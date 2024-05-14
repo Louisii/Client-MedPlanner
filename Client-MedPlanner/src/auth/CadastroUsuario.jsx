@@ -51,8 +51,9 @@ const CadastroUsuario = () => {
 
     const handleSubmit = () => {
         setForm({
+            ...{ situacao: 'A' },
             ...{ password: 'password' },
-            ...{ username: `${Date.now()}` },
+            ...{ username: form.email },
             ...form,
         });
         console.log('form');
