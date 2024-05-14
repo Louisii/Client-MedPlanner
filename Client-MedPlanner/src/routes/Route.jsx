@@ -41,7 +41,7 @@ const Routes = () => {
           path: "/cadastro-usuario",
           element: <CadastroUsuario />
         }, {
-          path: "/usuario/:id",
+          path: "/usuario/:usuarioId",
           element: <DetalhesUsuario />
         },
         {

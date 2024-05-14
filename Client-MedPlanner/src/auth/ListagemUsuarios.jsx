@@ -3,9 +3,11 @@ import axiosWithToken from '../lib/RequestInterceptor';
 import React, { useState, useEffect } from 'react';
 import Button from '../components/Button';
 import Layout from '../components/Layout';
+import { useNavigate } from 'react-router-dom';
 
 const ListagemUsuarios = () => {
     const [usuarios, setUsuarios] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         getUsuarios();
