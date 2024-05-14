@@ -31,63 +31,63 @@ const MenuLateral = () => {
 
     const menuItems = [
         {
-            id: 'paciente_menu',
-            title: 'Home',
-            icon: <FaUserAlt />,
-            link: '/home',
+            id: 'usuarios_menu',
+            title: 'Usuários',
+            icon: <FaUsers />,
+            link: '/listagem-usuarios',
             itens: [
                 {
                     id: 'cadastrar_paciente_menu',
-                    title: 'Cadastrar Paciente',
+                    title: 'Cadastrar Usuário',
                     icon: <FaUserPlus />,
-                    link: '/cadastro-paciente',
+                    link: '/cadastro-usuario',
                 },
                 {
                     id: 'lista_de_pacientes_menu',
-                    title: 'Lista de Pacientes',
+                    title: 'Lista de Usuários',
                     icon: <FaUsers />,
-                    link: '/listagem-pacientes',
+                    link: '/listagem-usuario',
                 },
 
             ]
         },
-        {
-            id: 'ambulatorio_menu',
-            title: 'Ambulatório',
-            icon: <FaStethoscope />,
-            link: '/home',
-            itens: [
-                {
-                    id: 'lista_consultas_menu',
-                    title: 'Consultas Agendadas',
-                    icon: <FaListAlt />,
-                    link: '/consultas-agendadas',
-                },
+        // {
+        //     id: 'ambulatorio_menu',
+        //     title: 'Ambulatório',
+        //     icon: <FaStethoscope />,
+        //     link: '/home',
+        //     itens: [
+        //         {
+        //             id: 'lista_consultas_menu',
+        //             title: 'Consultas Agendadas',
+        //             icon: <FaListAlt />,
+        //             link: '/consultas-agendadas',
+        //         },
 
 
-            ]
-        },
-        {
-            id: 'agenda_menu',
-            title: 'Agenda',
-            icon: <FaCalendarAlt />,
-            link: '/home',
-            itens: [
-                {
-                    id: 'cadastrar_agenda_menu',
-                    title: 'Cadastrar Agenda',
-                    icon: <FaCalendarPlus />,
-                    link: '/cadastro-agenda',
-                },
-                {
-                    id: 'lista_de_agendas_menu',
-                    title: 'Lista de Agendas',
-                    icon: <FaCalendarAlt />,
-                    link: '/agendas',
-                },
+        //     ]
+        // },
+        // {
+        //     id: 'agenda_menu',
+        //     title: 'Agenda',
+        //     icon: <FaCalendarAlt />,
+        //     link: '/home',
+        //     itens: [
+        //         {
+        //             id: 'cadastrar_agenda_menu',
+        //             title: 'Cadastrar Agenda',
+        //             icon: <FaCalendarPlus />,
+        //             link: '/cadastro-agenda',
+        //         },
+        //         {
+        //             id: 'lista_de_agendas_menu',
+        //             title: 'Lista de Agendas',
+        //             icon: <FaCalendarAlt />,
+        //             link: '/agendas',
+        //         },
 
-            ]
-        },
+        //     ]
+        // },
         // {
         //     title: 'Ambulatório',
         //     icon: <FaStethoscope />
@@ -114,14 +114,14 @@ const MenuLateral = () => {
 
     return (
 
-        <div className="max-w-lg h-screen bg-white shadow-md rounded-lg py-8 ">
+        <div className=" h-screen bg-white shadow-md rounded-lg py-8 ">
             <div className='w-full mb-8 mt-4'>
                 <img src={logo} alt="logo sga" className='w-28 mx-auto' />
 
                 <ul className='py-10'>
                     {/* TODO ordenar itens da lista por ordem alfabetica 
                             https://stackoverflow.com/questions/1129216/sort-array-of-objects-by-string-property-value */}
-                    <li className='text-gray-500 w-full shadow-sm py-3 pl-6 pr-0'>
+                    {/* <li className='text-gray-500 w-full shadow-sm py-3 pl-6 pr-0'>
                         <Link className='flex align-baseline mr-4 text-gray-500 gap-2 hover:text-teal-700 items-center' to="/" onClick={handleClickSair}>
                             <FaHome /> Home
                         </Link>
@@ -150,10 +150,10 @@ const MenuLateral = () => {
                         <Link className='flex align-baseline mr-4 text-gray-500 gap-2 hover:text-teal-700 items-center' to="/" onClick={handleClickSair}>
                             <FaUser /> Minha Conta
                         </Link>
-                    </li>
+                    </li> */}
 
 
-                    {/* {menuItems.map((item, i) =>
+                    {menuItems.map((item, i) =>
                         <li className='text-gray-500 w-full shadow-sm py-3 pl-6 pr-0' key={i}>
                             <div className=''>
                                 <div onClick={(e) => { expandElement(item.id) }} className='flex items-center gap-4 w-full pr-12 cursor-pointer hover:text-teal-700 '>
@@ -173,7 +173,7 @@ const MenuLateral = () => {
 
                             </div>
                         </li>
-                    )} */}
+                    )}
                     <li className='text-gray-500 w-full shadow-sm py-3 pl-6 pr-0'>
                         <Link className='flex align-baseline mr-4 text-gray-500 gap-2 hover:text-teal-700 items-center' to="/" onClick={handleClickSair}>
                             <FaSignOutAlt /> Sair

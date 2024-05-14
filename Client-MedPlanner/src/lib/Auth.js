@@ -1,11 +1,11 @@
 export const authenticate = async (username, password) => {
     try {
-        const response = await fetch('http://localhost:8080/profissional/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ "username": username, "password": password }),
+        const response = await fetch('http://127.0.0.1:8080/usuario/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ "username": username, "password": password }),
         });
 
         if (response.ok) {
@@ -22,11 +22,11 @@ export const authenticate = async (username, password) => {
 export const create = async (nome, senha) => {
     try {
         const response = await fetch('http://localhost:8080/usuario/salvar', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ "nome": nome, "senha": senha }),
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ "nome": nome, "senha": senha }),
         });
 
         if (response.ok) {

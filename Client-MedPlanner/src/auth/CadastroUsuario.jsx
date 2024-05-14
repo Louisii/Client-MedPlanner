@@ -4,12 +4,10 @@ import Button from '../components/Button'
 import Input from '../components/Input'
 import Label from '../components/Label'
 import Combobox from '../components/Combobox'
-import axios from 'axios';
 import axiosWithToken from '../lib/RequestInterceptor';
 import { useNavigate } from 'react-router-dom';
 
 const CadastroUsuario = () => {
-    const [enderecoViaCep, setEnderecoViaCep] = useState({});
     const [form, setForm] = useState({});
     const [respostaErro, setRespostaErro] = useState([]);
     const [respostaOk, setRespostaOk] = useState(false);
@@ -18,7 +16,7 @@ const CadastroUsuario = () => {
 
 
     const opcoesUF = ['Selecione', 'RS', 'SC', 'PR', 'SP'];
-    const opcoesFuncao = ['Selecione', 'Recepcionista', 'Médico(a)'];
+    const opcoesFuncao = ['Selecione', 'Administrador(a)', 'Recepcionista', 'Médico(a)'];
     const opcoesEspecialidade = ['Selecione', 'Cardiologista', 'Geral'];
 
     const handleFormTeste = () => {
@@ -28,26 +26,14 @@ const CadastroUsuario = () => {
         setEnviar(true);
     }
 
-    const getEndereco = (cep) => {
-        if (cep != '') {
-            axios.get(`http://viacep.com.br/ws/${cep}/json/`)
-                .then((response) => { setEnderecoViaCep(response.data) })
-                .catch((error) => { console.log(error) })
-            console.log(JSON.stringify(enderecoViaCep))
-        } else {
-            console.log('cep vazio');
-        }
 
-    }
-
-    const salvarPaciente = () => {
-        axiosWithToken.post(`http://localhost:8080/paciente/salvar`, form)
+    const salvarUsuario = () => {
+        axiosWithToken.post(`http://localhost:8080/usuario/salvar`, form)
             .then((response) => {
                 if (response.status == 200) {
                     setRespostaOk(true);
-                    navigate("/listagem-pacientes");
+                    navigate("/listagem-usuario");
                 }
-
             })
             .catch((error) => {
                 setRespostaErro(error.response.data['errors']);
@@ -64,21 +50,22 @@ const CadastroUsuario = () => {
 
 
     const handleSubmit = () => {
-
         setForm({
+            ...{ password: 'password' },
+            ...{ username: `${Date.now()}` },
             ...form,
-
         });
         console.log('form');
         console.log(JSON.stringify(form));
         // salvarPaciente()
+        salvarUsuario()
         setEnviar(true);
 
     }
 
     useEffect(() => {
         if (Object.keys(form).length > 0) {
-            salvarPaciente();
+            salvarUsuario();
         }
     }, [enviar]);
 
@@ -97,11 +84,11 @@ const CadastroUsuario = () => {
                     </div>
                     <div className='m-4'>
                         <Label text="Email" />
-                        <Input type='text' placeholder='' onChange={(e) => handleFormContato('email', e.target.value)} />
+                        <Input type='text' placeholder='' onChange={(e) => handleForm('email', e.target.value)} />
                     </div>
                     <div className='m-4'>
                         <Label text="CPF" />
-                        <Input type='text' placeholder='' onChange={(e) => handleForm('nomeSocial', e.target.value)} />
+                        <Input type='text' placeholder='' onChange={(e) => handleForm('cpf', e.target.value)} />
                     </div>
 
                 </div>
@@ -118,11 +105,11 @@ const CadastroUsuario = () => {
                     </div>
                     <div className='m-4'>
                         <Label text="CMR" />
-                        <Input type='text' placeholder='' onChange={(e) => handleFormContato('crm', e.target.value)} />
+                        <Input type='text' placeholder='' onChange={(e) => handleForm('crm', e.target.value)} />
                     </div>
                     <div className='m-4'>
                         <Label text="UF" />
-                        <Combobox opcoes={opcoesUF} opcoesDisplay={opcoesUF} onChange={(e) => handleForm('estado', e.target.value)} />
+                        <Combobox opcoes={opcoesUF} opcoesDisplay={opcoesUF} onChange={(e) => handleForm('uf_crm', e.target.value)} />
                     </div>
 
                 </div>
@@ -130,7 +117,9 @@ const CadastroUsuario = () => {
 
                 {!respostaOk && respostaErro == undefined || respostaErro.length > 0 ?
                     <div className='bg-red-300 text-white rounded-md px-4 py-2 mx-8 my-2'>
-                        {respostaErro.map((e) => <p>{e}</p>)}
+                        {/*  {respostaErro.map((e) => <p>{e}</p>)}*/}
+                        <p>Não foi possível cadastrar.</p>
+
                     </div>
                     : null}
 

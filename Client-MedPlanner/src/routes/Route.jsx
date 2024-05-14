@@ -2,12 +2,12 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { useAuth } from "../lib/AuthProvider";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { PublicRoute } from "./PublicRoute";
-import CadastroPaciente from "../auth/CadastroPaciente";
 import Home from "../auth/Home";
-import ListagemDePacientes from "../auth/ListagemDePacientes";
 import Login from "../pages/Login";
 import Signup from "../pages/Signup";
-import CadastroUsuario from "../pages/CadastroUsuario";
+import CadastroUsuario from "../auth/CadastroUsuario";
+import ListagemUsuarios from "../auth/ListagemUsuarios";
+import DetalhesUsuario from "../auth/DetalhesUsuario";
 
 const Routes = () => {
   const { token } = useAuth();
@@ -21,15 +21,8 @@ const Routes = () => {
         {
           path: "/",
           element: <Login />
-        },
-        {
-          path: "/sign-up",
-          element: <Signup />
-        },
-        {
-          path: "/cadastro-usuario",
-          element: <CadastroUsuario />
         }
+
       ]
     }
   ];
@@ -45,13 +38,16 @@ const Routes = () => {
           element: <Home />,
         },
         {
-          path: "/cadastro-paciente",
-          element: <CadastroPaciente />,
+          path: "/cadastro-usuario",
+          element: <CadastroUsuario />
+        }, {
+          path: "/usuario/:id",
+          element: <DetalhesUsuario />
         },
         {
-          path: "/listagem-pacientes",
-          element: <ListagemDePacientes />,
-        },
+          path: "/listagem-usuario",
+          element: <ListagemUsuarios />
+        }
 
       ],
     },
