@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import logo from '../assets/logo2.png'
+import logo from '../assets/logoMedPlanner.png'
 import Input from '../components/Input'
 import Label from '../components/Label'
 import LinkStyled from '../components/LinkStyled'
@@ -43,7 +43,7 @@ const Login = () => {
                 <div>
                     <form className="bg-white shadow-md rounded-lg px-16 pt-6 pb-8 mb-4">
                         <div className='w-full mb-8 mt-4'>
-                            <img src={logo} alt="logo sga" className='w-28 mx-auto' />
+                            <img src={logo} alt="logo sga" className='w-48 mx-auto' />
 
                         </div>
                         <div className="mb-6">

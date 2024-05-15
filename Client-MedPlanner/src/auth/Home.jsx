@@ -1,7 +1,7 @@
 import React from 'react'
 import MenuLateral from '../components/MenuLateral'
 import Layout from '../components/Layout'
-import logo from '../assets/logo2.png'
+import logo from '../assets/logoMedPlanner.png'
 
 const Home = () => {
 

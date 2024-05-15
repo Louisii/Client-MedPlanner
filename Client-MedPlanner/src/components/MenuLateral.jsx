@@ -1,5 +1,5 @@
 
-import logo from '../assets/logo2.png'
+import logo from '../assets/logoMedPlanner.png'
 import { FaUserMd, FaUserAlt, FaStethoscope, FaCalendarAlt, FaFileAlt, FaEllipsisV, FaChevronDown, FaChevronUp, FaCalendarPlus, FaUsers, FaUserPlus, FaListAlt, FaSignOutAlt, FaHome, FaUser, FaList, FaBook, FaHospital, FaCalendar } from 'react-icons/fa';
 import Button from '../components/Button';
 import LinkStyled from '../components/LinkStyled';
@@ -116,7 +116,7 @@ const MenuLateral = () => {
 
         <div className=" h-screen bg-white shadow-md rounded-lg py-8 ">
             <div className='w-full mb-8 mt-4'>
-                <img src={logo} alt="logo sga" className='w-28 mx-auto' />
+                <img src={logo} alt="logo sga" className='w-48 mx-auto' />
 
                 <ul className='py-10'>
                     {/* TODO ordenar itens da lista por ordem alfabetica 
