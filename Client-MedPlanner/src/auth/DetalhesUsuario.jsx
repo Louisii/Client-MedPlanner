@@ -48,7 +48,7 @@ const DetalhesUsuario = () => {
                     </div>
                     <div className='flex items-center text-sm  h-9 gap-4 m-4 p-4'>
                         <Button onClick={() => navigate(`/listagem-usuario`)} text="Voltar" />
-                        <Button onClick={() => navigate(`/lista`)} text="Editar" />
+                        <Button onClick={() => navigate(`/edicao-usuario/${usuarioId}`)} text="Editar" />
                     </div>
 
 

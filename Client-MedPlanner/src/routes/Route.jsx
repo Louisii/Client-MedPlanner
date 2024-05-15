@@ -40,7 +40,12 @@ const Routes = () => {
         {
           path: "/cadastro-usuario",
           element: <CadastroUsuario />
-        }, {
+        },
+        {
+          path: "/edicao-usuario/:usuarioId",
+          element: <CadastroUsuario />
+        },
+        {
           path: "/usuario/:usuarioId",
           element: <DetalhesUsuario />
         },

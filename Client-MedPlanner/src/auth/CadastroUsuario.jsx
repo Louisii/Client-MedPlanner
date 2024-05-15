@@ -5,27 +5,37 @@ import Input from '../components/Input'
 import Label from '../components/Label'
 import Combobox from '../components/Combobox'
 import axiosWithToken from '../lib/RequestInterceptor';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const CadastroUsuario = () => {
+    const { usuarioId } = useParams()
     const [form, setForm] = useState({});
     const [respostaErro, setRespostaErro] = useState([]);
     const [respostaOk, setRespostaOk] = useState(false);
     const [enviar, setEnviar] = useState(false);
     const navigate = useNavigate();
+    const [usuario, setUsuario] = useState(null);
 
 
     const opcoesUF = ['Selecione', 'RS', 'SC', 'PR', 'SP'];
     const opcoesFuncao = ['Selecione', 'Administrador(a)', 'Recepcionista', 'Médico(a)'];
     const opcoesEspecialidade = ['Selecione', 'Cardiologista', 'Geral'];
 
-    const handleFormTeste = () => {
-        setForm(objTeste);
-        console.log('form');
-        console.log(JSON.stringify(form));
-        setEnviar(true);
-    }
 
+    const getUsuario = (usuarioId) => {
+        axiosWithToken.get(`http://localhost:8080/usuario/buscar?id=${usuarioId}`)
+            .then((response) => {
+                if (response.status === 200) {
+                    setUsuario(response.data[0]);
+                } else {
+                    console.error(`Falha ao obter usuário: ${response.status}`);
+                }
+            })
+            .catch((error) => {
+                console.error('Erro ao obter usuário:', error.message);
+                // Aqui você pode adicionar lógica para exibir uma mensagem de erro para o usuário
+            });
+    }
 
     const salvarUsuario = () => {
         axiosWithToken.post(`http://localhost:8080/usuario/salvar`, form)
@@ -50,12 +60,23 @@ const CadastroUsuario = () => {
 
 
     const handleSubmit = () => {
-        setForm({
-            ...{ situacao: 'A' },
-            ...{ password: 'password' },
-            ...{ username: form.email },
-            ...form,
-        });
+        if (usuarioId != null) {
+            setForm({
+                ...{ idUsuario: usuarioId },
+                ...{ situacao: 'A' },
+                ...{ password: 'password' },
+                // ...{ username: form.email },
+                ...form,
+            });
+        } else {
+            setForm({
+                ...{ situacao: 'A' },
+                ...{ password: 'password' },
+                // ...{ username: form.email },
+                ...form,
+            });
+        }
+
         console.log('form');
         console.log(JSON.stringify(form));
         // salvarPaciente()
@@ -68,7 +89,11 @@ const CadastroUsuario = () => {
         if (Object.keys(form).length > 0) {
             salvarUsuario();
         }
-    }, [enviar]);
+        if (usuarioId != null) {
+            getUsuario(usuarioId);
+        }
+    }, [enviar, usuarioId]);
+
 
 
     return (<Layout>
@@ -81,15 +106,15 @@ const CadastroUsuario = () => {
 
                     <div className='m-4'>
                         <Label text="Nome Completo" />
-                        <Input type='text' placeholder='' onChange={(e) => handleForm('nome', e.target.value)} />
+                        <Input type='text' placeholder='' value={usuario != null && form.nome == null ? usuario.nome : form.nome} onChange={(e) => handleForm('nome', e.target.value)} />
                     </div>
                     <div className='m-4'>
                         <Label text="Email" />
-                        <Input type='text' placeholder='' onChange={(e) => handleForm('email', e.target.value)} />
+                        <Input type='text' placeholder='' value={usuario != null && form.username == null ? usuario.username : form.username} onChange={(e) => handleForm('username', e.target.value)} />
                     </div>
                     <div className='m-4'>
                         <Label text="CPF" />
-                        <Input type='text' placeholder='' onChange={(e) => handleForm('cpf', e.target.value)} />
+                        <Input type='text' placeholder='' value={usuario != null && form.cpf == null ? usuario.cpf : form.cpf} onChange={(e) => handleForm('cpf', e.target.value)} />
                     </div>
 
                 </div>
@@ -98,7 +123,7 @@ const CadastroUsuario = () => {
 
                     <div className='m-4'>
                         <Label text="Função" />
-                        <Combobox opcoes={opcoesFuncao} opcoesDisplay={opcoesFuncao} onChange={(e) => handleForm('funcao', e.target.value)} />
+                        <Combobox opcoes={opcoesFuncao} opcoesDisplay={opcoesFuncao} value={usuario != null ? opcoesFuncao[1] : null} onChange={(e) => handleForm('funcao', e.target.value)} />
                     </div>
                     <div className='m-4'>
                         <Label text="Especialidade" />
