@@ -6,6 +6,7 @@ import Label from '../components/Label'
 import Combobox from '../components/Combobox'
 import axiosWithToken from '../lib/RequestInterceptor';
 import { useNavigate, useParams } from 'react-router-dom';
+import InputDisabled from '../components/InputDisabled';
 
 const CadastroUsuario = () => {
     const { usuarioId } = useParams()
@@ -127,15 +128,29 @@ const CadastroUsuario = () => {
                     </div>
                     <div className='m-4'>
                         <Label text="Especialidade" />
-                        <Combobox opcoes={opcoesEspecialidade} opcoesDisplay={opcoesEspecialidade} onChange={(e) => handleForm('especialidade', e.target.value)} />
+                        {form.funcao != opcoesFuncao[3] ?
+                            <InputDisabled type='text' placeholder='' onChange={(e) => handleForm('crm', e.target.value)} />
+                            :
+                            <Combobox opcoes={opcoesEspecialidade} opcoesDisplay={opcoesEspecialidade} onChange={(e) => handleForm('especialidade', e.target.value)} />
+                        }
                     </div>
                     <div className='m-4'>
                         <Label text="CMR" />
-                        <Input type='text' placeholder='' onChange={(e) => handleForm('crm', e.target.value)} />
+                        {form.funcao != opcoesFuncao[3] ?
+                            <InputDisabled type='text' placeholder='' onChange={(e) => handleForm('crm', e.target.value)} />
+                            :
+                            <Input type='text' placeholder='' onChange={(e) => handleForm('crm', e.target.value)} />
+                        }
+
+
                     </div>
                     <div className='m-4'>
                         <Label text="UF" />
-                        <Combobox opcoes={opcoesUF} opcoesDisplay={opcoesUF} onChange={(e) => handleForm('uf_crm', e.target.value)} />
+                        {form.funcao != opcoesFuncao[3] ?
+                            <InputDisabled type='text' placeholder='' onChange={(e) => handleForm('crm', e.target.value)} />
+                            :
+                            <Combobox opcoes={opcoesUF} opcoesDisplay={opcoesUF} onChange={(e) => handleForm('uf_crm', e.target.value)} />
+                        }
                     </div>
 
                 </div>
