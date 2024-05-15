@@ -100,7 +100,7 @@ const CadastroUsuario = () => {
         <div className='p-4'>
             <form>
 
-                <h2 className='p-4'>Cadastro de Usuário</h2>
+                <h2 className='p-4'>{usuarioId != null ? "Edição de Usuário" : "Cadastro de Usuário"}</h2>
 
                 <div className='p-4 grid grid-cols-3 gap-8'>
 
@@ -155,7 +155,8 @@ const CadastroUsuario = () => {
                 </div> */}
 
                 <div className='flex gap-4 p-8 items-center justify-end'>
-                    <Button onClick={() => handleSubmit()} text="Cadastrar" />
+                    {usuarioId != null ? <Button onClick={() => navigate(`/usuario/${usuarioId}`)} text="Voltar" /> : null}
+                    <Button onClick={() => handleSubmit()} text={usuarioId != null ? "Atualizar" : "Cadastrar"} />
                 </div>
             </form>
         </div>
