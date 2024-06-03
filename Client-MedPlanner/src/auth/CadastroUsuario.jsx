@@ -21,6 +21,7 @@ const CadastroUsuario = () => {
     const opcoesUF = ['Selecione', 'RS', 'SC', 'PR', 'SP'];
     const opcoesFuncao = ['Selecione', 'Administrador(a)', 'Recepcionista', 'Médico(a)'];
     const opcoesEspecialidade = ['Selecione', 'Cardiologista', 'Geral'];
+    const opcoesSituacao = ['Selecione', 'A', 'I', 'E'];
 
 
     const getUsuario = (usuarioId) => {
@@ -34,7 +35,6 @@ const CadastroUsuario = () => {
             })
             .catch((error) => {
                 console.error('Erro ao obter usuário:', error.message);
-                // Aqui você pode adicionar lógica para exibir uma mensagem de erro para o usuário
             });
     }
 
@@ -54,33 +54,20 @@ const CadastroUsuario = () => {
 
     }
 
-
     const handleForm = (name, value) => {
         setForm({ ...form, [name]: value });
     };
-
 
     const handleSubmit = () => {
         if (usuarioId != null) {
             setForm({
                 ...{ idUsuario: usuarioId },
-                ...{ situacao: 'A' },
-                ...{ password: 'password' },
-                // ...{ username: form.email },
                 ...form,
             });
-        } else {
-            setForm({
-                ...{ situacao: 'A' },
-                ...{ password: 'password' },
-                // ...{ username: form.email },
-                ...form,
-            });
-        }
+       }
 
         console.log('form');
         console.log(JSON.stringify(form));
-        // salvarPaciente()
         salvarUsuario()
         setEnviar(true);
 
@@ -103,7 +90,7 @@ const CadastroUsuario = () => {
 
                 <h2 className='p-4'>{usuarioId != null ? "Edição de Usuário" : "Cadastro de Usuário"}</h2>
 
-                <div className='p-4 grid grid-cols-3 gap-8'>
+                <div className='p-4 grid grid-cols-2 gap-8'>
 
                     <div className='m-4'>
                         <Label text="Nome Completo" />
@@ -113,19 +100,31 @@ const CadastroUsuario = () => {
                         <Label text="Email" />
                         <Input type='text' placeholder='' value={usuario != null && form.username == null ? usuario.username : form.username} onChange={(e) => handleForm('username', e.target.value)} />
                     </div>
+                    
+
+                </div>
+
+                <div className='p-4 grid grid-cols-3 gap-8'> 
                     <div className='m-4'>
                         <Label text="CPF" />
                         <Input type='text' placeholder='' value={usuario != null && form.cpf == null ? usuario.cpf : form.cpf} onChange={(e) => handleForm('cpf', e.target.value)} />
                     </div>
-
-                </div>
-
-                <div className='p-4 grid grid-cols-4 gap-8'>
-
                     <div className='m-4'>
                         <Label text="Função" />
                         <Combobox opcoes={opcoesFuncao} opcoesDisplay={opcoesFuncao} value={usuario != null ? opcoesFuncao[1] : null} onChange={(e) => handleForm('funcao', e.target.value)} />
                     </div>
+                    <div className='m-4'>
+                        <Label text="Situação" />
+                        {form.idUsuario != null ?
+                            <InputDisabled type='text' placeholder='' value={opcoesSituacao[2]} onChange={(e) => handleForm('situacao', e.target.value)} />
+                            :
+                            <Combobox opcoes={opcoesSituacao} opcoesDisplay={opcoesSituacao} value={usuario != null ? opcoesSituacao[1] : null} onChange={(e) => handleForm('situacao', e.target.value)} />                        
+                        }
+                        
+                    </div>
+                </div>
+
+                <div className='p-4 grid grid-cols-3 gap-8'>
                     <div className='m-4'>
                         <Label text="Especialidade" />
                         {form.funcao != opcoesFuncao[3] ?
@@ -158,16 +157,9 @@ const CadastroUsuario = () => {
 
                 {!respostaOk && respostaErro == undefined || respostaErro.length > 0 ?
                     <div className='bg-red-300 text-white rounded-md px-4 py-2 mx-8 my-2'>
-                        {/*  {respostaErro.map((e) => <p>{e}</p>)}*/}
-                        <p>Não foi possível cadastrar.</p>
-
+                        {respostaErro.map((e) => <p>{e}</p>)}
                     </div>
                     : null}
-
-
-                {/* <div className='flex gap-4 p-4 items-center justify-end'>
-                    <Button onClick={() => handleFormTeste()} text="Cadastrar teste" />
-                </div> */}
 
                 <div className='flex gap-4 p-8 items-center justify-end'>
                     {usuarioId != null ? <Button onClick={() => navigate(`/usuario/${usuarioId}`)} text="Voltar" /> : null}
