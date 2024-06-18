@@ -62,6 +62,10 @@ const Routes = () => {
         {
           path: "/listagem-especialidade",
           element: <ListagemEspecialidades />
+        },
+        {
+          path: "/edicao-especialidade/:especialidadeId",
+          element: <CadastroEspecialidade />
         }
 
       ],
