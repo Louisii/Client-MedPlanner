@@ -30,7 +30,7 @@ const CadastroEspecialidade = () => {
         axiosWithToken.get(`http://localhost:8080/especialidade/buscar?id=${id}`)
             .then((response) => {
                 if (response.status === 200) {
-                    setEspecialidade(response.data[0]);
+                    setForm(response.data[0]);
                 } else {
                     console.error(`Falha ao obter especialidade: ${response.status}`);
                 }
