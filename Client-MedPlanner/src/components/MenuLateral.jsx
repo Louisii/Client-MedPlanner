@@ -48,6 +48,18 @@ const MenuLateral = () => {
                     icon: <FaUsers />,
                     link: '/listagem-usuario',
                 },
+                {
+                    id: 'lista_de_pacientes_menu',
+                    title: 'Cadastrar Especialidade',
+                    icon: <FaUsers />,
+                    link: '/cadastro-especialidade',
+                },
+                {
+                    id: 'lista_de_pacientes_menu',
+                    title: 'Listar Especialidade',
+                    icon: <FaUsers />,
+                    link: '/listagem-especialidade',
+                }
 
             ]
         },

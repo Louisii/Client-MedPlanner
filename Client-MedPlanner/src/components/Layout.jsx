@@ -4,7 +4,7 @@ import MenuLateral from '../components/MenuLateral'
 const Layout = ({ children }) => {
 
     return (
-        <div className='flex bg-gray-200 '>
+        <div className='flex bg-gray-200 max-h-screen'>
             <div className='flex'>
                 <MenuLateral />
             </div>

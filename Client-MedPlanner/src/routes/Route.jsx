@@ -8,6 +8,8 @@ import Signup from "../pages/Signup";
 import CadastroUsuario from "../auth/CadastroUsuario";
 import ListagemUsuarios from "../auth/ListagemUsuarios";
 import DetalhesUsuario from "../auth/DetalhesUsuario";
+import ListagemEspecialidades from "../auth/ListagemEspecialidade";
+import CadastroEspecialidade from "../auth/CadastroEspecialidade";
 
 const Routes = () => {
   const { token } = useAuth();
@@ -52,6 +54,14 @@ const Routes = () => {
         {
           path: "/listagem-usuario",
           element: <ListagemUsuarios />
+        },
+        {
+          path: "/cadastro-especialidade",
+          element: <CadastroEspecialidade />
+        },
+        {
+          path: "/listagem-especialidade",
+          element: <ListagemEspecialidades />
         }
 
       ],
