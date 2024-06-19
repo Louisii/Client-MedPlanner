@@ -100,7 +100,7 @@ const CadastroEspecialidade = () => {
                     )}
                     <div className="flex gap-4 p-8 items-center justify-end">
                         {especialidadeId && (
-                            <Button onClick={() => navigate(`/especialidade/${especialidadeId}`)} text="Voltar" />
+                            <Button onClick={() => navigate(`/listagem-especialidade`)} text="Voltar" />
                         )}
                         <Button onClick={handleSubmit} text={especialidadeId ? 'Atualizar' : 'Cadastrar'} />
                     </div>
