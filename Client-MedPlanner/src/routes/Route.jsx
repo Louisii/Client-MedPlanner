@@ -10,6 +10,7 @@ import ListagemUsuarios from "../auth/ListagemUsuarios";
 import DetalhesUsuario from "../auth/DetalhesUsuario";
 import ListagemEspecialidades from "../auth/ListagemEspecialidade";
 import CadastroEspecialidade from "../auth/CadastroEspecialidade";
+import Agenda from "../auth/Agenda";
 
 const Routes = () => {
   const { token } = useAuth();
@@ -66,6 +67,10 @@ const Routes = () => {
         {
           path: "/edicao-especialidade/:especialidadeId",
           element: <CadastroEspecialidade />
+        },
+        {
+          path: "/agenda",
+          element: <Agenda />
         }
 
       ],

@@ -38,7 +38,7 @@ const ListagemUsuarios = () => {
                                     <div className='flex items-center text-sm justify-end h-9 gap-2'>
                                         {
                                             u.cargo == "MEDICO" ? <div className='flex items-center text-sm justify-end h-9'>
-                                                <Button onClick={() => navigate(`/usuario/${u.idUsuario}`)} text="Agenda" />
+                                                <Button onClick={() => navigate(`/agenda`)} text="Agenda" />
                                             </div> : null
                                         }
                                         <div className='flex items-center text-sm justify-end h-9'>
