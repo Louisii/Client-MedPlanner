@@ -21,6 +21,7 @@ const Login = () => {
             await authenticate(username, password).then((response) => {
                 setToken(response.token);
                 localStorage.setItem("usuario", response.usuario);
+                localStorage.setItem("role", response.role);
                 navigate("/home", { replace: true });
             });
         } catch (error) {
