@@ -57,10 +57,11 @@ const ListagemEspecialidades = () => {
                                 <div>
                                     <h2 className='text-xl font-bold'>{especialidade.nome}</h2>
                                 </div>
-                                <div className='flex items-center text-sm justify-end h-9 gap-2'>
-                                    <Button onClick={() => navigate(`/edicao-especialidade/${especialidade.idEspecialidade}`)} text="Editar" />
-                                    <Button onClick={() => openDeleteModal(especialidade)} text="Excluir" />
-                                </div>
+                                {localStorage.getItem("role") == "ADMINISTRADOR" || localStorage.getItem("role") == "RECEPCAO" ?
+                                    <div className='flex items-center text-sm justify-end h-9 gap-2'>
+                                        <Button onClick={() => navigate(`/edicao-especialidade/${especialidade.idEspecialidade}`)} text="Editar" />
+                                        <Button onClick={() => openDeleteModal(especialidade)} text="Excluir" />
+                                    </div> : null}
                             </div>
                         ))}
                     </div>
