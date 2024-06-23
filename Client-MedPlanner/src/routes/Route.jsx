@@ -72,6 +72,10 @@ const Routes = () => {
           path: "/agenda",
           element: <Agenda />
         }
+        {
+          path: "/relatorio",
+          element: <Agenda />
+        }
 
       ],
     },
