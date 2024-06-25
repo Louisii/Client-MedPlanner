@@ -7,6 +7,7 @@ import Combobox from '../components/Combobox'
 import axiosWithToken from '../lib/RequestInterceptor';
 import { useNavigate, useParams } from 'react-router-dom';
 import InputDisabled from '../components/InputDisabled';
+import AsyncSelectorEspecialidade from '../components/AsyncSelectorEspecialidade';
 
 const CadastroUsuario = () => {
     const { usuarioId } = useParams()
@@ -130,7 +131,8 @@ const CadastroUsuario = () => {
                         {form.funcao != opcoesFuncao[3] ?
                             <InputDisabled type='text' placeholder='' onChange={(e) => handleForm('crm', e.target.value)} />
                             :
-                            <Combobox opcoes={opcoesEspecialidade} opcoesDisplay={opcoesEspecialidade} onChange={(e) => handleForm('especialidade', e.target.value)} />
+                            <AsyncSelectorEspecialidade onSelectionChange={(e) => handleForm('especialidade', e.target.value)} />
+                            // <Combobox opcoes={opcoesEspecialidade} opcoesDisplay={opcoesEspecialidade} onChange={(e) => handleForm('especialidade', e.target.value)} />
                         }
                     </div>
                     <div className='m-4'>
