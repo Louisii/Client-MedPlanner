@@ -63,6 +63,33 @@ const MenuLateral = () => {
 
             ]
         },
+        {
+            id: 'relatorios_menu',
+            title: 'Relatórios',
+            icon: <FaFileAlt />,
+            link: '/relatorios',
+            itens: [
+                {
+                    id: 'relatorio_sala_menu',
+                    title: 'Relatório de Salas',
+                    icon: <FaUserPlus />,
+                    link: '/relatorios/sala',
+                },
+                {
+                    id: 'relatorio_medico_menu',
+                    title: 'Relatório de Médicos',
+                    icon: <FaUsers />,
+                    link: '/relatorios/medico',
+                },
+                {
+                    id: 'relatorio_diario_menu',
+                    title: 'Relatório Diário',
+                    icon: <FaUsers />,
+                    link: '/relatorios/diario',
+                },
+        
+            ]
+        },
         // {
         //     id: 'ambulatorio_menu',
         //     title: 'Ambulatório',

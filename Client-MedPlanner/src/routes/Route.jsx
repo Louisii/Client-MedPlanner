@@ -11,6 +11,7 @@ import DetalhesUsuario from "../auth/DetalhesUsuario";
 import ListagemEspecialidades from "../auth/ListagemEspecialidade";
 import CadastroEspecialidade from "../auth/CadastroEspecialidade";
 import Agenda from "../auth/Agenda";
+import Relatorios from "../auth/Relatorios";
 
 const Routes = () => {
   const { token } = useAuth();
@@ -71,10 +72,10 @@ const Routes = () => {
         {
           path: "/agenda",
           element: <Agenda />
-        }
+        },
         {
-          path: "/relatorio",
-          element: <Agenda />
+          path: "/relatorios/:tipo",
+          element: <Relatorios />
         }
 
       ],
