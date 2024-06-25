@@ -8,7 +8,7 @@ const Layout = ({ children }) => {
             <div className='flex'>
                 <MenuLateral />
             </div>
-            <div className='w-9/12  bg-white mx-auto my-8 shadow-md rounded-lg'>
+            <div className='w-9/12  bg-white mx-auto my-4 shadow-md rounded-lg'>
                 {children}
             </div>
         </div>

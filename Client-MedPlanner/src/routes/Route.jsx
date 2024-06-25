@@ -69,7 +69,7 @@ const Routes = () => {
           element: <CadastroEspecialidade />
         },
         {
-          path: "/agenda",
+          path: "/agenda-profissional/:profissionalId",
           element: <Agenda />
         }
 

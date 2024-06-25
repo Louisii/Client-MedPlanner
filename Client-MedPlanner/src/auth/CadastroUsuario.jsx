@@ -28,7 +28,7 @@ const CadastroUsuario = () => {
         axiosWithToken.get(`http://localhost:8080/usuario/buscar?id=${usuarioId}`)
             .then((response) => {
                 if (response.status === 200) {
-                    setUsuario(response.data[0]);
+                    setUsuario(response.data)
                 } else {
                     console.error(`Falha ao obter usuário: ${response.status}`);
                 }
@@ -64,7 +64,7 @@ const CadastroUsuario = () => {
                 ...{ idUsuario: usuarioId },
                 ...form,
             });
-       }
+        }
 
         console.log('form');
         console.log(JSON.stringify(form));
@@ -100,11 +100,11 @@ const CadastroUsuario = () => {
                         <Label text="Email" />
                         <Input type='text' placeholder='' value={usuario != null && form.username == null ? usuario.username : form.username} onChange={(e) => handleForm('username', e.target.value)} />
                     </div>
-                    
+
 
                 </div>
 
-                <div className='p-4 grid grid-cols-3 gap-8'> 
+                <div className='p-4 grid grid-cols-3 gap-8'>
                     <div className='m-4'>
                         <Label text="CPF" />
                         <Input type='text' placeholder='' value={usuario != null && form.cpf == null ? usuario.cpf : form.cpf} onChange={(e) => handleForm('cpf', e.target.value)} />
@@ -118,9 +118,9 @@ const CadastroUsuario = () => {
                         {form.idUsuario != null ?
                             <InputDisabled type='text' placeholder='' value={opcoesSituacao[2]} onChange={(e) => handleForm('situacao', e.target.value)} />
                             :
-                            <Combobox opcoes={opcoesSituacao} opcoesDisplay={opcoesSituacao} value={usuario != null ? opcoesSituacao[1] : null} onChange={(e) => handleForm('situacao', e.target.value)} />                        
+                            <Combobox opcoes={opcoesSituacao} opcoesDisplay={opcoesSituacao} value={usuario != null ? opcoesSituacao[1] : null} onChange={(e) => handleForm('situacao', e.target.value)} />
                         }
-                        
+
                     </div>
                 </div>
 
