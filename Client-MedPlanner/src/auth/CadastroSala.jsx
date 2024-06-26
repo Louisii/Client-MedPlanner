@@ -10,14 +10,54 @@ import InputDisabled from '../components/InputDisabled';
 
 const CadastroSala = () => {
     const { idSala } = useParams()
-    const [form, setForm] = useState({ nomeSala: '', ala: 'Santa Maria', andar: 2, situacao: 'Disponível', recursos: [{ nomeRecurso: '', descricaoRecurso: '' }] });
+    const [form, setForm] = useState({ nomeSala: '', ala: '', andar: '', situacao: '', recursos: [{ nomeRecurso: '', descricaoRecurso: '' }] });
     const [respostaErro, setRespostaErro] = useState([]);
     const [respostaOk, setRespostaOk] = useState(false);
     const [enviar, setEnviar] = useState(false);
     const navigate = useNavigate();
     const [sala, setSala] = useState(null);
 
+    const [opcoesAla, setOpcoesAla] = useState(['Selecione']);
+    const [opcoesAndar, setOpcoesAndar] = useState(['Selecione']);
     const opcoesSituacao = ['Selecione', 'A', 'I', 'M'];
+
+    useEffect(() => {
+        if (idSala) {
+            getSala(idSala);
+        }
+        fetchOpcoesAla();
+        fetchOpcoesAndar();
+    }, [idSala]);
+
+    const fetchOpcoesAla = () => {
+        axiosWithToken.get(`http://localhost:8080/ala/buscar`)
+            .then((response) => {
+                if (response.status === 200) {
+                    const alas = response.data.map((ala) => ala.nomeAla);
+                    setOpcoesAla(['Selecione', ...alas]);
+                } else {
+                    console.error(`Falha ao obter alas: ${response.status}`);
+                }
+            })
+            .catch((error) => {
+                console.error('Erro ao obter alas:', error.message);
+            });
+    };
+
+    const fetchOpcoesAndar = () => {
+        axiosWithToken.get(`http://localhost:8080/ala/buscar`)
+            .then((response) => {
+                if (response.status === 200) {
+                    const andares = response.data.map((andar) => andar.numeroAndar);
+                    setOpcoesAndar(['Selecione', ...andares]);
+                } else {
+                    console.error(`Falha ao obter andares: ${response.status}`);
+                }
+            })
+            .catch((error) => {
+                console.error('Erro ao obter andares:', error.message);
+            });
+    };
 
     const getSala = (idSala) => {
         axiosWithToken.get(`http://localhost:8080/sala/buscar?id=${idSala}`)
@@ -108,16 +148,16 @@ const CadastroSala = () => {
                     </div>
                     <div className='m-4'>
                             <Label text="Ala" />
-                            <InputDisabled type='text' value='Santa Maria' onChange={(e) => handleForm('ala', e.target.value)} />
+                            <Combobox opcoes={opcoesAla} value={form.ala} onChange={(e) => handleForm('ala', e.target.value)} />
                     </div>
                     <div className='m-4'>
                             <Label text="Andar" />
-                            <InputDisabled type='text' value='2' onChange={(e) => handleForm('andar', e.target.value)} />
-                    </div>
-                    <div className='m-4'>
+                            <Combobox opcoes={opcoesAndar} value={form.andar} onChange={(e) => handleForm('andar', e.target.value)} />
+                        </div>
+                        <div className='m-4'>
                             <Label text="Situação" />
                             <Combobox opcoes={opcoesSituacao} value={form.situacao} onChange={(e) => handleForm('situacao', e.target.value)} />
-                        </div>                
+                        </div>               
                 </div>
 
                 <div className='p-4'>
@@ -148,4 +188,4 @@ const CadastroSala = () => {
     );
 }
 
-export default CadastroSala
+export default CadastroSala;
