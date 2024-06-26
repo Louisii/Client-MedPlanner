@@ -98,6 +98,7 @@ const Agenda = () => {
                             <Paper>
                                 <Scheduler
                                     data={[]}
+                                    locale={"pt-BR"}
                                 >
                                     <EditingState
                                         onCommitChanges={commitChanges}
@@ -130,7 +131,7 @@ const Agenda = () => {
                                         showOpenButton
                                     />
                                     <AppointmentForm
-
+                                        locale={"pt-BR"}
                                     />
 
 
