@@ -1,22 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import Layout from '../components/Layout'
-import Button from '../components/Button'
-import Input from '../components/Input'
-import Label from '../components/Label'
-import Combobox from '../components/Combobox'
-import axiosWithToken from '../lib/RequestInterceptor';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import InputDisabled from '../components/InputDisabled';
+import Button from '../components/Button';
+import Combobox from '../components/Combobox';
+import Input from '../components/Input';
+import Label from '../components/Label';
+import Layout from '../components/Layout';
+import axiosWithToken from '../lib/RequestInterceptor';
 
 const CadastroSala = () => {
-    const { idSala } = useParams()
-    const [form, setForm] = useState({ nomeSala: '', ala: '', andar: '', situacao: '', recursos: [{ nomeRecurso: '', descricaoRecurso: '' }] });
+    const { idSala } = useParams();
+    const [form, setForm] = useState({ nomeSala: '', ala: '', andar: '', situacao: 'Selecione', recursos: [{ nomeRecurso: '', descricaoRecurso: '' }] });
     const [respostaErro, setRespostaErro] = useState([]);
     const [respostaOk, setRespostaOk] = useState(false);
     const [enviar, setEnviar] = useState(false);
     const navigate = useNavigate();
     const [sala, setSala] = useState(null);
-
     const [opcoesAla, setOpcoesAla] = useState(['Selecione']);
     const [opcoesAndar, setOpcoesAndar] = useState(['Selecione']);
     const opcoesSituacao = ['Selecione', 'A', 'I', 'M'];
@@ -64,6 +62,13 @@ const CadastroSala = () => {
             .then((response) => {
                 if (response.status === 200) {
                     setSala(response.data[0]);
+                    setForm({
+                        nomeSala: response.data[0].nomeSala,
+                        ala: response.data[0].ala,
+                        andar: response.data[0].andar,
+                        situacao: response.data[0].situacao,
+                        recursos: response.data[0].recursos,
+                    });
                 } else {
                     console.error(`Falha ao obter sala: ${response.status}`);
                 }
@@ -71,12 +76,12 @@ const CadastroSala = () => {
             .catch((error) => {
                 console.error('Erro ao obter sala:', error.message);
             });
-    }
+    };
 
     const salvarSala = () => {
         axiosWithToken.post(`http://localhost:8080/sala/salvar`, form)
             .then((response) => {
-                if (response.status == 200) {
+                if (response.status === 200) {
                     setRespostaOk(true);
                     navigate("/listagem-sala");
                 }
@@ -84,10 +89,8 @@ const CadastroSala = () => {
             .catch((error) => {
                 setRespostaErro(error.response.data['errors']);
                 console.log(respostaErro);
-
-            })
-
-    }
+            });
+    };
 
     const handleForm = (name, value) => {
         setForm({ ...form, [name]: value });
@@ -115,60 +118,54 @@ const CadastroSala = () => {
                 ...{ idSala: idSala },
                 ...form,
             });
-       }
+        }
 
-        console.log('form');
-        console.log(JSON.stringify(form));
-        salvarSala()
+        salvarSala();
         setEnviar(true);
+    };
 
-    }
+    return (
+        <Layout>
+            <div className='p-4'>
+                <form>
+                    <h2 className='p-4'>{idSala != null ? "Edição de Sala" : "Cadastro de Sala"}</h2>
 
-    useEffect(() => {
-        if (Object.keys(form).length > 0) {
-            salvarSala();
-        }
-        if (idSala != null) {
-            getSala(idSala);
-        }
-    }, [enviar, idSala]);
-
-
-
-    return (<Layout>
-        <div className='p-4'>
-            <form>
-
-                <h2 className='p-4'>{idSala != null ? "Edição de Sala" : "Cadastro de Sala"}</h2>
-
-                <div className='p-4 grid grid-cols-2 gap-8'>
-                    <div className='m-4'>
-                        <Label text="Nome da Sala" />
-                        <Input type='text' placeholder='' value={sala != null && form.nomeSala == null ? sala.nomeSala : form.nomeSala} onChange={(e) => handleForm('nomeSala', e.target.value)} />
-                    </div>
-                    <div className='m-4'>
-                            <Label text="Ala" />
-                            <Combobox opcoes={opcoesAla} value={form.ala} onChange={(e) => handleForm('ala', e.target.value)} />
-                    </div>
-                    <div className='m-4'>
-                            <Label text="Andar" />
-                            <Combobox opcoes={opcoesAndar} value={form.andar} onChange={(e) => handleForm('andar', e.target.value)} />
+                    <div className='p-4 grid grid-cols-4 gap-4'>
+                        <div className='col-span-4'>
+                            <Label text="Nome da Sala" />
+                            <Input type='text' value={form.nomeSala} onChange={(e) => handleForm('nomeSala', e.target.value)} />
                         </div>
-                        <div className='m-4'>
+                        <div className='col-span-1'>
+                            <Label text="Ala" />
+                            <Combobox opcoes={opcoesAla} opcoesDisplay={opcoesAla} value={form.ala} onChange={(e) => handleForm('ala', e.target.value)} />
+                        </div>
+                        <div className='col-span-1'>
+                            <Label text="Andar" />
+                            <Combobox opcoes={opcoesAndar} opcoesDisplay={opcoesAndar} value={form.andar} onChange={(e) => handleForm('andar', e.target.value)} />
+                        </div>
+                        <div className='col-span-2'>
                             <Label text="Situação" />
-                            <Combobox opcoes={opcoesSituacao} value={form.situacao} onChange={(e) => handleForm('situacao', e.target.value)} />
-                        </div>               
-                </div>
+                            <Combobox opcoes={opcoesSituacao} opcoesDisplay={['Selecione', 'A', 'I', 'M']} value={form.situacao} onChange={(e) => handleForm('situacao', e.target.value)} />
+                        </div>
+                    </div>
 
-                <div className='p-4'>
+                    <div className='p-4'>
                         <h3>Recursos</h3>
-                        {form.recursos.map((recurso, index) => (
-                            <div key={index} className='flex gap-4 items-center'>
-                                <Input type='text' placeholder='Nome' value={recurso.nomeRecurso} onChange={(e) => handleRecursoChange(index, 'nomeRecurso', e.target.value)} />
-                                <Input type='text' placeholder='Descrição' value={recurso.descricaoRecurso} onChange={(e) => handleRecursoChange(index, 'descricaoRecurso', e.target.value)} />
-                                <Button onClick={() => removeRecurso(index)} text="Excluir" />
-                            </div>
-                        ))}
+                        <div className='grid grid-cols-3 gap-4'>
+                            {form.recursos.map((recurso, index) => (
+                                <div key={index} className='flex col-span-3 gap-4 items-center'>
+                                    <div className='col-span-1'>
+                                        <Input type='text' placeholder='Nome' value={recurso.nomeRecurso} onChange={(e) => handleRecursoChange(index, 'nomeRecurso', e.target.value)} />
+                                    </div>
+                                    <div className='col-span-2'>
+                                        <Input type='text' placeholder='Descrição' value={recurso.descricaoRecurso} onChange={(e) => handleRecursoChange(index, 'descricaoRecurso', e.target.value)} />
+                                    </div>
+                                    <div className='col-span-1'>
+                                        <Button onClick={() => removeRecurso(index)} text="Excluir" />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                         <Button onClick={addRecurso} text="Adicionar Recurso" />
                     </div>
 

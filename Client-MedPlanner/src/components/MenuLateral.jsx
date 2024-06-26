@@ -57,18 +57,6 @@ const MenuLateral = () => {
                     title: 'Listar Especialidade',
                     icon: <FaUsers />,
                     link: '/listagem-especialidade',
-                },
-                {
-                    id: 'lista_de_pacientes_menu',
-                    title: 'Cadastrar Sala',
-                    icon: <FaUsers />,
-                    link: '/cadastro-sala',
-                },
-                {
-                    id: 'lista_de_pacientes_menu',
-                    title: 'Listar Sala',
-                    icon: <FaUsers />,
-                    link: '/listagem-sala',
                 }
 
 
