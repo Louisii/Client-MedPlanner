@@ -1,10 +1,8 @@
 
-import logo from '../assets/logoMedPlanner.png'
-import { FaUserMd, FaUserAlt, FaStethoscope, FaCalendarAlt, FaFileAlt, FaEllipsisV, FaChevronDown, FaChevronUp, FaCalendarPlus, FaUsers, FaUserPlus, FaListAlt, FaSignOutAlt, FaHome, FaUser, FaList, FaBook, FaHospital, FaCalendar } from 'react-icons/fa';
-import Button from '../components/Button';
-import LinkStyled from '../components/LinkStyled';
-import SubmenuItem from './SubmenuItem';
+import { FaChevronDown, FaListAlt, FaSignOutAlt, FaStethoscope, FaUserPlus, FaUsers } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
+import logo from '../assets/logoMedPlanner.png';
+import SubmenuItem from './SubmenuItem';
 
 const MenuLateral = () => {
     let navigate = useNavigate();
@@ -59,7 +57,42 @@ const MenuLateral = () => {
                     title: 'Listar Especialidade',
                     icon: <FaUsers />,
                     link: '/listagem-especialidade',
+                },
+                {
+                    id: 'lista_de_pacientes_menu',
+                    title: 'Cadastrar Sala',
+                    icon: <FaUsers />,
+                    link: '/cadastro-sala',
+                },
+                {
+                    id: 'lista_de_pacientes_menu',
+                    title: 'Listar Sala',
+                    icon: <FaUsers />,
+                    link: '/listagem-sala',
                 }
+
+
+            ]
+        },
+        {
+            id: 'sala_menu',
+            title: 'Salas',
+            icon: <FaStethoscope />,
+            link: '/listagem-sala',
+            itens: [
+                {
+                    id: 'cadastro_sala_menu',
+                    title: 'Cadastrar Sala',
+                    icon: <FaListAlt />,
+                    link: '/cadastro-sala',
+                },
+                {
+                    id: 'lista_de_salas_menu',
+                    title: 'Listar Sala',
+                    icon: <FaListAlt />,
+                    link: '/listagem-sala',
+                }
+
 
             ]
         },
