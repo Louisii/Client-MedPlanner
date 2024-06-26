@@ -9,7 +9,7 @@ import axiosWithToken from '../lib/RequestInterceptor';
 
 const CadastroSala = () => {
     const { idSala } = useParams();
-    const [form, setForm] = useState({ nomeSala: '', ala: '', andar: '', situacao: 'Selecione', recursos: [{ nomeRecurso: '', descricaoRecurso: '' }] });
+    const [form, setForm] = useState({ nomeSala: '', ala: '', andar: '', situacao: 'Selecione', recursos: [] });
     const [respostaErro, setRespostaErro] = useState([]);
     const [respostaOk, setRespostaOk] = useState(false);
     const [enviar, setEnviar] = useState(false);
@@ -43,7 +43,7 @@ const CadastroSala = () => {
     };
 
     const fetchOpcoesAndar = () => {
-        axiosWithToken.get(`http://localhost:8080/ala/buscar`)
+        axiosWithToken.get(`http://localhost:8080/andar/buscar`)
             .then((response) => {
                 if (response.status === 200) {
                     const andares = response.data.map((andar) => andar.numeroAndar);
@@ -104,7 +104,8 @@ const CadastroSala = () => {
     };
 
     const addRecurso = () => {
-        setForm({ ...form, recursos: [...form.recursos, { nomeRecurso: '', descricaoRecurso: '' }] });
+        const novoRecurso = { nomeRecurso: form.nomeRecursoTemp || '', descricaoRecurso: form.descricaoRecursoTemp || '' };
+        setForm({ ...form, recursos: [...form.recursos, novoRecurso], nomeRecursoTemp: '', descricaoRecursoTemp: '' });
     };
 
     const removeRecurso = (index) => {
@@ -127,9 +128,8 @@ const CadastroSala = () => {
     return (
         <Layout>
             <div className='p-4'>
-                <form>
-                    <h2 className='p-4'>{idSala != null ? "Edição de Sala" : "Cadastro de Sala"}</h2>
-
+                <h2 className='p-4'>{idSala != null ? "Edição de Sala" : "Cadastro de Sala"}</h2>
+                <div className='overflow-y-auto max-h-[calc(100vh-10rem)]'>
                     <div className='p-4 grid grid-cols-4 gap-4'>
                         <div className='col-span-4'>
                             <Label text="Nome da Sala" />
@@ -151,22 +151,30 @@ const CadastroSala = () => {
 
                     <div className='p-4'>
                         <h3>Recursos</h3>
-                        <div className='grid grid-cols-3 gap-4'>
+                        <div className='grid grid-cols-3 gap-4 mb-4'>
+                            <div className='col-span-1'>
+                                <Label text="Nome" />
+                                <Input type='text' placeholder='Nome' value={form.nomeRecursoTemp || ''} onChange={(e) => handleForm('nomeRecursoTemp', e.target.value)} />
+                            </div>
+                            <div className='col-span-2'>
+                                <Label text="Descrição" />
+                                <Input type='text' placeholder='Descrição' value={form.descricaoRecursoTemp || ''} onChange={(e) => handleForm('descricaoRecursoTemp', e.target.value)} />
+                            </div>
+                            <div className='col-span-1 flex items-end'>
+                                <Button onClick={addRecurso} text="+" />
+                            </div>
+                        </div>
+                        <div className='grid grid-cols-1 gap-4'>
                             {form.recursos.map((recurso, index) => (
-                                <div key={index} className='flex col-span-3 gap-4 items-center'>
-                                    <div className='col-span-1'>
-                                        <Input type='text' placeholder='Nome' value={recurso.nomeRecurso} onChange={(e) => handleRecursoChange(index, 'nomeRecurso', e.target.value)} />
+                                <div key={index} className='flex items-center justify-between bg-gray-100 p-2 rounded w-full'>
+                                    <div className='flex-1'>
+                                        <p><strong>Nome:</strong> {recurso.nomeRecurso}</p>
+                                        <p><strong>Descrição:</strong> {recurso.descricaoRecurso}</p>
                                     </div>
-                                    <div className='col-span-2'>
-                                        <Input type='text' placeholder='Descrição' value={recurso.descricaoRecurso} onChange={(e) => handleRecursoChange(index, 'descricaoRecurso', e.target.value)} />
-                                    </div>
-                                    <div className='col-span-1'>
-                                        <Button onClick={() => removeRecurso(index)} text="Excluir" />
-                                    </div>
+                                    <Button onClick={() => removeRecurso(index)} text="Excluir" />
                                 </div>
                             ))}
                         </div>
-                        <Button onClick={addRecurso} text="Adicionar Recurso" />
                     </div>
 
                     {!respostaOk && (respostaErro == undefined || respostaErro.length > 0) &&
@@ -174,12 +182,11 @@ const CadastroSala = () => {
                             {respostaErro.map((e) => <p key={e}>{e}</p>)}
                         </div>
                     }
-
                     <div className='flex gap-4 p-8 items-center justify-end'>
                         {idSala != null && <Button onClick={() => navigate(`/sala/${idSala}`)} text="Voltar" />}
                         <Button onClick={handleSubmit} text={idSala != null ? "Atualizar" : "Cadastrar"} />
                     </div>
-                </form>
+                </div>
             </div>
         </Layout>
     );
