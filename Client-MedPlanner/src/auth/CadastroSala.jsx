@@ -10,14 +10,14 @@ import InputDisabled from '../components/InputDisabled';
 
 const CadastroSala = () => {
     const { idSala } = useParams()
-    const [form, setForm] = useState({});
+    const [form, setForm] = useState({ nomeSala: '', ala: 'Santa Maria', andar: 2, situacao: 'Disponível', recursos: [{ nomeRecurso: '', descricaoRecurso: '' }] });
     const [respostaErro, setRespostaErro] = useState([]);
     const [respostaOk, setRespostaOk] = useState(false);
     const [enviar, setEnviar] = useState(false);
     const navigate = useNavigate();
     const [sala, setSala] = useState(null);
 
-    const opcoesSituacao = ['Selecione', 'A', 'I', 'E'];
+    const opcoesSituacao = ['Selecione', 'A', 'I', 'M'];
 
     const getSala = (idSala) => {
         axiosWithToken.get(`http://localhost:8080/sala/buscar?id=${idSala}`)
@@ -51,6 +51,22 @@ const CadastroSala = () => {
 
     const handleForm = (name, value) => {
         setForm({ ...form, [name]: value });
+    };
+
+    const handleRecursoChange = (index, name, value) => {
+        const newRecursos = form.recursos.map((recurso, i) => (
+            i === index ? { ...recurso, [name]: value } : recurso
+        ));
+        setForm({ ...form, recursos: newRecursos });
+    };
+
+    const addRecurso = () => {
+        setForm({ ...form, recursos: [...form.recursos, { nomeRecurso: '', descricaoRecurso: '' }] });
+    };
+
+    const removeRecurso = (index) => {
+        const newRecursos = form.recursos.filter((_, i) => i !== index);
+        setForm({ ...form, recursos: newRecursos });
     };
 
     const handleSubmit = () => {
@@ -89,35 +105,47 @@ const CadastroSala = () => {
                     <div className='m-4'>
                         <Label text="Nome da Sala" />
                         <Input type='text' placeholder='' value={sala != null && form.nomeSala == null ? sala.nomeSala : form.nomeSala} onChange={(e) => handleForm('nomeSala', e.target.value)} />
-                    </div>                   
-                </div>
-
-                <div className='p-4 grid grid-cols-3 gap-8'> 
+                    </div>
                     <div className='m-4'>
-                        <Label text="Situação" />
-                        {form.idUsuario != null ?
-                            <InputDisabled type='text' placeholder='' value={opcoesSituacao[2]} onChange={(e) => handleForm('situacao', e.target.value)} />
-                            :
-                            <Combobox opcoes={opcoesSituacao} opcoesDisplay={opcoesSituacao} value={sala != null ? opcoesSituacao[1] : null} onChange={(e) => handleForm('situacao', e.target.value)} />                        
-                        }
-                        
+                            <Label text="Ala" />
+                            <InputDisabled type='text' value='Santa Maria' onChange={(e) => handleForm('ala', e.target.value)} />
                     </div>
+                    <div className='m-4'>
+                            <Label text="Andar" />
+                            <InputDisabled type='text' value='2' onChange={(e) => handleForm('andar', e.target.value)} />
+                    </div>
+                    <div className='m-4'>
+                            <Label text="Situação" />
+                            <Combobox opcoes={opcoesSituacao} value={form.situacao} onChange={(e) => handleForm('situacao', e.target.value)} />
+                        </div>                
                 </div>
 
-                {!respostaOk && respostaErro == undefined || respostaErro.length > 0 ?
-                    <div className='bg-red-300 text-white rounded-md px-4 py-2 mx-8 my-2'>
-                        {respostaErro.map((e) => <p>{e}</p>)}
+                <div className='p-4'>
+                        <h3>Recursos</h3>
+                        {form.recursos.map((recurso, index) => (
+                            <div key={index} className='flex gap-4 items-center'>
+                                <Input type='text' placeholder='Nome' value={recurso.nomeRecurso} onChange={(e) => handleRecursoChange(index, 'nomeRecurso', e.target.value)} />
+                                <Input type='text' placeholder='Descrição' value={recurso.descricaoRecurso} onChange={(e) => handleRecursoChange(index, 'descricaoRecurso', e.target.value)} />
+                                <Button onClick={() => removeRecurso(index)} text="Excluir" />
+                            </div>
+                        ))}
+                        <Button onClick={addRecurso} text="Adicionar Recurso" />
                     </div>
-                    : null}
 
-                <div className='flex gap-4 p-8 items-center justify-end'>
-                    {idSala != null ? <Button onClick={() => navigate(`/sala/${idSala}`)} text="Voltar" /> : null}
-                    <Button onClick={() => handleSubmit()} text={idSala != null ? "Atualizar" : "Cadastrar"} />
-                </div>
-            </form>
-        </div>
-    </Layout>
-    )
+                    {!respostaOk && (respostaErro == undefined || respostaErro.length > 0) &&
+                        <div className='bg-red-300 text-white rounded-md px-4 py-2 mx-8 my-2'>
+                            {respostaErro.map((e) => <p key={e}>{e}</p>)}
+                        </div>
+                    }
+
+                    <div className='flex gap-4 p-8 items-center justify-end'>
+                        {idSala != null && <Button onClick={() => navigate(`/sala/${idSala}`)} text="Voltar" />}
+                        <Button onClick={handleSubmit} text={idSala != null ? "Atualizar" : "Cadastrar"} />
+                    </div>
+                </form>
+            </div>
+        </Layout>
+    );
 }
 
 export default CadastroSala
