@@ -1,6 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
+import { CustomTooltipLayout, CustomTooltipHeader, CustomTooltipContent } from '../components/CustomTooltipLayout';
 
 import {
     Scheduler,
@@ -21,13 +21,37 @@ import { useParams } from 'react-router-dom';
 import axiosWithToken from '../lib/RequestInterceptor';
 import { Typography } from '@material-tailwind/react';
 
-
 // https://devexpress.github.io/devextreme-reactive/react/scheduler/docs/guides/editing/
 
 const Agenda = () => {
-    const { profissionalId: profissionalId } = useParams();
+    const { profissionalId } = useParams();
     const [profissional, setProfissional] = useState(null);
+    const [schedulerData, setSchedulerData] = useState([]);
 
+    const getLocacoes = (profissionalId) => {
+        // axiosWithToken.get(`http://localhost:8080/locacao/buscar?id=${profissionalId}`)
+        axiosWithToken.get(`http://localhost:8080/locacao/listar`)
+            .then((response) => {
+                if (response.status === 200) {
+                    const dadosCalendario = response.data.map((l) => ({
+                        startDate: new Date(l.horaInicio),
+                        endDate: new Date(l.horaFinal),
+                        title: `${l.sala.nomeSala} - ${l.usuario.nome}`,
+                        style: {
+
+                            backgroundColor: '#FFC107',
+                        }
+                    }));
+                    setSchedulerData(dadosCalendario);
+                    // console.log(dadosCalendario)
+                } else {
+                    console.error(`Falha ao obter locacoes: ${response.status}`);
+                }
+            })
+            .catch((error) => {
+                console.error('Erro ao obter locacoes:', error.message);
+            });
+    };
 
     const getProfissional = (id) => {
         axiosWithToken.get(`http://localhost:8080/usuario/buscar?id=${id}`)
@@ -43,110 +67,97 @@ const Agenda = () => {
             });
     };
 
-
-    const currentDate = new Date().toJSON();
-
     const commitChanges = ({ added, changed, deleted }) => {
-
-
-        this.setState((state) => {
-            let { data } = state;
+        setSchedulerData((prevData) => {
+            let data = [...prevData];
             if (added) {
                 const startingAddedId = data.length > 0 ? data[data.length - 1].id + 1 : 0;
                 data = [...data, { id: startingAddedId, ...added }];
             }
             if (changed) {
-                data = data.map(appointment => (
-                    changed[appointment.id] ? { ...appointment, ...changed[appointment.id] } : appointment));
+                data = data.map((appointment) => (
+                    changed[appointment.id] ? { ...appointment, ...changed[appointment.id] } : appointment
+                ));
             }
             if (deleted !== undefined) {
-                data = data.filter(appointment => appointment.id !== deleted);
+                data = data.filter((appointment) => appointment.id !== deleted);
             }
-            return { data };
+            return data;
         });
-    }
-
+    };
 
     useEffect(() => {
+
         if (profissionalId) {
             getProfissional(profissionalId);
+            getLocacoes();
+            // getLocacoes(profissionalId);
         }
     }, [profissionalId]);
 
 
+    const Appointment = ({ children, style, ...restProps }) => (
+        <Appointments.Appointment
+            {...restProps}
+            style={{
+                ...style,
+                backgroundColor: '#5CC99B',
+                borderRadius: '8px',
+            }}
+        >
+            {children}
+        </Appointments.Appointment>
+    );
+
     return (
         <Layout>
             <div className='p-4'>
-
-                {profissional != null ? (
+                {profissional ? (
                     <div>
                         <div className='mx-4'>
-                            <p className='font-semibold text-lg' >{profissional.nome}</p>
-                            <div className='flex flex-row ' >
-                                <p className='font-semibold mr-1' >CRM: </p>
-                                <p className='' >{profissional.numCrm}</p>
-                                <p className='' >{`/${profissional.ufCrm}`}</p>
+                            <p className='font-semibold text-lg'>{profissional.nome}</p>
+                            <div className='flex flex-row'>
+                                <p className='font-semibold mr-1'>CRM: </p>
+                                <p>{profissional.numCrm}</p>
+                                <p>{`/${profissional.ufCrm}`}</p>
                             </div>
                             <div className='flex flex-row'>
                                 <p className='font-semibold mr-1'>E-mail: </p>
-                                <p className=''>{profissional.username}</p>
+                                <p>{profissional.username}</p>
                             </div>
                         </div>
 
                         <div className='overflow-y-auto max-h-[calc(100vh-10rem)] border rounded-md m-2'>
-
                             <Paper>
-                                <Scheduler
-                                    data={[]}
-                                    locale={"pt-BR"}
-                                >
-                                    <EditingState
-                                        onCommitChanges={commitChanges}
-                                    />
-                                    <IntegratedEditing />
-                                    <ViewState
-                                        defaultCurrentDate={currentDate}
-                                    // currentDate={currentDate}
-                                    // onCurrentDateChange={handleDateChange}
-                                    />
-                                    <WeekView
-                                        startDayHour={8}
-                                        endDayHour={18}
-                                        excludedDays={[0, 6]}>
-                                    </WeekView>
+                                <Scheduler data={schedulerData} locale="pt-BR">
+                                    <EditingState onCommitChanges={commitChanges} />
+                                    {/* <IntegratedEditing /> */}
+                                    <ViewState defaultCurrentDate={new Date()} />
+                                    <WeekView startDayHour={8} endDayHour={18} excludedDays={[0, 6]} />
                                     <MonthView />
-
-                                    <DayView
-                                        startDayHour={8}
-                                        endDayHour={18}
-                                    />
-
+                                    <DayView startDayHour={8} endDayHour={18} />
                                     <Toolbar />
                                     <TodayButton />
                                     <ViewSwitcher />
                                     <DateNavigator />
-                                    <Appointments />
+                                    <Appointments appointmentComponent={Appointment} />
                                     <AppointmentTooltip
                                         showCloseButton
                                         showOpenButton
+                                        layoutComponent={CustomTooltipLayout}
+                                    // headerComponent={CustomTooltipHeader}
+                                    // contentComponent={CustomTooltipContent}
                                     />
-                                    <AppointmentForm
-                                        locale={"pt-BR"}
-                                    />
-
-
+                                    <AppointmentForm overlayComponent={CustomTooltipLayout} />
                                 </Scheduler>
                             </Paper>
-
                         </div>
                     </div>
-
                 ) : (
                     <div className='w-full justify-center items-center'>
                         <Typography className='p-4 text-gray-600' variant="h6">Agenda não encontrada</Typography>
                     </div>
                 )}
-
             </div>
         </Layout>
     );
