@@ -16,7 +16,7 @@ const ListagemAlas = () => {
     }, []);
 
     const getAlas = () => {
-        axiosWithToken.get('http://localhost:8080/ala/listar')
+        axiosWithToken.get('http://localhost:8080/ala/buscar')
             .then((response) => { setAlas(response.data) })
             .catch((error) => { console.log(error) });
     };
@@ -35,7 +35,7 @@ const ListagemAlas = () => {
         if (alaToDelete) {
             axiosWithToken.delete(`http://localhost:8080/ala/deletar/${alaToDelete.idAla}`)
                 .then((response) => {
-                    console.log(response.data); 
+                    console.log(response.data);
                     getAlas();
                     closeDeleteModal();
                 })

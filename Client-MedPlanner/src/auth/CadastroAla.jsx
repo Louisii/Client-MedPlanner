@@ -22,10 +22,10 @@ const CadastroAla = () => {
     }, [alaId]);
 
     const getAla = (id) => {
-        axiosWithToken.get(`http://localhost:8080/ala/buscar?id=${id}`)
+        axiosWithToken.get(`http://localhost:8080/ala/buscar/${id}`)
             .then((response) => {
                 if (response.status === 200) {
-                    setForm(response.data[0]);
+                    setForm(response.data);
                 } else {
                     console.error(`Falha ao obter Ala: ${response.status}`);
                 }
