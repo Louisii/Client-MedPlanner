@@ -23,7 +23,7 @@ export const validateExpiredToken = (token) => {
 
 const AuthProvider = ({ children }) => {
   // State to hold the authentication token
-  const [token, setToken_] = useState(localStorage.getItem("token"));
+  const [token, setToken_] = useState(sessionStorage.getItem("token"));
 
   // Function to set the authentication token
   const setToken = (newToken) => {
@@ -33,10 +33,10 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     if(token && validateExpiredToken(token)){
       // axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-      localStorage.setItem('token',token);
+      sessionStorage.setItem('token',token);
     } else {
       // delete axios.defaults.headers.common["Authorization"];
-      localStorage.removeItem('token')
+      sessionStorage.removeItem('token')
     }
   }, [token]);
 

@@ -20,7 +20,7 @@ const DetalhesUsuario = () => {
         axiosWithToken.get(`http://localhost:8080/usuario/buscar?id=${usuarioId}`)
             .then((response) => {
                 if (response.status === 200) {
-                    setUsuario(response.data[0]);
+                    setUsuario(response.data);
                 } else {
                     console.error(`Falha ao obter usuário: ${response.status}`);
                 }

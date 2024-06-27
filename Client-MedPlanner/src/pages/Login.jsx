@@ -20,7 +20,8 @@ const Login = () => {
         try {
             await authenticate(username, password).then((response) => {
                 setToken(response.token);
-                localStorage.setItem("usuario", response.usuario);
+                sessionStorage.setItem("usuario", response.usuario);
+                sessionStorage.setItem("role", response.role);
                 navigate("/home", { replace: true });
             });
         } catch (error) {

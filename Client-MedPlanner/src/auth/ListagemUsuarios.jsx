@@ -32,11 +32,21 @@ const ListagemUsuarios = () => {
                                 <div className='m-4 p-4 grid grid-cols-2 gap-8 border border-gray-100 rounded-lg shadow-md'>
                                     <div>
                                         <h2 className='text-xl font-bold'>{u.nome}</h2>
-                                        <p>Administrador</p>
+                                        <p>{u.cargo.toLowerCase()}</p>
                                     </div>
-                                    <div className='flex items-center text-sm justify-end h-9'>
-                                        <Button onClick={() => navigate(`/usuario/${u.idUsuario}`)} text="Detalhes" />
+
+                                    <div className='flex items-center text-sm justify-end h-9 gap-2'>
+                                        {
+                                            u.cargo == "MEDICO" ? <div className='flex items-center text-sm justify-end h-9'>
+                                                <Button onClick={() => navigate(`/agenda-profissional/${u.idUsuario}`)} text="Agenda" />
+                                            </div> : null
+                                        }
+                                        <div className='flex items-center text-sm justify-end h-9'>
+                                            <Button onClick={() => navigate(`/usuario/${u.idUsuario}`)} text="Detalhes" />
+                                        </div>
                                     </div>
+
+
                                 </div>
 
                             ))}
