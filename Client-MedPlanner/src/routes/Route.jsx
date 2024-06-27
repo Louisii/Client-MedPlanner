@@ -10,12 +10,9 @@ import ListagemUsuarios from "../auth/ListagemUsuarios";
 import DetalhesUsuario from "../auth/DetalhesUsuario";
 import ListagemEspecialidades from "../auth/ListagemEspecialidade";
 import CadastroEspecialidade from "../auth/CadastroEspecialidade";
-<<<<<<< HEAD
 import CadastroAla from "../auth/CadastroAla";
-import ListagemAla from "../auth/ListagemAla";
-=======
+import ListagemAlas from "../auth/ListagemAlas";
 import Agenda from "../auth/Agenda";
->>>>>>> 49934a6eb7bdc3bb5291b609f009a2dd2a79be99
 
 const Routes = () => {
   const { token } = useAuth();
@@ -78,7 +75,7 @@ const Routes = () => {
           element: <CadastroAla />
         },
         {
-          path: "/listagem-ala",
+          path: "/listagem-alas",
           element: <ListagemAlas />
         },
         {
