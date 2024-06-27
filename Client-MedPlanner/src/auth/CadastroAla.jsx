@@ -9,7 +9,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 const CadastroAla = () => {
     const { alaId } = useParams();
     const navigate = useNavigate();
-    const [form, setForm] = useState({ nome: '', sigla: '', andar: '' });
+    const [form, setForm] = useState({ nome: '', sigla: ''});
     const [respostaErro, setRespostaErro] = useState([]);
     const [respostaOk, setRespostaOk] = useState(false);
     const [enviar, setEnviar] = useState(false);
