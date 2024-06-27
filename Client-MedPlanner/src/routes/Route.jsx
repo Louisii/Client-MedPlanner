@@ -75,6 +75,10 @@ const Routes = () => {
           element: <CadastroAla />
         },
         {
+          path: "/edicao-ala/:alaId",
+          element: <CadastroAla />
+        },
+        {
           path: "/listagem-alas",
           element: <ListagemAlas />
         },

@@ -9,12 +9,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 const CadastroAla = () => {
     const { alaId } = useParams();
     const navigate = useNavigate();
-    const [form, setForm] = useState({ nome: '', sigla: ''});
+    const [form, setForm] = useState({ nome: '', sigla: '' });
     const [respostaErro, setRespostaErro] = useState([]);
     const [respostaOk, setRespostaOk] = useState(false);
     const [enviar, setEnviar] = useState(false);
     const [ala, setAla] = useState(null);
-
 
     useEffect(() => {
         if (alaId) {
@@ -41,7 +40,7 @@ const CadastroAla = () => {
             .then((response) => {
                 if (response.status === 200) {
                     setRespostaOk(true);
-                    navigate('/listagem-ala');
+                    navigate('/listagem-alas');
                 }
             })
             .catch((error) => {
@@ -58,6 +57,10 @@ const CadastroAla = () => {
         setEnviar(true);
     };
 
+    const handleForm = (field, value) => {
+        setForm({ ...form, [field]: value });
+    };
+
     return (
         <Layout>
             <div className="p-4 my-auto">
@@ -69,7 +72,7 @@ const CadastroAla = () => {
                             <Input
                                 type="text"
                                 placeholder=""
-                                value={form.nome || (ala ? ala.nome : '')}
+                                value={form.nome}
                                 onChange={(e) => handleForm('nome', e.target.value)}
                             />
                         </div>
@@ -78,7 +81,7 @@ const CadastroAla = () => {
                             <Input
                                 type="text"
                                 placeholder=""
-                                value={form.sigla || (ala ? ala.sigla : '')}
+                                value={form.sigla}
                                 onChange={(e) => handleForm('sigla', e.target.value)}
                             />
                         </div>
@@ -92,7 +95,7 @@ const CadastroAla = () => {
                     )}
                     <div className="flex gap-4 p-8 items-center justify-end">
                         {alaId && (
-                            <Button onClick={() => navigate(`/ala/${alaId}`)} text="Voltar" />
+                            <Button onClick={() => navigate(`/listagem-alas`)} text="Voltar" />
                         )}
                         <Button onClick={handleSubmit} text={alaId ? 'Atualizar' : 'Cadastrar'} />
                     </div>

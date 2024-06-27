@@ -63,16 +63,17 @@ const MenuLateral = () => {
 
             ]
         },
-        {id: 'alas_menu',
+        {
+            id: 'alas_menu',
             title: 'Alas',
             icon: <FaUsers />,
             link: '/listagem-alas',
-            itens: [ 
+            itens: [
                 {
                     id: 'lista_de_alas_menu',
                     title: 'Cadastrar Ala',
                     icon: <FaUsers />,
-                    link: '/cadastro-alas',
+                    link: '/cadastro-ala',
                 },
                 {
                     id: 'lista_de_alas_menu',
@@ -81,7 +82,7 @@ const MenuLateral = () => {
                     link: '/listagem-alas',
                 }
             ]
-        },    
+        },
         // {
         //     id: 'ambulatorio_menu',
         //     title: 'Ambulatório',
