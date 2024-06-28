@@ -70,23 +70,23 @@ const CustomTooltipLayout = ({ appointmentMeta, onHide, visible, ...restProps })
     );
 };
 
-// // Custom Header Component
-// const CustomTooltipHeader = ({ children, appointmentData, ...restProps }) => (
-//     <div>
-//         <h3>{appointmentData ? appointmentData.title : ''}</h3>
-//         {children}
-//     </div>
-// );
+// Custom Header Component
+const CustomTooltipHeader = ({ children, appointmentData, ...restProps }) => (
+    <div>
+        <h3>{appointmentData ? appointmentData.title : ''}</h3>
+        {children}
+    </div>
+);
 
-// // Custom Content Component
-// const CustomTooltipContent = ({ children, appointmentData, ...restProps }) => (
-//     <div>
-//         <p>{appointmentData ? appointmentData.title : ''}</p>
-//         <p>{appointmentData ? appointmentData.startDate.toString() : ''}</p>
-//         <p>{appointmentData ? appointmentData.endDate.toString() : ''}</p>
-//         {children}
-//     </div>
-// );
+// Custom Content Component
+const CustomTooltipContent = ({ children, appointmentData, ...restProps }) => (
+    <div>
+        <p>{appointmentData ? appointmentData.title : ''}</p>
+        <p>{appointmentData ? appointmentData.startDate.toString() : ''}</p>
+        <p>{appointmentData ? appointmentData.endDate.toString() : ''}</p>
+        {children}
+    </div>
+);
 
-export { CustomTooltipLayout };
-// export { CustomTooltipLayout, CustomTooltipHeader, CustomTooltipContent };
+// export { CustomTooltipLayout };
+export { CustomTooltipLayout, CustomTooltipHeader, CustomTooltipContent };
