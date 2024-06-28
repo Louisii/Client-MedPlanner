@@ -9,103 +9,118 @@ import axiosWithToken from '../lib/RequestInterceptor';
 
 const CadastroSala = () => {
     const { idSala } = useParams();
-    const [form, setForm] = useState({ nomeSala: '', ala: '', andar: '', situacao: 'Selecione', recursos: [] });
+    const [form, setForm] = useState({
+        nomeSala: '',
+        ala: { idAla: '' },
+        andar: '',
+        situacao: 'Selecione',
+        recursos: []
+    });
+    const [recursoForm, setRecursoForm] = useState({
+        nomeRecurso: '',
+        descricao: ''
+    });
     const [respostaErro, setRespostaErro] = useState([]);
     const [respostaOk, setRespostaOk] = useState(false);
     const [enviar, setEnviar] = useState(false);
     const navigate = useNavigate();
-    const [sala, setSala] = useState(null);
-    const [opcoesAla, setOpcoesAla] = useState(['Selecione']);
-    const [opcoesAndar, setOpcoesAndar] = useState(['Selecione']);
-    const opcoesSituacao = ['Selecione', 'A', 'I', 'M'];
+    const [opcoesAla, setOpcoesAla] = useState([{ value: '', label: 'Selecione' }]);
+    const opcoesSituacao = [
+        { value: 'Selecione', label: 'Selecione' },
+        { value: 'A', label: 'Ativo' },
+        { value: 'I', label: 'Inativo' },
+        { value: 'M', label: 'Manutenção' }
+    ];
 
     useEffect(() => {
         if (idSala) {
             getSala(idSala);
         }
         fetchOpcoesAla();
-        fetchOpcoesAndar();
     }, [idSala]);
 
-    const fetchOpcoesAla = () => {
-        axiosWithToken.get(`http://localhost:8080/ala/buscar`)
-            .then((response) => {
-                if (response.status === 200) {
-                    const alas = response.data.map((ala) => ala.nomeAla);
-                    setOpcoesAla(['Selecione', ...alas]);
-                } else {
-                    console.error(`Falha ao obter alas: ${response.status}`);
-                }
-            })
-            .catch((error) => {
-                console.error('Erro ao obter alas:', error.message);
-            });
+    useEffect(() => {
+        if (enviar) {
+            salvarSala();
+        }
+    }, [enviar]);
+
+    const fetchOpcoesAla = async () => {
+        try {
+            const response = await axiosWithToken.get(`http://localhost:8080/ala/buscar`);
+            if (response.status === 200) {
+                const alas = response.data.map((ala) => ({ value: ala.idAla, label: ala.nome }));
+                setOpcoesAla([{ value: '', label: 'Selecione' }, ...alas]);
+            } else {
+                console.error(`Falha ao obter alas: ${response.status}`);
+            }
+        } catch (error) {
+            console.error('Erro ao obter alas:', error.message);
+        }
     };
 
-    const fetchOpcoesAndar = () => {
-        axiosWithToken.get(`http://localhost:8080/andar/buscar`)
-            .then((response) => {
-                if (response.status === 200) {
-                    const andares = response.data.map((andar) => andar.numeroAndar);
-                    setOpcoesAndar(['Selecione', ...andares]);
-                } else {
-                    console.error(`Falha ao obter andares: ${response.status}`);
-                }
-            })
-            .catch((error) => {
-                console.error('Erro ao obter andares:', error.message);
-            });
+    const getSala = async (idSala) => {
+        try {
+            const response = await axiosWithToken.get(`http://localhost:8080/sala/buscar?id=${idSala}`);
+            if (response.status === 200 && response.data.length > 0) {
+                const sala = response.data[0];
+                setForm({
+                    nomeSala: sala.nomeSala,
+                    ala: sala.ala || { idAla: '' },
+                    andar: sala.andar,
+                    situacao: sala.situacao,
+                    recursos: sala.recursos || [],
+                });
+            } else {
+                console.error(`Falha ao obter sala: ${response.status}`);
+            }
+        } catch (error) {
+            console.error('Erro ao obter sala:', error.message);
+        }
     };
 
-    const getSala = (idSala) => {
-        axiosWithToken.get(`http://localhost:8080/sala/buscar?id=${idSala}`)
-            .then((response) => {
-                if (response.status === 200) {
-                    setSala(response.data[0]);
-                    setForm({
-                        nomeSala: response.data[0].nomeSala,
-                        ala: response.data[0].ala,
-                        andar: response.data[0].andar,
-                        situacao: response.data[0].situacao,
-                        recursos: response.data[0].recursos,
-                    });
-                } else {
-                    console.error(`Falha ao obter sala: ${response.status}`);
-                }
-            })
-            .catch((error) => {
-                console.error('Erro ao obter sala:', error.message);
-            });
-    };
-
-    const salvarSala = () => {
-        axiosWithToken.post(`http://localhost:8080/sala/salvar`, form)
-            .then((response) => {
-                if (response.status === 200) {
-                    setRespostaOk(true);
-                    navigate("/listagem-sala");
-                }
-            })
-            .catch((error) => {
-                setRespostaErro(error.response.data['errors']);
-                console.log(respostaErro);
-            });
+    const salvarSala = async () => {
+      
+        const payload = {
+            ...form,
+            ala: { idAla: form.ala.idAla }, // Certifica-se que 'ala' seja um objeto com a chave idAla
+        };
+        console.log(payload)
+        try {
+            const response = await axiosWithToken.post(`http://localhost:8080/sala/salvar`, payload);
+            if (response.status === 200) {
+                setRespostaOk(true);
+                navigate("/listagem-sala");
+            }
+        } catch (error) {
+            if (error.response) {
+                setRespostaErro(error.response.data.errors || ['Erro desconhecido']);
+                console.log(error.response.data);
+            } else {
+                setRespostaErro(['Erro ao conectar ao servidor']);
+                console.log(error.message);
+            }
+        } finally {
+            setEnviar(false); // Reset enviar to false after the save
+        }
     };
 
     const handleForm = (name, value) => {
-        setForm({ ...form, [name]: value });
+        if (name === 'ala') {
+            setForm({ ...form, [name]: { idAla: value } });
+        } else {
+            setForm({ ...form, [name]: value });
+        }
     };
 
-    const handleRecursoChange = (index, name, value) => {
-        const newRecursos = form.recursos.map((recurso, i) => (
-            i === index ? { ...recurso, [name]: value } : recurso
-        ));
-        setForm({ ...form, recursos: newRecursos });
+    const handleRecursoChange = (name, value) => {
+        setRecursoForm({ ...recursoForm, [name]: value });
     };
 
     const addRecurso = () => {
-        const novoRecurso = { nomeRecurso: form.nomeRecursoTemp || '', descricaoRecurso: form.descricaoRecursoTemp || '' };
-        setForm({ ...form, recursos: [...form.recursos, novoRecurso], nomeRecursoTemp: '', descricaoRecursoTemp: '' });
+        const novoRecurso = { ...recursoForm };
+        setForm({ ...form, recursos: [...form.recursos, novoRecurso] });
+        setRecursoForm({ nomeRecurso: '', descricao: '' });
     };
 
     const removeRecurso = (index) => {
@@ -115,13 +130,11 @@ const CadastroSala = () => {
 
     const handleSubmit = () => {
         if (idSala != null) {
-            setForm({
-                ...{ idSala: idSala },
-                ...form,
-            });
+            setForm((prevForm) => ({
+                ...prevForm,
+                idSala: idSala,
+            }));
         }
-
-        salvarSala();
         setEnviar(true);
     };
 
@@ -137,15 +150,23 @@ const CadastroSala = () => {
                         </div>
                         <div className='col-span-1'>
                             <Label text="Ala" />
-                            <Combobox opcoes={opcoesAla} opcoesDisplay={opcoesAla} value={form.ala} onChange={(e) => handleForm('ala', e.target.value)} />
+                            <Combobox
+                                opcoes={opcoesAla}
+                                value={form.ala.idAla}
+                                onChange={(value) => handleForm('ala', value)}
+                            />
                         </div>
                         <div className='col-span-1'>
                             <Label text="Andar" />
-                            <Combobox opcoes={opcoesAndar} opcoesDisplay={opcoesAndar} value={form.andar} onChange={(e) => handleForm('andar', e.target.value)} />
+                            <Input type='number' value={form.andar} onChange={(e) => handleForm('andar', e.target.value)} />
                         </div>
                         <div className='col-span-2'>
                             <Label text="Situação" />
-                            <Combobox opcoes={opcoesSituacao} opcoesDisplay={['Selecione', 'A', 'I', 'M']} value={form.situacao} onChange={(e) => handleForm('situacao', e.target.value)} />
+                            <Combobox
+                                opcoes={opcoesSituacao}
+                                value={form.situacao}
+                                onChange={(value) => handleForm('situacao', value)}
+                            />
                         </div>
                     </div>
 
@@ -154,22 +175,32 @@ const CadastroSala = () => {
                         <div className='grid grid-cols-3 gap-4 mb-4'>
                             <div className='col-span-1'>
                                 <Label text="Nome" />
-                                <Input type='text' placeholder='Nome' value={form.nomeRecursoTemp || ''} onChange={(e) => handleForm('nomeRecursoTemp', e.target.value)} />
+                                <Input
+                                    type='text'
+                                    placeholder='Nome'
+                                    value={recursoForm.nomeRecurso}
+                                    onChange={(e) => handleRecursoChange('nomeRecurso', e.target.value)}
+                                />
                             </div>
                             <div className='col-span-2'>
                                 <Label text="Descrição" />
-                                <Input type='text' placeholder='Descrição' value={form.descricaoRecursoTemp || ''} onChange={(e) => handleForm('descricaoRecursoTemp', e.target.value)} />
+                                <Input
+                                    type='text'
+                                    placeholder='Descrição'
+                                    value={recursoForm.descricao}
+                                    onChange={(e) => handleRecursoChange('descricao', e.target.value)}
+                                />
                             </div>
                             <div className='col-span-1 flex items-end'>
                                 <Button onClick={addRecurso} text="+" />
                             </div>
                         </div>
                         <div className='grid grid-cols-1 gap-4'>
-                            {form.recursos.map((recurso, index) => (
+                            {Array.isArray(form.recursos) && form.recursos.map((recurso, index) => (
                                 <div key={index} className='flex items-center justify-between bg-gray-100 p-2 rounded w-full'>
                                     <div className='flex-1'>
                                         <p><strong>Nome:</strong> {recurso.nomeRecurso}</p>
-                                        <p><strong>Descrição:</strong> {recurso.descricaoRecurso}</p>
+                                        <p><strong>Descrição:</strong> {recurso.descricao}</p>
                                     </div>
                                     <Button onClick={() => removeRecurso(index)} text="Excluir" />
                                 </div>

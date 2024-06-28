@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
-import Combobox from '../components/Combobox';
 import ConfirmDeleteModal from '../components/ConfirmDeleteModal';
 import Layout from '../components/Layout';
 import axiosWithToken from '../lib/RequestInterceptor';
@@ -29,7 +28,7 @@ const ListagemSala = () => {
         axiosWithToken.get('http://localhost:8080/ala/buscar')
             .then((response) => {
                 if (response.status === 200) {
-                    const alas = response.data.map((ala) => ala.nomeAla);
+                    const alas = response.data.map((ala) => ({ value: ala.idAla, label: ala.nome }));
                     setOpcoesAla(['Selecione', ...alas]);
                 } else {
                     console.error(`Falha ao obter alas: ${response.status}`);
@@ -72,7 +71,11 @@ const ListagemSala = () => {
                     <div className='flex items-center space-x-4'>
                         <div className='flex items-center'>
                             <label className='mr-2'>Filtrar por ala:</label>
-                            <Combobox opcoes={opcoesAla} opcoesDisplay={opcoesAla} value={filterAla} onChange={(e) => setFilterAla(e.target.value)} />
+                            <select value={filterAla} onChange={(e) => setFilterAla(e.target.value)}>
+                                {opcoesAla.map((ala, index) => (
+                                    <option key={index} value={ala.value}>{ala.label}</option>
+                                ))}
+                            </select>
                         </div>
                         <Button onClick={() => navigate('/cadastro-sala')} text="Nova Sala" />
                     </div>
@@ -80,12 +83,12 @@ const ListagemSala = () => {
                 
                 {salas.length > 0 ? (
                     <div className='overflow-y-auto max-h-[calc(100vh-10rem)]'>
-                        {salas.filter(sala => filterAla === 'Selecione' || sala.ala === filterAla).map((sala) => (
+                        {salas.filter(sala => filterAla === 'Selecione' || sala.ala.idAla === parseInt(filterAla)).map((sala) => (
                             <div key={sala.idSala} className='m-4 p-4 border border-gray-100 rounded-lg shadow-md'>
                                 <div className='grid grid-cols-1 md:grid-cols-2'>
                                     <div>
                                         <h2 className='text-lg font-bold'>Sala {sala.idSala}</h2>
-                                        <p><strong>Ala:</strong> {sala.ala}</p>
+                                        <p><strong>Ala:</strong> {sala.ala.nome}</p>
                                         <p><strong>Andar:</strong> {sala.andar}</p>
                                         <p><strong>Recursos:</strong></p>
                                         <ul>
