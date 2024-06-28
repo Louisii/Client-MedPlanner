@@ -1,17 +1,21 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import Agenda from "../auth/Agenda";
+import CadastroEspecialidade from "../auth/CadastroEspecialidade";
+import CadastroSala from "../auth/CadastroSala";
+import CadastroUsuario from "../auth/CadastroUsuario";
+import DetalhesUsuario from "../auth/DetalhesUsuario";
+import Home from "../auth/Home";
+import ListagemEspecialidades from "../auth/ListagemEspecialidade";
+import ListagemSala from "../auth/ListagemSalas";
+import ListagemUsuarios from "../auth/ListagemUsuarios";
 import { useAuth } from "../lib/AuthProvider";
+import Login from "../pages/Login";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { PublicRoute } from "./PublicRoute";
-import Home from "../auth/Home";
-import Login from "../pages/Login";
 import Signup from "../pages/Signup";
-import CadastroUsuario from "../auth/CadastroUsuario";
-import ListagemUsuarios from "../auth/ListagemUsuarios";
-import DetalhesUsuario from "../auth/DetalhesUsuario";
-import ListagemEspecialidades from "../auth/ListagemEspecialidade";
-import CadastroEspecialidade from "../auth/CadastroEspecialidade";
-import Agenda from "../auth/Agenda";
 import Relatorios from "../auth/Relatorios";
+import CadastroAla from "../auth/CadastroAla";
+import ListagemAlas from "../auth/ListagemAlas";
 
 const Routes = () => {
   const { token } = useAuth();
@@ -66,11 +70,36 @@ const Routes = () => {
           element: <ListagemEspecialidades />
         },
         {
+          path: "/cadastro-sala",
+          element: <CadastroSala />
+        },
+        {
+          path: "/listagem-sala",
+          element: <ListagemSala />
+        },
+        {
           path: "/edicao-especialidade/:especialidadeId",
           element: <CadastroEspecialidade />
         },
+
         {
-          path: "/agenda",
+          path: "/edicao-sala/:idSala",
+          element: <CadastroSala />
+        },
+        {
+          path: "/cadastro-ala/",
+          element: <CadastroAla />
+        },
+        {
+          path: "/edicao-ala/:alaId",
+          element: <CadastroAla />
+        },
+        {
+          path: "/listagem-alas",
+          element: <ListagemAlas />
+        },
+        {
+          path: "/agenda-profissional/:profissionalId",
           element: <Agenda />
         },
         {

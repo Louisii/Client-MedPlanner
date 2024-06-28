@@ -46,16 +46,12 @@ const Relatorios = () => {
         setForm({ ...form, [name]: value });
     };
 
-        const handleSubmit = () => {
-        if (form.sala) {
-            setForm({ ...form, idEspecialidade: especialidadeId });
+    const handleSubmit = () => {
+        if (tipo === 'sala') {
             gerarRelatorioSala();
-        }
-        if (form.sala) {
-            setForm({ ...form, idEspecialidade: especialidadeId });
+        } else if (tipo === 'medico') {
             gerarRelatorioMedico();
         }
-        setEnviar(true);
     };
 
     return (
@@ -64,7 +60,6 @@ const Relatorios = () => {
                 <form>
                     <h2 className="p-4">{'Relatórios'}</h2>
                     { tipo != "diario" ?
-                    <div>
                     <div className="p-4 grid grid-cols-2 gap-8">
                         <div className="m-4">
                             {tipo == "sala" ?
@@ -83,9 +78,7 @@ const Relatorios = () => {
                                 :
                                 null
                             }
-                        </div>
-                    </div>
-                        <div className="p-4 grid grid-cols-2 gap-8">
+
                             <div className="m-4">
                                 <Label text="Data inicial" />
                                 <Input
@@ -105,7 +98,7 @@ const Relatorios = () => {
                                 />
                             </div>
                         </div>
-                    </div>
+                    </div>       
                     : null
                     }
                     {(!respostaOk && respostaErro.length > 0) && (

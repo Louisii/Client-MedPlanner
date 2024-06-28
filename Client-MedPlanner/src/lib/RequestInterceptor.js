@@ -2,7 +2,7 @@ import axios from "axios";
 
 // interceptador de requisições. Utilizado para adicionar token para as requisições
 
-const token = localStorage.getItem("token");
+const token = sessionStorage.getItem("token");
 
 const axiosWithToken = axios.create();
 axiosWithToken.interceptors.request.use(
