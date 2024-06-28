@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
-import { CustomTooltipLayout, CustomTooltipHeader, CustomTooltipContent } from '../components/CustomTooltipLayout';
-
+import { CustomTooltipLayout } from '../components/CustomTooltipLayout';
 import {
     Scheduler,
     Appointments,
@@ -21,15 +20,12 @@ import { useParams } from 'react-router-dom';
 import axiosWithToken from '../lib/RequestInterceptor';
 import { Typography } from '@material-tailwind/react';
 
-// https://devexpress.github.io/devextreme-reactive/react/scheduler/docs/guides/editing/
-
 const Agenda = () => {
     const { profissionalId } = useParams();
     const [profissional, setProfissional] = useState(null);
     const [schedulerData, setSchedulerData] = useState([]);
 
-    const getLocacoes = (profissionalId) => {
-        // axiosWithToken.get(`http://localhost:8080/locacao/buscar?id=${profissionalId}`)
+    const getLocacoes = () => {
         axiosWithToken.get(`http://localhost:8080/locacao/listar`)
             .then((response) => {
                 if (response.status === 200) {
@@ -38,12 +34,10 @@ const Agenda = () => {
                         endDate: new Date(l.horaFinal),
                         title: `${l.sala.nomeSala} - ${l.usuario.nome}`,
                         style: {
-
                             backgroundColor: '#FFC107',
                         }
                     }));
                     setSchedulerData(dadosCalendario);
-                    // console.log(dadosCalendario)
                 } else {
                     console.error(`Falha ao obter locacoes: ${response.status}`);
                 }
@@ -87,14 +81,11 @@ const Agenda = () => {
     };
 
     useEffect(() => {
-
         if (profissionalId) {
             getProfissional(profissionalId);
             getLocacoes();
-            // getLocacoes(profissionalId);
         }
     }, [profissionalId]);
-
 
     const Appointment = ({ children, style, ...restProps }) => (
         <Appointments.Appointment
@@ -131,11 +122,11 @@ const Agenda = () => {
                             <Paper>
                                 <Scheduler data={schedulerData} locale="pt-BR">
                                     <EditingState onCommitChanges={commitChanges} />
-                                    {/* <IntegratedEditing /> */}
+                                    <IntegratedEditing />
                                     <ViewState defaultCurrentDate={new Date()} />
-                                    <WeekView startDayHour={8} endDayHour={18} excludedDays={[0, 6]} />
+                                    <WeekView startDayHour={6} endDayHour={23} excludedDays={[0]} />
                                     <MonthView />
-                                    <DayView startDayHour={8} endDayHour={18} />
+                                    <DayView startDayHour={6} endDayHour={23} />
                                     <Toolbar />
                                     <TodayButton />
                                     <ViewSwitcher />
@@ -145,8 +136,6 @@ const Agenda = () => {
                                         showCloseButton
                                         showOpenButton
                                         layoutComponent={CustomTooltipLayout}
-                                    // headerComponent={CustomTooltipHeader}
-                                    // contentComponent={CustomTooltipContent}
                                     />
                                     <AppointmentForm overlayComponent={CustomTooltipLayout} />
                                 </Scheduler>
