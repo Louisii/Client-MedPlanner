@@ -9,8 +9,12 @@ import { format } from 'date-fns'; // Importando a função format do date-fns
 
 const CustomTooltipLayout = ({ appointmentMeta, onHide, visible, profissional, ...restProps }) => {
     const initialTitle = appointmentMeta?.data?.title || '';
-    const initialStartDate = appointmentMeta?.data?.startDate ? format(new Date(appointmentMeta.data.startDate), 'HH:mm dd/MM/yyyy') : '';
-    const initialEndDate = appointmentMeta?.data?.endDate ? format(new Date(appointmentMeta.data.endDate), 'HH:mm dd/MM/yyyy') : '';
+    const initialStartDate = appointmentMeta?.data?.startDate
+        ? format(new Date(appointmentMeta.data.startDate), 'yyyy-MM-dd\'T\'HH:mm')
+        : '';
+    const initialEndDate = appointmentMeta?.data?.endDate
+        ? format(new Date(appointmentMeta.data.endDate), 'yyyy-MM-dd\'T\'HH:mm')
+        : '';
     const initialSelectedSala = null;
     const initialSelectedAla = '';
 
@@ -93,7 +97,7 @@ const CustomTooltipLayout = ({ appointmentMeta, onHide, visible, profissional, .
                     <div className='w-80'>
                         <Label text={'Hora início'} />
                         <Input
-                            type='text'
+                            type='datetime-local'
                             placeholder='Hora início'
                             value={startDate}
                             onChange={(e) => setStartDate(e.target.value)}
@@ -102,12 +106,13 @@ const CustomTooltipLayout = ({ appointmentMeta, onHide, visible, profissional, .
                     <div className='w-80'>
                         <Label text={'Hora fim'} />
                         <Input
-                            type='text'
+                            type='datetime-local'
                             placeholder='Hora fim'
                             value={endDate}
                             onChange={(e) => setEndDate(e.target.value)}
                         />
                     </div>
+
                 </div>
             </DialogContent>
             <DialogActions>
