@@ -11,7 +11,6 @@ import {
     MonthView,
     DayView,
     AppointmentTooltip,
-    AppointmentForm,
     TodayButton,
 } from '@devexpress/dx-react-scheduler-material-ui';
 import Paper from '@mui/material/Paper';
@@ -19,11 +18,13 @@ import { ViewState, EditingState, IntegratedEditing } from '@devexpress/dx-react
 import { useParams } from 'react-router-dom';
 import axiosWithToken from '../lib/RequestInterceptor';
 import { Typography } from '@material-tailwind/react';
+import Button from '../components/Button';
 
 const Agenda = () => {
     const { profissionalId } = useParams();
     const [profissional, setProfissional] = useState(null);
     const [schedulerData, setSchedulerData] = useState([]);
+    const [showCustomTooltip, setShowCustomTooltip] = useState(false); // Estado para controlar a exibição do CustomTooltipLayout
 
     const getLocacoes = () => {
         axiosWithToken.get(`http://localhost:8080/locacao/listar`)
@@ -100,21 +101,44 @@ const Agenda = () => {
         </Appointments.Appointment>
     );
 
+    const handleNovaLocacaoClick = () => {
+        setShowCustomTooltip(true); // Mostra o CustomTooltipLayout quando o botão for clicado
+    };
+
+    const handleCloseCustomTooltip = () => {
+        setShowCustomTooltip(false); // Fecha o CustomTooltipLayout
+    };
+
     return (
         <Layout>
             <div className='p-4'>
                 {profissional ? (
                     <div>
-                        <div className='mx-4'>
-                            <p className='font-semibold text-lg'>{profissional.nome}</p>
-                            <div className='flex flex-row'>
-                                <p className='font-semibold mr-1'>CRM: </p>
-                                <p>{profissional.numCrm}</p>
-                                <p>{`/${profissional.ufCrm}`}</p>
+
+                        <div className='flex flex-row justify-between'>
+                            <div className='mx-4'>
+                                <p className='font-semibold text-lg'>{profissional.nome}</p>
+                                <div className='flex flex-row'>
+                                    <p className='font-semibold mr-1'>CRM: </p>
+                                    <p>{profissional.numCrm}</p>
+                                    <p>{`/${profissional.ufCrm}`}</p>
+                                </div>
+                                <div className='flex flex-row'>
+                                    <p className='font-semibold mr-1'>E-mail: </p>
+                                    <p>{profissional.username}</p>
+                                </div>
                             </div>
-                            <div className='flex flex-row'>
-                                <p className='font-semibold mr-1'>E-mail: </p>
-                                <p>{profissional.username}</p>
+
+                            <div>
+                                <Button onClick={handleNovaLocacaoClick} text="Nova locação" />
+                                {showCustomTooltip && (
+                                    <CustomTooltipLayout
+                                        appointmentMeta={null} // Passar o que for apropriado para appointmentMeta
+                                        onHide={handleCloseCustomTooltip}
+                                        visible={showCustomTooltip}
+                                        profissional={profissional}
+                                    />
+                                )}
                             </div>
                         </div>
 
@@ -135,9 +159,10 @@ const Agenda = () => {
                                     <AppointmentTooltip
                                         showCloseButton
                                         showOpenButton
-                                        layoutComponent={(props) => <CustomTooltipLayout {...props} profissional={profissional} />}
+                                        layoutComponent={(props) => (
+                                            <CustomTooltipLayout {...props} profissional={profissional} />
+                                        )}
                                     />
-                                    <AppointmentForm overlayComponent={(props) => <CustomTooltipLayout {...props} profissional={profissional} />} />
                                 </Scheduler>
                             </Paper>
                         </div>

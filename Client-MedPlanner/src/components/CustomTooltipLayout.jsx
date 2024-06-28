@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import Button from '../components/Button';
 import Input from '../components/Input';
 import AsyncSelectorSala from './AsyncSeletorSala';
 import AsyncSelectorProfissional from './AsyncSelectorProfissional';
 import Label from './Label';
+import { format } from 'date-fns'; // Importando a função format do date-fns
 
 const CustomTooltipLayout = ({ appointmentMeta, onHide, visible, profissional, ...restProps }) => {
     const initialTitle = appointmentMeta?.data?.title || '';
-    const initialStartDate = appointmentMeta?.data?.startDate || '';
-    const initialEndDate = appointmentMeta?.data?.endDate || '';
+    const initialStartDate = appointmentMeta?.data?.startDate ? format(new Date(appointmentMeta.data.startDate), 'HH:mm dd/MM/yyyy') : '';
+    const initialEndDate = appointmentMeta?.data?.endDate ? format(new Date(appointmentMeta.data.endDate), 'HH:mm dd/MM/yyyy') : '';
     const initialSelectedSala = null;
     const initialSelectedAla = '';
 
@@ -18,6 +19,22 @@ const CustomTooltipLayout = ({ appointmentMeta, onHide, visible, profissional, .
     const [endDate, setEndDate] = useState(initialEndDate);
     const [selectedSala, setSelectedSala] = useState(initialSelectedSala);
     const [selectedAla, setSelectedAla] = useState(initialSelectedAla);
+
+    useEffect(() => {
+        setTitle(initialTitle);
+        setStartDate(initialStartDate);
+        setEndDate(initialEndDate);
+        setSelectedSala(initialSelectedSala);
+        setSelectedAla(initialSelectedAla);
+    }, [appointmentMeta]);
+
+    // Adicionando console.log para ver os props recebidos
+    useEffect(() => {
+        console.log('appointmentMeta:', appointmentMeta);
+        console.log('profissional:', profissional);
+        console.log('restProps:', restProps);
+    }, [appointmentMeta, profissional, restProps]);
+
 
     const handleCancel = () => {
         setTitle(initialTitle);
