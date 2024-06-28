@@ -135,9 +135,9 @@ const Agenda = () => {
                                     <AppointmentTooltip
                                         showCloseButton
                                         showOpenButton
-                                        layoutComponent={CustomTooltipLayout}
+                                        layoutComponent={(props) => <CustomTooltipLayout {...props} profissional={profissional} />}
                                     />
-                                    <AppointmentForm overlayComponent={CustomTooltipLayout} />
+                                    <AppointmentForm overlayComponent={(props) => <CustomTooltipLayout {...props} profissional={profissional} />} />
                                 </Scheduler>
                             </Paper>
                         </div>

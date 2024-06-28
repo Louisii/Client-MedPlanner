@@ -43,7 +43,7 @@ const AsyncSelectorSala = ({ onSelectionChange }) => {
 
     return (
         <AsyncSelect
-            className="h-[40px] m-1 w-full appearance-none border rounded"
+            className="h-[40px] m-1 w-full appearance-none border rounded shadow"
             loadOptions={getSalas}
             onInputChange={handleChangeFiltroSala}
             onChange={handleSelectionChange}
