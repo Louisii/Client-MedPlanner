@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
-import { CustomTooltipLayout } from '../components/CustomTooltipLayout';
 import {
     Scheduler,
     Appointments,
@@ -21,6 +20,7 @@ import { Typography } from '@material-tailwind/react';
 import Button from '../components/Button';
 import { CriarLocacaoMedico } from '../components/CriarLocacaoMedico';
 import { CriarLocacaoSala } from '../components/CriarLocacaoSala';
+import { FaStethoscope } from 'react-icons/fa';
 
 const Agenda = () => {
     const { profissionalId, salaId } = useParams();
@@ -29,9 +29,12 @@ const Agenda = () => {
     const [schedulerData, setSchedulerData] = useState([]);
     const [showCustomTooltip, setShowCustomTooltip] = useState(false);
 
-    const getLocacoesDoMedico = () => {
+    const getLocacoesDoMedico = (profissionalId) => {
+        console.log(`teste: buscar locacoes do medico ${profissionalId}`)
+        // axiosWithToken.get(`http://localhost:8080/locacao/buscar?medico=${profissionalId}`)
         axiosWithToken.get(`http://localhost:8080/locacao/listar`)
             .then((response) => {
+                console.log(`teste: ${response.data}`)
                 if (response.status === 200) {
                     const dadosCalendario = response.data.map((l) => ({
                         startDate: new Date(l.horaInicio),
@@ -51,9 +54,12 @@ const Agenda = () => {
             });
     };
 
-    const getLocacoesDaSala = () => {
+    const getLocacoesDaSala = (salaId) => {
+        // axiosWithToken.get(`http://localhost:8080/locacao/buscar?sala=${salaId}`)
         axiosWithToken.get(`http://localhost:8080/locacao/listar`)
+
             .then((response) => {
+                console.log(`teste: ${response.data}`)
                 if (response.status === 200) {
                     const dadosCalendario = response.data.map((l) => ({
                         startDate: new Date(l.horaInicio),
@@ -186,13 +192,20 @@ const Agenda = () => {
                                             <p>{sala.andar}</p>
                                         </div>
                                     </div>
-                                    <div className='bg-gray-200-200 rounded h-20 p-2 mx-2 border overflow-y-auto'>
-                                        <p>Recursos</p>
-                                        {sala.recursos.map((r) => (
-                                            <div key={r.idRecurso}>
-                                                <p>{r.nomeRecurso}</p>
-                                            </div>
-                                        ))}
+
+                                    <div>
+                                        <p className='font-semibold mx-2 mb-1'>Recursos:</p>
+                                        <div className='bg-gray-50 rounded h-24 max-w-96 px-2 mx-2 border overflow-y-auto'>
+
+                                            {sala.recursos.map((r) => (
+                                                <div>
+                                                    <div className='flex flex-row items-center' key={r.idRecurso}>
+                                                        <FaStethoscope size={14} /><p className=' ml-1'> {r.nomeRecurso}</p>
+                                                    </div>
+                                                    <p className='border-b ml-5 text-sm text-gray-500'> {r.descricao}</p>
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
                             }
@@ -220,7 +233,7 @@ const Agenda = () => {
                             </div>
                         </div>
 
-                        <div className='overflow-y-auto max-h-[calc(100vh-10rem)] border rounded-md m-2'>
+                        <div className='overflow-y-auto max-h-[calc(100vh-12rem)] border rounded-md m-2'>
                             <Paper>
                                 <Scheduler data={schedulerData} locale="pt-BR">
                                     <EditingState onCommitChanges={commitChanges} />
@@ -237,9 +250,11 @@ const Agenda = () => {
                                     <AppointmentTooltip
                                         showCloseButton
                                         showOpenButton
-                                        layoutComponent={(props) => (
-                                            <CustomTooltipLayout {...props} profissional={profissional} />
-                                        )}
+                                    // layoutComponent={(props) => (
+                                    //     <CustomTooltipLayout {...props} profissional={profissional} 
+
+                                    //     />
+                                    // )}
                                     />
                                 </Scheduler>
                             </Paper>
