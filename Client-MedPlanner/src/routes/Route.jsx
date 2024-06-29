@@ -1,19 +1,20 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Agenda from "../auth/Agenda";
+import CadastroAla from "../auth/CadastroAla";
 import CadastroEspecialidade from "../auth/CadastroEspecialidade";
 import CadastroSala from "../auth/CadastroSala";
 import CadastroUsuario from "../auth/CadastroUsuario";
 import DetalhesUsuario from "../auth/DetalhesUsuario";
 import Home from "../auth/Home";
+import ListagemAlas from "../auth/ListagemAlas";
 import ListagemEspecialidades from "../auth/ListagemEspecialidade";
 import ListagemSala from "../auth/ListagemSalas";
 import ListagemUsuarios from "../auth/ListagemUsuarios";
+import MinhaConta from "../auth/MinhaConta";
 import { useAuth } from "../lib/AuthProvider";
 import Login from "../pages/Login";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { PublicRoute } from "./PublicRoute";
-import CadastroAla from "../auth/CadastroAla";
-import ListagemAlas from "../auth/ListagemAlas";
 
 const Routes = () => {
   const { token } = useAuth();
@@ -99,6 +100,14 @@ const Routes = () => {
         {
           path: "/agenda-profissional/:profissionalId",
           element: <Agenda />
+        },
+        {
+          path: "/minha-conta",
+          element: <MinhaConta />
+        },
+        {
+          path: "/alterar-senha",
+          element: <div>Alterar Senha - Em construção</div>
         }
 
       ],
