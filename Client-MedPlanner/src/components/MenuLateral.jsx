@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { FaChevronDown, FaListAlt, FaSignOutAlt, FaStethoscope, FaUserCircle, FaUserPlus, FaUsers } from 'react-icons/fa';
+=======
+import { FaChevronDown, FaHospital, FaListAlt, FaSignOutAlt, FaStethoscope, FaUserMd, FaUserPlus, FaUsers } from 'react-icons/fa';
+>>>>>>> 08ecd5e24962ffd7fcbe329b425d80a3c641a3e2
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/logoMedPlanner.png';
 import SubmenuItem from './SubmenuItem';
@@ -61,19 +65,19 @@ const MenuLateral = () => {
         {
             id: 'alas_menu',
             title: 'Alas',
-            icon: <FaUsers />,
+            icon: <FaHospital />,
             link: '/listagem-alas',
             itens: [
                 {
                     id: 'lista_de_alas_menu',
                     title: 'Cadastrar Ala',
-                    icon: <FaUsers />,
+                    icon: <FaHospital />,
                     link: '/cadastro-ala',
                 },
                 {
                     id: 'lista_de_alas_menu',
                     title: 'Listar Alas',
-                    icon: <FaUsers />,
+                    icon: <FaHospital />,
                     link: '/listagem-alas',
                 }
             ]

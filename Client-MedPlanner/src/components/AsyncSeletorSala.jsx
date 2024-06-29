@@ -1,54 +1,56 @@
-import { useState } from 'react';
 import AsyncSelect from 'react-select/async';
+import { useState } from 'react';
 import axiosWithToken from '../lib/RequestInterceptor';
 
-const AsyncSelectorProfissional = ({ onSelectionChange }) => {
+const AsyncSelectorSala = ({ onSelectionChange }) => {
     const [filtroId, setFiltroId] = useState('');
     const [filtroNomeSala, setFiltroNomeSala] = useState('');
-    const [selectSala, setSelectSala] = useState({value: 0, label: 'Procure uma sala'});
+    const [selectSala, setSelectSala] = useState({ value: 0, label: 'Procure uma sala' });
 
-    const getSalas = async (e) => {
-        return axiosWithToken.get('http://localhost:8080/sala/buscar', {params: {
-                id: filtroId,
-                nome: filtroNomeSala
-            }})
-            .then((response) => {
-                const options = []
-                response.data.forEach((sala) => {
-                  options.push({
-                    label: sala.idSala + ' - ' + sala.nomeSala,
-                    value: sala.idSala
-                  })
-                })
-                return options
-            })
-    }
-
-    const handleChangeFiltroSala = (data) => {
-        if(/^-?\d+$/.test(data)){
-            setFiltroId(data);
-            setFiltroNomeSala(null);
-        } else {
-            setFiltroNomeSala(data);
-            setFiltroId(null);
+    const getSalas = async (inputValue) => {
+        try {
+            const response = await axiosWithToken.get('http://localhost:8080/sala/buscar', {
+                params: {
+                    idSala: filtroId || undefined,
+                    nomeSala: filtroNomeSala || undefined
+                }
+            });
+            return response.data.map((sala) => ({
+                label: `${sala.idSala} - ${sala.nomeSala}`,
+                value: sala.idSala,
+                ala: sala.ala, // Include ala in the options
+            }));
+        } catch (error) {
+            console.error('Error fetching salas:', error);
+            return [];
         }
-    }
+    };
 
-    const handleSelectionChange = (data) => {
-        setSelectSala(data);
-        onSelectionChange(data);
-    }
+    const handleChangeFiltroSala = (inputValue) => {
+        if (/^-?\d+$/.test(inputValue)) {
+            setFiltroId(inputValue);
+            setFiltroNomeSala('');
+        } else {
+            setFiltroNomeSala(inputValue);
+            setFiltroId('');
+        }
+    };
+
+    const handleSelectionChange = (selectedOption) => {
+        setSelectSala(selectedOption);
+        onSelectionChange(selectedOption);
+    };
 
     return (
-        <AsyncSelect 
-            className='h-[40px] m-1 w-full appearance-none border rounded'
+        <AsyncSelect
+            className="h-[40px] m-1 w-full appearance-none border rounded shadow"
             loadOptions={getSalas}
-            onInputChange={(data) => handleChangeFiltroSala(data)}
-            onChange={(data) => handleSelectionChange(data)}
+            onInputChange={handleChangeFiltroSala}
+            onChange={handleSelectionChange}
             value={selectSala}
             defaultOptions
         />
-    )
-}
+    );
+};
 
 export default AsyncSelectorSala;

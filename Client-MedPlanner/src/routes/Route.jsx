@@ -102,12 +102,17 @@ const Routes = () => {
           element: <Agenda />
         },
         {
+<<<<<<< HEAD
           path: "/minha-conta",
           element: <MinhaConta />
         },
         {
           path: "/alterar-senha",
           element: <div>Alterar Senha - Em construção</div>
+=======
+          path: "/agenda-sala/:salaId",
+          element: <Agenda />
+>>>>>>> 08ecd5e24962ffd7fcbe329b425d80a3c641a3e2
         }
 
       ],
