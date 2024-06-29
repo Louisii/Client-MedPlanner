@@ -19,21 +19,46 @@ import { useParams } from 'react-router-dom';
 import axiosWithToken from '../lib/RequestInterceptor';
 import { Typography } from '@material-tailwind/react';
 import Button from '../components/Button';
+import { CriarLocacaoMedico } from '../components/CriarLocacaoMedico';
+import { CriarLocacaoSala } from '../components/CriarLocacaoSala';
 
 const Agenda = () => {
-    const { profissionalId } = useParams();
+    const { profissionalId, salaId } = useParams();
     const [profissional, setProfissional] = useState(null);
+    const [sala, setSala] = useState(null);
     const [schedulerData, setSchedulerData] = useState([]);
-    const [showCustomTooltip, setShowCustomTooltip] = useState(false); // Estado para controlar a exibição do CustomTooltipLayout
+    const [showCustomTooltip, setShowCustomTooltip] = useState(false);
 
-    const getLocacoes = () => {
+    const getLocacoesDoMedico = () => {
         axiosWithToken.get(`http://localhost:8080/locacao/listar`)
             .then((response) => {
                 if (response.status === 200) {
                     const dadosCalendario = response.data.map((l) => ({
                         startDate: new Date(l.horaInicio),
                         endDate: new Date(l.horaFinal),
-                        title: `${l.sala.nomeSala} - ${l.usuario.nome}`,
+                        title: `${l.sala.nomeSala} `,
+                        style: {
+                            backgroundColor: '#FFC107',
+                        }
+                    }));
+                    setSchedulerData(dadosCalendario);
+                } else {
+                    console.error(`Falha ao obter locacoes: ${response.status}`);
+                }
+            })
+            .catch((error) => {
+                console.error('Erro ao obter locacoes:', error.message);
+            });
+    };
+
+    const getLocacoesDaSala = () => {
+        axiosWithToken.get(`http://localhost:8080/locacao/listar`)
+            .then((response) => {
+                if (response.status === 200) {
+                    const dadosCalendario = response.data.map((l) => ({
+                        startDate: new Date(l.horaInicio),
+                        endDate: new Date(l.horaFinal),
+                        title: `${l.usuario.nome} `,
                         style: {
                             backgroundColor: '#FFC107',
                         }
@@ -62,6 +87,20 @@ const Agenda = () => {
             });
     };
 
+    const getSala = (id) => {
+        axiosWithToken.get(`http://localhost:8080/sala/buscar?idSala=${id}`)
+            .then((response) => {
+                if (response.status === 200) {
+                    setSala(response.data);
+                } else {
+                    console.error(`Falha ao obter sala: ${response.status}`);
+                }
+            })
+            .catch((error) => {
+                console.error('Erro ao obter sala:', error.message);
+            });
+    };
+
     const commitChanges = ({ added, changed, deleted }) => {
         setSchedulerData((prevData) => {
             let data = [...prevData];
@@ -84,9 +123,12 @@ const Agenda = () => {
     useEffect(() => {
         if (profissionalId) {
             getProfissional(profissionalId);
-            getLocacoes();
+            getLocacoesDoMedico(profissionalId);
+        } else if (salaId) {
+            getSala(salaId);
+            getLocacoesDaSala(salaId);
         }
-    }, [profissionalId]);
+    }, [profissionalId, salaId]);
 
     const Appointment = ({ children, style, ...restProps }) => (
         <Appointments.Appointment
@@ -102,41 +144,77 @@ const Agenda = () => {
     );
 
     const handleNovaLocacaoClick = () => {
-        setShowCustomTooltip(true); // Mostra o CustomTooltipLayout quando o botão for clicado
+        setShowCustomTooltip(true);
     };
 
     const handleCloseCustomTooltip = () => {
-        setShowCustomTooltip(false); // Fecha o CustomTooltipLayout
+        setShowCustomTooltip(false);
     };
 
     return (
         <Layout>
             <div className='p-4'>
-                {profissional ? (
+                {profissional || sala != null ? (
                     <div>
 
                         <div className='flex flex-row justify-between'>
-                            <div className='mx-4'>
-                                <p className='font-semibold text-lg'>{profissional.nome}</p>
-                                <div className='flex flex-row'>
-                                    <p className='font-semibold mr-1'>CRM: </p>
-                                    <p>{profissional.numCrm}</p>
-                                    <p>{`/${profissional.ufCrm}`}</p>
+
+                            {profissional &&
+                                <div className='mx-4'>
+                                    <p className='font-semibold text-lg'>{profissional.nome}</p>
+                                    <div className='flex flex-row'>
+                                        <p className='font-semibold mr-1'>CRM: </p>
+                                        <p>{profissional.numCrm}</p>
+                                        <p>{`/${profissional.ufCrm}`}</p>
+                                    </div>
+                                    <div className='flex flex-row'>
+                                        <p className='font-semibold mr-1'>E-mail: </p>
+                                        <p>{profissional.username}</p>
+                                    </div>
                                 </div>
-                                <div className='flex flex-row'>
-                                    <p className='font-semibold mr-1'>E-mail: </p>
-                                    <p>{profissional.username}</p>
+                            }
+                            {sala &&
+                                <div className='flex flex-row justify-between'>
+                                    <div className='mx-4'>
+                                        <p className='font-semibold text-lg'>{sala.nomeSala}</p>
+                                        <div className='flex flex-row'>
+                                            <p className='font-semibold mr-1'>Ala: </p>
+                                            <p>{sala.ala.nome}</p>
+                                        </div>
+                                        <div className='flex flex-row'>
+                                            <p className='font-semibold mr-1'>Andar: </p>
+                                            <p>{sala.andar}</p>
+                                        </div>
+                                    </div>
+                                    <div className='bg-gray-200-200 rounded h-20 p-2 mx-2 border overflow-y-auto'>
+                                        <p>Recursos</p>
+                                        {sala.recursos.map((r) => (
+                                            <div key={r.idRecurso}>
+                                                <p>{r.nomeRecurso}</p>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
+                            }
 
                             <div>
                                 <Button onClick={handleNovaLocacaoClick} text="Nova locação" />
-                                {showCustomTooltip && (
-                                    <CustomTooltipLayout
-                                        appointmentMeta={null} // Passar o que for apropriado para appointmentMeta
+                                {profissionalId && showCustomTooltip && (
+                                    <CriarLocacaoMedico
+                                        appointmentMeta={null}
                                         onHide={handleCloseCustomTooltip}
                                         visible={showCustomTooltip}
                                         profissional={profissional}
+                                        getLocacoes={getLocacoesDoMedico} // Passa a função getLocacoes
+                                    />
+                                )}
+                                {salaId && showCustomTooltip && (
+                                    <CriarLocacaoSala
+                                        appointmentMeta={null}
+                                        onHide={handleCloseCustomTooltip}
+                                        visible={showCustomTooltip}
+                                        sala={sala}
+                                        getLocacoes={getLocacoesDaSala} // Passa a função getLocacoes
                                     />
                                 )}
                             </div>
