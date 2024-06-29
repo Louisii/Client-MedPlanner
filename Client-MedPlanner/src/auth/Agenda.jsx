@@ -30,9 +30,8 @@ const Agenda = () => {
     const [showCustomTooltip, setShowCustomTooltip] = useState(false);
 
     const getLocacoesDoMedico = (profissionalId) => {
-        console.log(`teste: buscar locacoes do medico ${profissionalId}`)
-        // axiosWithToken.get(`http://localhost:8080/locacao/buscar?medico=${profissionalId}`)
-        axiosWithToken.get(`http://localhost:8080/locacao/listar`)
+
+        axiosWithToken.get(`http://localhost:8080/locacao/buscar?medico=${profissionalId}`)
             .then((response) => {
                 console.log(`teste: ${response.data}`)
                 if (response.status === 200) {
@@ -55,8 +54,11 @@ const Agenda = () => {
     };
 
     const getLocacoesDaSala = (salaId) => {
-        // axiosWithToken.get(`http://localhost:8080/locacao/buscar?sala=${salaId}`)
-        axiosWithToken.get(`http://localhost:8080/locacao/listar`)
+        axiosWithToken.get(`http://localhost:8080/locacao/buscar?medico=${salaId}`, {
+            params: {
+                sala: salaId
+            }
+        })
 
             .then((response) => {
                 console.log(`teste: ${response.data}`)
@@ -239,7 +241,7 @@ const Agenda = () => {
                                     <EditingState onCommitChanges={commitChanges} />
                                     <IntegratedEditing />
                                     <ViewState defaultCurrentDate={new Date()} />
-                                    <WeekView startDayHour={6} endDayHour={23} excludedDays={[0]} />
+                                    <WeekView startDayHour={6} endDayHour={23} excludedDays={[0]} cellDuration={60} />
                                     <MonthView />
                                     <DayView startDayHour={6} endDayHour={23} />
                                     <Toolbar />
