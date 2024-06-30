@@ -1,24 +1,26 @@
+// src/routes/Routes.jsx
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Agenda from "../auth/Agenda";
+import AlterarSenha from "../auth/AlterarSenha";
+import CadastroAla from "../auth/CadastroAla";
 import CadastroEspecialidade from "../auth/CadastroEspecialidade";
 import CadastroSala from "../auth/CadastroSala";
 import CadastroUsuario from "../auth/CadastroUsuario";
 import DetalhesUsuario from "../auth/DetalhesUsuario";
 import Home from "../auth/Home";
+import ListagemAlas from "../auth/ListagemAlas";
 import ListagemEspecialidades from "../auth/ListagemEspecialidade";
 import ListagemSala from "../auth/ListagemSalas";
 import ListagemUsuarios from "../auth/ListagemUsuarios";
+import MinhaConta from "../auth/MinhaConta";
 import { useAuth } from "../lib/AuthProvider";
 import Login from "../pages/Login";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { PublicRoute } from "./PublicRoute";
-import CadastroAla from "../auth/CadastroAla";
-import ListagemAlas from "../auth/ListagemAlas";
 
 const Routes = () => {
   const { token } = useAuth();
 
-  // Define public routes accessible to all users
   const routesForPublic = [
     {
       path: "/",
@@ -28,16 +30,14 @@ const Routes = () => {
           path: "/",
           element: <Login />
         }
-
       ]
     }
   ];
 
-  // Define routes accessible only to authenticated users
   const routesForAuthenticatedOnly = [
     {
       path: "/",
-      element: <ProtectedRoute />, // Wrap the component in ProtectedRoute
+      element: <ProtectedRoute />,
       children: [
         {
           path: "/home",
@@ -79,7 +79,6 @@ const Routes = () => {
           path: "/edicao-especialidade/:especialidadeId",
           element: <CadastroEspecialidade />
         },
-
         {
           path: "/edicao-sala/:idSala",
           element: <CadastroSala />
@@ -101,25 +100,29 @@ const Routes = () => {
           element: <Agenda />
         },
         {
+          path: "/minha-conta",
+          element: <MinhaConta />
+        },
+        {
+          path: "/alterar-senha",
+          element: <AlterarSenha /> // Include the AlterarSenha route
+        },
+        {
           path: "/agenda-sala/:salaId",
           element: <Agenda />
         }
-
       ],
     },
   ];
 
-  // Define routes accessible only to non-authenticated users
   const routesForNotAuthenticatedOnly = [];
 
-  // Combine and conditionally include routes based on authentication status
   const router = createBrowserRouter([
     ...routesForPublic,
     ...(!token ? routesForNotAuthenticatedOnly : []),
     ...routesForAuthenticatedOnly,
   ]);
 
-  // Provide the router configuration using RouterProvider
   return <RouterProvider router={router} />;
 };
 

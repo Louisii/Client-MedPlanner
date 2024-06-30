@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 const SubmenuItem = (props) => {
     return (
@@ -10,4 +10,4 @@ const SubmenuItem = (props) => {
     )
 }
 
-export default SubmenuItem
+export default SubmenuItem;
