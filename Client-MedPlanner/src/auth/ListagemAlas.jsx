@@ -16,7 +16,7 @@ const ListagemAlas = () => {
     }, []);
 
     const getAlas = () => {
-        axiosWithToken.get('http://localhost:8080/ala/buscar')
+        axiosWithToken.get('http://localhost:8080/ala/listar')
             .then((response) => { setAlas(response.data) })
             .catch((error) => { console.log(error) });
     };
