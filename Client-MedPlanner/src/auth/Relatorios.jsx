@@ -95,7 +95,24 @@ const Relatorios = () => {
                 const imgProps = pdf.getImageProperties(imgData);
                 const pdfWidth = pdf.internal.pageSize.getWidth();
                 const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+
+                // Adicionando cabeçalho
+                const dataAtual = format(new Date(), 'dd/MM/yyyy');
+                const { dataInicio, dataFim } = form;
+
+                pdf.setFontSize(12);
+                pdf.text(`Tipo de Relatório: ${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`, 10, 10);
+                if (tipo === 'sala') {
+                    pdf.text(`Sala: ${form.salaId}`, 10, 20);
+                } else if (tipo === 'medico') {
+                    pdf.text(`Médico: ${form.medicoId}`, 10, 20);
+                }
+                pdf.text(`Data Inicial: ${dataInicio}`, 10, 30);
+                pdf.text(`Data Final: ${dataFim}`, 10, 40);
+                pdf.text(`Data de Geração: ${dataAtual}`, 10, 50);
+
+                // Adicionando imagem da tabela
+                pdf.addImage(imgData, 'PNG', 0, 60, pdfWidth, pdfHeight);
                 pdf.save('relatorio.pdf');
             });
     };
