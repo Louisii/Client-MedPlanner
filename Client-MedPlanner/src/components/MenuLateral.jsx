@@ -1,4 +1,4 @@
-import { FaChevronDown, FaListAlt, FaSignOutAlt, FaStethoscope, FaUserPlus, FaUsers } from 'react-icons/fa';
+import { FaChevronDown, FaListAlt, FaSignOutAlt, FaStethoscope, FaUserPlus, FaUsers, FaFileAlt  } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/logoMedPlanner.png';
 import SubmenuItem from './SubmenuItem';
