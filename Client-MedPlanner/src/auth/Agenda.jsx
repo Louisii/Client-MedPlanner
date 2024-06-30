@@ -97,8 +97,7 @@ const Agenda = () => {
         axiosWithToken.get(`http://localhost:8080/sala/buscar?idSala=${id}`)
             .then((response) => {
                 if (response.status === 200) {
-                    console.log(`sala`)
-                    console.log(response.data)
+                    console.log('Fetched sala:', response.data);
                     setSala(response.data);
                 } else {
                     console.error(`Falha ao obter sala: ${response.status}`);
@@ -130,9 +129,11 @@ const Agenda = () => {
 
     useEffect(() => {
         if (profissionalId) {
+            console.log('Fetching professional with ID:', profissionalId);
             getProfissional(profissionalId);
             getLocacoesDoMedico(profissionalId);
         } else if (salaId) {
+            console.log('Fetching sala with ID:', salaId);
             getSala(salaId);
             getLocacoesDaSala(salaId);
         }
@@ -158,15 +159,12 @@ const Agenda = () => {
     const handleCloseCustomTooltip = () => {
         setShowCustomTooltip(false);
     };
-
     return (
         <Layout>
             <div className='p-4'>
-                {profissional || sala != null ? (
+                {profissional || sala ? (
                     <div>
-
                         <div className='flex flex-row justify-between'>
-
                             {profissional &&
                                 <div className='mx-4'>
                                     <p className='font-semibold text-lg'>{profissional.nome}</p>
@@ -194,14 +192,12 @@ const Agenda = () => {
                                             <p>{sala.andar}</p>
                                         </div>
                                     </div>
-
                                     <div>
                                         <p className='font-semibold mx-2 mb-1'>Recursos:</p>
                                         <div className='bg-gray-50 rounded h-24 max-w-96 px-2 mx-2 border overflow-y-auto'>
-
                                             {sala.recursos.map((r) => (
-                                                <div>
-                                                    <div className='flex flex-row items-center' key={r.idRecurso}>
+                                                <div key={r.idRecurso}>
+                                                    <div className='flex flex-row items-center'>
                                                         <FaStethoscope size={14} /><p className=' ml-1'> {r.nomeRecurso}</p>
                                                     </div>
                                                     <p className='border-b ml-5 text-sm text-gray-500'> {r.descricao}</p>
@@ -211,7 +207,6 @@ const Agenda = () => {
                                     </div>
                                 </div>
                             }
-
                             <div>
                                 <Button onClick={handleNovaLocacaoClick} text="Nova locação" />
                                 {profissionalId && showCustomTooltip && (
@@ -220,7 +215,7 @@ const Agenda = () => {
                                         onHide={handleCloseCustomTooltip}
                                         visible={showCustomTooltip}
                                         profissional={profissional}
-                                        getLocacoes={getLocacoesDoMedico} // Passa a função getLocacoes
+                                        getLocacoes={getLocacoesDoMedico}
                                     />
                                 )}
                                 {salaId && showCustomTooltip && (
@@ -229,12 +224,11 @@ const Agenda = () => {
                                         onHide={handleCloseCustomTooltip}
                                         visible={showCustomTooltip}
                                         sala={sala}
-                                        getLocacoes={getLocacoesDaSala} // Passa a função getLocacoes
+                                        getLocacoes={getLocacoesDaSala}
                                     />
                                 )}
                             </div>
                         </div>
-
                         <div className='overflow-y-auto max-h-[calc(100vh-12rem)] border rounded-md m-2'>
                             <Paper>
                                 <Scheduler data={schedulerData} locale="pt-BR">
@@ -252,21 +246,19 @@ const Agenda = () => {
                                     <AppointmentTooltip
                                         showCloseButton
                                         showOpenButton
-
                                         layoutComponent={(props) => (
-                                            <CriarLocacaoMedico
-                                                {...props}
-
-
-                                                profissional={profissional}
-                                                getLocacoes={getLocacoesDoMedico} // Passa a função getLocacoes
-                                            />
+                                            profissionalId ?
+                                                <CriarLocacaoMedico
+                                                    {...props}
+                                                    profissional={profissional}
+                                                    getLocacoes={getLocacoesDoMedico}
+                                                /> :
+                                                <CriarLocacaoSala
+                                                    {...props}
+                                                    sala={sala}
+                                                    getLocacoes={getLocacoesDaSala}
+                                                />
                                         )}
-                                    // layoutComponent={(props) => (
-                                    //     <CustomTooltipLayout {...props} profissional={profissional} 
-
-                                    //     />
-                                    // )}
                                     />
                                 </Scheduler>
                             </Paper>
@@ -280,6 +272,7 @@ const Agenda = () => {
             </div>
         </Layout>
     );
+
 };
 
 export default Agenda;

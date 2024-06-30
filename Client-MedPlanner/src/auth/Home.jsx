@@ -4,8 +4,11 @@ import logo from '../assets/logoMedPlanner.png';
 import axiosWithToken from '../lib/RequestInterceptor';
 import { FaArrowLeft, FaArrowRight, FaRegClock } from 'react-icons/fa';
 import { FaUserDoctor } from 'react-icons/fa6';
+import Button from '../components/Button';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const Home = () => {
+  const navigate = useNavigate();
   const [locacoes, setLocacoes] = useState([]);
   const [salas, setSalas] = useState([]);
   const [currentDate, setCurrentDate] = useState(new Date().toISOString().split('T')[0]);
@@ -78,6 +81,7 @@ const Home = () => {
     return `${day}/${month}/${year}`;
   };
 
+
   return (
     <Layout>
       <div className='p-4'>
@@ -101,7 +105,10 @@ const Home = () => {
           <div className='overflow-y-auto max-h-[calc(100vh-10rem)]'>
             {agruparPorSala().map((sala) => (
               <div className='m-4 p-4 border border-gray-100 rounded-lg shadow-md' key={sala.idSala}>
-                <p className='py-1 text-lg font-bold'>{sala.nomeSala}</p>
+                <div className='flex flex-row justify-between'>
+                  <p className='py-1 text-lg font-bold'>{sala.nomeSala}</p>
+                  <Button onClick={() => navigate(`/agenda-sala/${sala.idSala}`)} text="Ver mais detalhes" className='bg-blue-500 text-white p-2 rounded mb-2' />
+                </div>
                 {sala.locacoes.length ? sala.locacoes.map((loc) => (
                   <div key={loc.idLocacao}>
                     <div className='flex flex-row m-1 items-center border-b'>

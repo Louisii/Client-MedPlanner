@@ -100,6 +100,9 @@ const Routes = () => {
         {
           path: "/agenda-profissional/:profissionalId",
           element: <Agenda />
+        }, {
+          path: "/agenda-sala/:salaId",
+          element: <Agenda />
         },
         {
           path: "/relatorios/:tipo",
