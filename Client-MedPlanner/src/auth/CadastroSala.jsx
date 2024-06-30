@@ -92,7 +92,7 @@ const CadastroSala = () => {
             }
         } catch (error) {
             if (error.response) {
-                setRespostaErro(error.response.data.errors || ['Erro desconhecido']);
+                setRespostaErro(error.response.data.errors || ['Algo deu errado! Revise os campos e tente novamente.']);
                 console.log(error.response.data);
             } else {
                 setRespostaErro(['Erro ao conectar ao servidor']);

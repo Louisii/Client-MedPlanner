@@ -1,5 +1,7 @@
+// src/routes/Routes.jsx
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Agenda from "../auth/Agenda";
+import AlterarSenha from "../auth/AlterarSenha";
 import CadastroAla from "../auth/CadastroAla";
 import CadastroEspecialidade from "../auth/CadastroEspecialidade";
 import CadastroSala from "../auth/CadastroSala";
@@ -19,7 +21,6 @@ import { PublicRoute } from "./PublicRoute";
 const Routes = () => {
   const { token } = useAuth();
 
-  // Define public routes accessible to all users
   const routesForPublic = [
     {
       path: "/",
@@ -29,16 +30,14 @@ const Routes = () => {
           path: "/",
           element: <Login />
         }
-
       ]
     }
   ];
 
-  // Define routes accessible only to authenticated users
   const routesForAuthenticatedOnly = [
     {
       path: "/",
-      element: <ProtectedRoute />, // Wrap the component in ProtectedRoute
+      element: <ProtectedRoute />,
       children: [
         {
           path: "/home",
@@ -80,7 +79,6 @@ const Routes = () => {
           path: "/edicao-especialidade/:especialidadeId",
           element: <CadastroEspecialidade />
         },
-
         {
           path: "/edicao-sala/:idSala",
           element: <CadastroSala />
@@ -102,34 +100,29 @@ const Routes = () => {
           element: <Agenda />
         },
         {
-<<<<<<< HEAD
           path: "/minha-conta",
           element: <MinhaConta />
         },
         {
           path: "/alterar-senha",
-          element: <div>Alterar Senha - Em construção</div>
-=======
+          element: <AlterarSenha /> // Include the AlterarSenha route
+        },
+        {
           path: "/agenda-sala/:salaId",
           element: <Agenda />
->>>>>>> 08ecd5e24962ffd7fcbe329b425d80a3c641a3e2
         }
-
       ],
     },
   ];
 
-  // Define routes accessible only to non-authenticated users
   const routesForNotAuthenticatedOnly = [];
 
-  // Combine and conditionally include routes based on authentication status
   const router = createBrowserRouter([
     ...routesForPublic,
     ...(!token ? routesForNotAuthenticatedOnly : []),
     ...routesForAuthenticatedOnly,
   ]);
 
-  // Provide the router configuration using RouterProvider
   return <RouterProvider router={router} />;
 };
 
