@@ -1,4 +1,4 @@
-import { FaChevronDown, FaHospital, FaListAlt, FaSignOutAlt, FaStethoscope, FaUserCircle, FaUserPlus, FaUsers } from 'react-icons/fa';
+import { FaChevronDown, FaHome, FaHospital, FaListAlt, FaSignOutAlt, FaStethoscope, FaUserCircle, FaUserPlus, FaUsers } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/logoMedPlanner.png';
 import SubmenuItem from './SubmenuItem';
@@ -106,7 +106,15 @@ const MenuLateral = () => {
                 <img src={logo} alt="logo sga" className='w-48 mx-auto' />
             </div>
 
+
             <ul className='py-10'>
+
+                <li className='text-gray-500 w-full shadow-sm py-3 pl-6 pr-0'>
+                    <Link className='flex align-baseline mr-4 text-gray-500 gap-2 hover:text-teal-700 items-center' to="/home">
+                        <FaHome /> Home
+                    </Link>
+                </li>
+
                 {menuItems.map((item) =>
                     <li className='text-gray-500 w-full shadow-sm py-3 pl-6 pr-0' key={item.id}>
                         <div>
@@ -126,6 +134,7 @@ const MenuLateral = () => {
                         </div>
                     </li>
                 )}
+
                 <li className='text-gray-500 w-full shadow-sm py-3 pl-6 pr-0'>
                     <Link className='flex align-baseline mr-4 text-gray-500 gap-2 hover:text-teal-700 items-center' to={minhaContaItem.link}>
                         {minhaContaItem.icon}

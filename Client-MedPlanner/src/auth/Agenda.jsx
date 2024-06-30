@@ -55,19 +55,16 @@ const Agenda = () => {
     };
 
     const getLocacoesDaSala = (salaId) => {
-        axiosWithToken.get(`http://localhost:8080/locacao/buscar?medico=${salaId}`, {
-            params: {
-                sala: salaId
-            }
-        })
+        axiosWithToken.get(`http://localhost:8080/locacao/buscar?sala=${salaId}`)
 
             .then((response) => {
-                console.log(`teste: ${response.data}`)
+                console.log(`locacoes`)
+                console.log(response.data)
                 if (response.status === 200) {
                     const dadosCalendario = response.data.map((l) => ({
                         startDate: new Date(l.horaInicio),
                         endDate: new Date(l.horaFinal),
-                        title: `${l.usuario.nome} `,
+                        title: `${l.usuario.nome} #${l.idLocacao}`,
                         style: {
                             backgroundColor: '#FFC107',
                         }
@@ -100,6 +97,8 @@ const Agenda = () => {
         axiosWithToken.get(`http://localhost:8080/sala/buscar?idSala=${id}`)
             .then((response) => {
                 if (response.status === 200) {
+                    console.log(`sala`)
+                    console.log(response.data)
                     setSala(response.data);
                 } else {
                     console.error(`Falha ao obter sala: ${response.status}`);
