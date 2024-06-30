@@ -61,13 +61,13 @@ const CadastroSala = () => {
 
     const getSala = async (idSala) => {
         try {
-            const response = await axiosWithToken.get(`http://localhost:8080/sala/buscar?id=${idSala}`);
-            if (response.status === 200 && response.data.length > 0) {
-                const sala = response.data[0];
+            const response = await axiosWithToken.get(`http://localhost:8080/sala/buscar?idSala=${idSala}`);
+            if (response.status === 200) {
+                const sala = response.data;
                 setForm({
                     nomeSala: sala.nomeSala,
                     ala: sala.ala || { idAla: '' },
-                    andar: sala.andar,
+                    andar: sala.andar != null ? String(sala.andar) : '',  // Converting to string if not null
                     situacao: sala.situacao,
                     recursos: sala.recursos || [],
                 });
@@ -80,12 +80,10 @@ const CadastroSala = () => {
     };
 
     const salvarSala = async () => {
-      
         const payload = {
             ...form,
             ala: { idAla: form.ala.idAla }, // Certifica-se que 'ala' seja um objeto com a chave idAla
         };
-        console.log(payload)
         try {
             const response = await axiosWithToken.post(`http://localhost:8080/sala/salvar`, payload);
             if (response.status === 200) {
@@ -94,7 +92,7 @@ const CadastroSala = () => {
             }
         } catch (error) {
             if (error.response) {
-                setRespostaErro(error.response.data.errors || ['Erro desconhecido']);
+                setRespostaErro(error.response.data.errors || ['Algo deu errado! Revise os campos e tente novamente.']);
                 console.log(error.response.data);
             } else {
                 setRespostaErro(['Erro ao conectar ao servidor']);
@@ -214,7 +212,7 @@ const CadastroSala = () => {
                         </div>
                     }
                     <div className='flex gap-4 p-8 items-center justify-end'>
-                        {idSala != null && <Button onClick={() => navigate(`/sala/${idSala}`)} text="Voltar" />}
+                        <Button onClick={() => navigate('/listagem-sala')} text="Voltar" /> {/* Botão de Voltar corrigido */}
                         <Button onClick={handleSubmit} text={idSala != null ? "Atualizar" : "Cadastrar"} />
                     </div>
                 </div>

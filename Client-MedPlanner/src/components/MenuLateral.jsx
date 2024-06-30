@@ -1,10 +1,11 @@
-import { FaChevronDown, FaHospital, FaListAlt, FaSignOutAlt, FaStethoscope, FaUserMd, FaUserPlus, FaUsers } from 'react-icons/fa';
+import { FaChevronDown, FaHospital, FaListAlt, FaSignOutAlt, FaStethoscope, FaUserCircle, FaUserPlus, FaUsers } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/logoMedPlanner.png';
 import SubmenuItem from './SubmenuItem';
 
 const MenuLateral = () => {
     let navigate = useNavigate();
+
     const expandElement = (itemId) => {
         const element = document.getElementById(itemId);
 
@@ -51,89 +52,12 @@ const MenuLateral = () => {
                 },
                 {
                     id: 'listar_especialidade_menu',
-                    title: 'Listar Especialidade',
+                    title: 'Lista de Especialidades',
                     icon: <FaListAlt />,
                     link: '/listagem-especialidade',
                 }
             ]
         },
-        {
-            id: 'alas_menu',
-            title: 'Alas',
-            icon: <FaHospital />,
-            link: '/listagem-alas',
-            itens: [
-                {
-                    id: 'lista_de_alas_menu',
-                    title: 'Cadastrar Ala',
-                    icon: <FaHospital />,
-                    link: '/cadastro-ala',
-                },
-                {
-                    id: 'lista_de_alas_menu',
-                    title: 'Listar Alas',
-                    icon: <FaHospital />,
-                    link: '/listagem-alas',
-                }
-            ]
-        },
-        // {
-        //     id: 'ambulatorio_menu',
-        //     title: 'Ambulatório',
-        //     icon: <FaStethoscope />,
-        //     link: '/home',
-        //     itens: [
-        //         {
-        //             id: 'lista_consultas_menu',
-        //             title: 'Consultas Agendadas',
-        //             icon: <FaListAlt />,
-        //             link: '/consultas-agendadas',
-        //         },
-
-
-        //     ]
-        // },
-        // {
-        //     id: 'agenda_menu',
-        //     title: 'Agenda',
-        //     icon: <FaCalendarAlt />,
-        //     link: '/home',
-        //     itens: [
-        //         {
-        //             id: 'cadastrar_agenda_menu',
-        //             title: 'Cadastrar Agenda',
-        //             icon: <FaCalendarPlus />,
-        //             link: '/cadastro-agenda',
-        //         },
-        //         {
-        //             id: 'lista_de_agendas_menu',
-        //             title: 'Lista de Agendas',
-        //             icon: <FaCalendarAlt />,
-        //             link: '/agendas',
-        //         },
-
-        //     ]
-        // },
-        // {
-        //     title: 'Ambulatório',
-        //     icon: <FaStethoscope />
-        // },
-        // {
-        //     title: 'Agenda',
-        //     icon: <FaCalendarAlt />
-        // },
-        // {
-        //     title: 'Corpo Clínico',
-        //     icon: <FaUserMd />
-        // },
-        // {
-        //     title: 'Relatório',
-        //     icon: <FaFileAlt />
-        // },
-        // {
-        //     title: 'Outros',
-        //     icon: <FaEllipsisV />
-        // },
         {
             id: 'sala_menu',
             title: 'Salas',
@@ -148,46 +72,72 @@ const MenuLateral = () => {
                 },
                 {
                     id: 'lista_de_salas_menu',
-                    title: 'Listar Sala',
+                    title: 'Lista de Salas',
                     icon: <FaListAlt />,
                     link: '/listagem-sala',
+                },
+                {
+                    id: 'cadastrar_ala_menu',
+                    title: 'Cadastrar Ala',
+                    icon: <FaHospital />,
+                    link: '/cadastro-ala',
+                },
+                {
+                    id: 'listar_alas_menu',
+                    title: 'Lista de Alas',
+                    icon: <FaHospital />,
+                    link: '/listagem-alas',
                 }
             ]
         }
-    ]
+    ];
+
+    const minhaContaItem = {
+        id: 'minha_conta_menu',
+        title: 'Minha Conta',
+        icon: <FaUserCircle />,
+        link: '/minha-conta',
+        itens: []
+    };
 
     return (
         <div className="h-screen bg-white shadow-md rounded-lg py-8">
             <div className='w-full mb-8 mt-4'>
                 <img src={logo} alt="logo sga" className='w-48 mx-auto' />
-
-                <ul className='py-10'>
-                    {menuItems.map((item) =>
-                        <li className='text-gray-500 w-full shadow-sm py-3 pl-6 pr-0' key={item.id}>
-                            <div>
-                                <div onClick={() => { expandElement(item.id) }} className='flex items-center gap-4 w-full pr-12 cursor-pointer hover:text-teal-700 '>
-                                    {item.icon}
-                                    {item.title}
-                                    <FaChevronDown className='ml-auto text-end hover:text-teal-700' />
-                                </div>
-
-                                <div id={item.id} className='invisible h-0'>
-                                    {item.itens.map((itemFilho) =>
-                                        <div key={itemFilho.id} className='pl-6 p-2 pt-4'>
-                                            <SubmenuItem to={itemFilho.link} text={itemFilho.title} icon={itemFilho.icon} />
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </li>
-                    )}
-                    <li className='text-gray-500 w-full shadow-sm py-3 pl-6 pr-0'>
-                        <Link className='flex align-baseline mr-4 text-gray-500 gap-2 hover:text-teal-700 items-center' to="/" onClick={handleClickSair}>
-                            <FaSignOutAlt /> Sair
-                        </Link>
-                    </li>
-                </ul>
             </div>
+
+            <ul className='py-10'>
+                {menuItems.map((item) =>
+                    <li className='text-gray-500 w-full shadow-sm py-3 pl-6 pr-0' key={item.id}>
+                        <div>
+                            <div onClick={() => { expandElement(item.id) }} className='flex items-center gap-4 w-full pr-12 cursor-pointer hover:text-teal-700 '>
+                                {item.icon}
+                                {item.title}
+                                {item.itens.length > 0 && <FaChevronDown className='ml-auto text-end hover:text-teal-700' />}
+                            </div>
+
+                            <div id={item.id} className={`transition-all duration-500 ${item.itens.length ? 'invisible h-0' : ''}`}>
+                                {item.itens.map((itemFilho) =>
+                                    <div key={itemFilho.id} className='pl-6 p-2 pt-4'>
+                                        <SubmenuItem to={itemFilho.link} text={itemFilho.title} icon={itemFilho.icon} />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </li>
+                )}
+                <li className='text-gray-500 w-full shadow-sm py-3 pl-6 pr-0'>
+                    <Link className='flex align-baseline mr-4 text-gray-500 gap-2 hover:text-teal-700 items-center' to={minhaContaItem.link}>
+                        {minhaContaItem.icon}
+                        {minhaContaItem.title}
+                    </Link>
+                </li>
+                <li className='text-gray-500 w-full shadow-sm py-3 pl-6 pr-0'>
+                    <Link className='flex align-baseline mr-4 text-gray-500 gap-2 hover:text-teal-700 items-center' to="/" onClick={handleClickSair}>
+                        <FaSignOutAlt /> Sair
+                    </Link>
+                </li>
+            </ul>
         </div>
     );
 }
