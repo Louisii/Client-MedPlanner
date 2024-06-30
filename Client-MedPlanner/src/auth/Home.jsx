@@ -102,7 +102,7 @@ const Home = () => {
         </div>
 
         {salas.length ?
-          <div className='overflow-y-auto max-h-[calc(100vh-10rem)]'>
+          <div className='overflow-y-auto max-h-[calc(100vh-12rem)]'>
             {agruparPorSala().map((sala) => (
               <div className='m-4 p-4 border border-gray-100 rounded-lg shadow-md' key={sala.idSala}>
                 <div className='flex flex-row justify-between'>

@@ -194,7 +194,7 @@ const Agenda = () => {
                                     </div>
                                     <div>
                                         <p className='font-semibold mx-2 mb-1'>Recursos:</p>
-                                        <div className='bg-gray-50 rounded h-24 max-w-96 px-2 mx-2 border overflow-y-auto'>
+                                        <div className='min-w-96 bg-gray-50 rounded h-24 max-w-96 px-2 mx-2 border overflow-y-auto '>
                                             {sala.recursos.map((r) => (
                                                 <div key={r.idRecurso}>
                                                     <div className='flex flex-row items-center'>
