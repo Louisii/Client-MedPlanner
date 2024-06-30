@@ -19,8 +19,6 @@ import { ProtectedRoute } from "./ProtectedRoute";
 import { PublicRoute } from "./PublicRoute";
 import Signup from "../pages/Signup";
 import Relatorios from "../auth/Relatorios";
-import CadastroAla from "../auth/CadastroAla";
-import ListagemAlas from "../auth/ListagemAlas";
 
 const Routes = () => {
   const { token } = useAuth();
