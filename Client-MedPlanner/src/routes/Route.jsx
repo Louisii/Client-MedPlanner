@@ -1,4 +1,3 @@
-// src/routes/Routes.jsx
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Agenda from "../auth/Agenda";
 import AlterarSenha from "../auth/AlterarSenha";
@@ -104,8 +103,11 @@ const Routes = () => {
         {
           path: "/relatorios/:tipo",
           element: <Relatorios />
+        },
+        {
+          path: "/minha-conta",  // Adicionando a rota Minha Conta
+          element: <MinhaConta />
         }
-
       ],
     },
   ];
