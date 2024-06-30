@@ -36,9 +36,10 @@ const Agenda = () => {
                 console.log(`teste: ${response.data}`)
                 if (response.status === 200) {
                     const dadosCalendario = response.data.map((l) => ({
+                        // id: l.idLocacao,
                         startDate: new Date(l.horaInicio),
                         endDate: new Date(l.horaFinal),
-                        title: `${l.sala.nomeSala} `,
+                        title: `${l.sala.nomeSala} #${l.idLocacao}`,
                         style: {
                             backgroundColor: '#FFC107',
                         }
@@ -241,7 +242,7 @@ const Agenda = () => {
                                     <EditingState onCommitChanges={commitChanges} />
                                     <IntegratedEditing />
                                     <ViewState defaultCurrentDate={new Date()} />
-                                    <WeekView startDayHour={6} endDayHour={23} excludedDays={[0]} cellDuration={60} />
+                                    <WeekView startDayHour={6} endDayHour={23} excludedDays={[0]} cellDuration={120} />
                                     <MonthView />
                                     <DayView startDayHour={6} endDayHour={23} />
                                     <Toolbar />
@@ -252,6 +253,16 @@ const Agenda = () => {
                                     <AppointmentTooltip
                                         showCloseButton
                                         showOpenButton
+
+                                        layoutComponent={(props) => (
+                                            <CriarLocacaoMedico
+                                                {...props}
+
+
+                                                profissional={profissional}
+                                                getLocacoes={getLocacoesDoMedico} // Passa a função getLocacoes
+                                            />
+                                        )}
                                     // layoutComponent={(props) => (
                                     //     <CustomTooltipLayout {...props} profissional={profissional} 
 
