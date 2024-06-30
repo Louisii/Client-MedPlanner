@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
-import { CustomTooltipLayout, CustomTooltipHeader, CustomTooltipContent } from '../components/CustomTooltipLayout';
-
 import {
     Scheduler,
     Appointments,
@@ -12,7 +10,6 @@ import {
     MonthView,
     DayView,
     AppointmentTooltip,
-    AppointmentForm,
     TodayButton,
 } from '@devexpress/dx-react-scheduler-material-ui';
 import Paper from '@mui/material/Paper';
@@ -20,30 +17,59 @@ import { ViewState, EditingState, IntegratedEditing } from '@devexpress/dx-react
 import { useParams } from 'react-router-dom';
 import axiosWithToken from '../lib/RequestInterceptor';
 import { Typography } from '@material-tailwind/react';
-
-// https://devexpress.github.io/devextreme-reactive/react/scheduler/docs/guides/editing/
+import Button from '../components/Button';
+import { CriarLocacaoMedico } from '../components/CriarLocacaoMedico';
+import { CriarLocacaoSala } from '../components/CriarLocacaoSala';
+import { FaStethoscope } from 'react-icons/fa';
 
 const Agenda = () => {
-    const { profissionalId } = useParams();
+    const { profissionalId, salaId } = useParams();
     const [profissional, setProfissional] = useState(null);
+    const [sala, setSala] = useState(null);
     const [schedulerData, setSchedulerData] = useState([]);
+    const [showCustomTooltip, setShowCustomTooltip] = useState(false);
 
-    const getLocacoes = (profissionalId) => {
-        // axiosWithToken.get(`http://localhost:8080/locacao/buscar?id=${profissionalId}`)
+    const getLocacoesDoMedico = (profissionalId) => {
+        console.log(`teste: buscar locacoes do medico ${profissionalId}`)
+        // axiosWithToken.get(`http://localhost:8080/locacao/buscar?medico=${profissionalId}`)
         axiosWithToken.get(`http://localhost:8080/locacao/listar`)
             .then((response) => {
+                console.log(`teste: ${response.data}`)
                 if (response.status === 200) {
                     const dadosCalendario = response.data.map((l) => ({
                         startDate: new Date(l.horaInicio),
                         endDate: new Date(l.horaFinal),
-                        title: `${l.sala.nomeSala} - ${l.usuario.nome}`,
+                        title: `${l.sala.nomeSala} `,
                         style: {
-
                             backgroundColor: '#FFC107',
                         }
                     }));
                     setSchedulerData(dadosCalendario);
-                    // console.log(dadosCalendario)
+                } else {
+                    console.error(`Falha ao obter locacoes: ${response.status}`);
+                }
+            })
+            .catch((error) => {
+                console.error('Erro ao obter locacoes:', error.message);
+            });
+    };
+
+    const getLocacoesDaSala = (salaId) => {
+        // axiosWithToken.get(`http://localhost:8080/locacao/buscar?sala=${salaId}`)
+        axiosWithToken.get(`http://localhost:8080/locacao/listar`)
+
+            .then((response) => {
+                console.log(`teste: ${response.data}`)
+                if (response.status === 200) {
+                    const dadosCalendario = response.data.map((l) => ({
+                        startDate: new Date(l.horaInicio),
+                        endDate: new Date(l.horaFinal),
+                        title: `${l.usuario.nome} `,
+                        style: {
+                            backgroundColor: '#FFC107',
+                        }
+                    }));
+                    setSchedulerData(dadosCalendario);
                 } else {
                     console.error(`Falha ao obter locacoes: ${response.status}`);
                 }
@@ -67,6 +93,20 @@ const Agenda = () => {
             });
     };
 
+    const getSala = (id) => {
+        axiosWithToken.get(`http://localhost:8080/sala/buscar?idSala=${id}`)
+            .then((response) => {
+                if (response.status === 200) {
+                    setSala(response.data);
+                } else {
+                    console.error(`Falha ao obter sala: ${response.status}`);
+                }
+            })
+            .catch((error) => {
+                console.error('Erro ao obter sala:', error.message);
+            });
+    };
+
     const commitChanges = ({ added, changed, deleted }) => {
         setSchedulerData((prevData) => {
             let data = [...prevData];
@@ -87,14 +127,14 @@ const Agenda = () => {
     };
 
     useEffect(() => {
-
         if (profissionalId) {
             getProfissional(profissionalId);
-            getLocacoes();
-            // getLocacoes(profissionalId);
+            getLocacoesDoMedico(profissionalId);
+        } else if (salaId) {
+            getSala(salaId);
+            getLocacoesDaSala(salaId);
         }
-    }, [profissionalId]);
-
+    }, [profissionalId, salaId]);
 
     const Appointment = ({ children, style, ...restProps }) => (
         <Appointments.Appointment
@@ -109,33 +149,99 @@ const Agenda = () => {
         </Appointments.Appointment>
     );
 
+    const handleNovaLocacaoClick = () => {
+        setShowCustomTooltip(true);
+    };
+
+    const handleCloseCustomTooltip = () => {
+        setShowCustomTooltip(false);
+    };
+
     return (
         <Layout>
             <div className='p-4'>
-                {profissional ? (
+                {profissional || sala != null ? (
                     <div>
-                        <div className='mx-4'>
-                            <p className='font-semibold text-lg'>{profissional.nome}</p>
-                            <div className='flex flex-row'>
-                                <p className='font-semibold mr-1'>CRM: </p>
-                                <p>{profissional.numCrm}</p>
-                                <p>{`/${profissional.ufCrm}`}</p>
-                            </div>
-                            <div className='flex flex-row'>
-                                <p className='font-semibold mr-1'>E-mail: </p>
-                                <p>{profissional.username}</p>
+
+                        <div className='flex flex-row justify-between'>
+
+                            {profissional &&
+                                <div className='mx-4'>
+                                    <p className='font-semibold text-lg'>{profissional.nome}</p>
+                                    <div className='flex flex-row'>
+                                        <p className='font-semibold mr-1'>CRM: </p>
+                                        <p>{profissional.numCrm}</p>
+                                        <p>{`/${profissional.ufCrm}`}</p>
+                                    </div>
+                                    <div className='flex flex-row'>
+                                        <p className='font-semibold mr-1'>E-mail: </p>
+                                        <p>{profissional.username}</p>
+                                    </div>
+                                </div>
+                            }
+                            {sala &&
+                                <div className='flex flex-row justify-between'>
+                                    <div className='mx-4'>
+                                        <p className='font-semibold text-lg'>{sala.nomeSala}</p>
+                                        <div className='flex flex-row'>
+                                            <p className='font-semibold mr-1'>Ala: </p>
+                                            <p>{sala.ala.nome}</p>
+                                        </div>
+                                        <div className='flex flex-row'>
+                                            <p className='font-semibold mr-1'>Andar: </p>
+                                            <p>{sala.andar}</p>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <p className='font-semibold mx-2 mb-1'>Recursos:</p>
+                                        <div className='bg-gray-50 rounded h-24 max-w-96 px-2 mx-2 border overflow-y-auto'>
+
+                                            {sala.recursos.map((r) => (
+                                                <div>
+                                                    <div className='flex flex-row items-center' key={r.idRecurso}>
+                                                        <FaStethoscope size={14} /><p className=' ml-1'> {r.nomeRecurso}</p>
+                                                    </div>
+                                                    <p className='border-b ml-5 text-sm text-gray-500'> {r.descricao}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            <div>
+                                <Button onClick={handleNovaLocacaoClick} text="Nova locação" />
+                                {profissionalId && showCustomTooltip && (
+                                    <CriarLocacaoMedico
+                                        appointmentMeta={null}
+                                        onHide={handleCloseCustomTooltip}
+                                        visible={showCustomTooltip}
+                                        profissional={profissional}
+                                        getLocacoes={getLocacoesDoMedico} // Passa a função getLocacoes
+                                    />
+                                )}
+                                {salaId && showCustomTooltip && (
+                                    <CriarLocacaoSala
+                                        appointmentMeta={null}
+                                        onHide={handleCloseCustomTooltip}
+                                        visible={showCustomTooltip}
+                                        sala={sala}
+                                        getLocacoes={getLocacoesDaSala} // Passa a função getLocacoes
+                                    />
+                                )}
                             </div>
                         </div>
 
-                        <div className='overflow-y-auto max-h-[calc(100vh-10rem)] border rounded-md m-2'>
+                        <div className='overflow-y-auto max-h-[calc(100vh-12rem)] border rounded-md m-2'>
                             <Paper>
                                 <Scheduler data={schedulerData} locale="pt-BR">
                                     <EditingState onCommitChanges={commitChanges} />
-                                    {/* <IntegratedEditing /> */}
+                                    <IntegratedEditing />
                                     <ViewState defaultCurrentDate={new Date()} />
-                                    <WeekView startDayHour={8} endDayHour={18} excludedDays={[0, 6]} />
+                                    <WeekView startDayHour={6} endDayHour={23} excludedDays={[0]} />
                                     <MonthView />
-                                    <DayView startDayHour={8} endDayHour={18} />
+                                    <DayView startDayHour={6} endDayHour={23} />
                                     <Toolbar />
                                     <TodayButton />
                                     <ViewSwitcher />
@@ -144,11 +250,12 @@ const Agenda = () => {
                                     <AppointmentTooltip
                                         showCloseButton
                                         showOpenButton
-                                        layoutComponent={CustomTooltipLayout}
-                                    // headerComponent={CustomTooltipHeader}
-                                    // contentComponent={CustomTooltipContent}
+                                    // layoutComponent={(props) => (
+                                    //     <CustomTooltipLayout {...props} profissional={profissional} 
+
+                                    //     />
+                                    // )}
                                     />
-                                    <AppointmentForm overlayComponent={CustomTooltipLayout} />
                                 </Scheduler>
                             </Paper>
                         </div>
