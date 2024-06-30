@@ -65,7 +65,7 @@ const MenuLateral = () => {
             link: '/listagem-alas',
             itens: [
                 {
-                    id: 'lista_de_alas_menu',
+                    id: 'cadastro_de_alas_menu',
                     title: 'Cadastrar Ala',
                     icon: <FaUsers />,
                     link: '/cadastro-ala',
