@@ -26,7 +26,6 @@ const Relatorios = () => {
             if (response.status === 200) {
                 setRespostaOk(true);
                 setRelatorio(response.data);
-                console.log(response);
             } else {
                 console.error(`Falha ao obter dados de relatório: ${response.status}`);
             }
@@ -139,16 +138,39 @@ const Relatorios = () => {
                         <thead>
                             <tr>
                                 <th className="py-2 px-4 border">Codigo</th>
-                                <th className="py-2 px-4 border">Nome</th>
-                                <th className="py-2 px-4 border">Total de horas</th>
+                                {tipo === 'sala' && <th className="py-2 px-4 border">Médico</th>}
+                                {tipo === 'medico' && <th className="py-2 px-4 border">Sala</th>}
+                                {tipo === 'diario' && (
+                                    <>
+                                        <th className="py-2 px-4 border">Nome Médico</th>
+                                        <th className="py-2 px-4 border">Sala</th>
+                                    </>
+                                )}
+                                {tipo !== 'diario' ? (
+                                    <th className="py-2 px-4 border">Total de horas</th>
+                                ) : (
+                                    <>
+                                        <th className="py-2 px-4 border">Hora de Início</th>
+                                        <th className="py-2 px-4 border">Hora de Fim</th>
+                                    </>
+                                )}
                             </tr>
                         </thead>
                         <tbody>
                             {relatorio.map((item, index) => (
                                 <tr key={index}>
                                     <td className="py-2 px-4 border">{item.id}</td>
-                                    <td className="py-2 px-4 border">{item.nome}</td>
-                                    <td className="py-2 px-4 border">{item.totalHoras + " horas"}</td>
+                                    {tipo === 'sala' && <td className="py-2 px-4 border">{item.nome}</td>}
+                                    {tipo === 'medico' && <td className="py-2 px-4 border">{item.nome}</td>}
+                                    {tipo === 'diario' && (
+                                        <>
+                                            <td className="py-2 px-4 border">{item.nomeMedico}</td>
+                                            <td className="py-2 px-4 border">{item.nomeSala}</td>
+                                            <td className="py-2 px-4 border">{item.horaInicio}</td>
+                                            <td className="py-2 px-4 border">{item.horaFim}</td>
+                                        </>
+                                    )}
+                                    {tipo !== 'diario' && <td className="py-2 px-4 border">{item.totalHoras + " horas"}</td>}
                                 </tr>
                             ))}
                         </tbody>
