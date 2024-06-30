@@ -17,6 +17,8 @@ import { useAuth } from "../lib/AuthProvider";
 import Login from "../pages/Login";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { PublicRoute } from "./PublicRoute";
+import Signup from "../pages/Signup";
+import Relatorios from "../auth/Relatorios";
 
 const Routes = () => {
   const { token } = useAuth();
@@ -100,17 +102,10 @@ const Routes = () => {
           element: <Agenda />
         },
         {
-          path: "/minha-conta",
-          element: <MinhaConta />
-        },
-        {
-          path: "/alterar-senha",
-          element: <AlterarSenha /> // Include the AlterarSenha route
-        },
-        {
-          path: "/agenda-sala/:salaId",
-          element: <Agenda />
+          path: "/relatorios/:tipo",
+          element: <Relatorios />
         }
+
       ],
     },
   ];

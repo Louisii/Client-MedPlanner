@@ -47,9 +47,10 @@ const CadastroSala = () => {
 
     const fetchOpcoesAla = async () => {
         try {
-            const response = await axiosWithToken.get(`http://localhost:8080/ala/buscar`);
+            const response = await axiosWithToken.get('http://localhost:8080/ala/listar');
             if (response.status === 200) {
                 const alas = response.data.map((ala) => ({ value: ala.idAla, label: ala.nome }));
+                console.log('Alas:', alas); // Adicionando log para verificar os dados das alas
                 setOpcoesAla([{ value: '', label: 'Selecione' }, ...alas]);
             } else {
                 console.error(`Falha ao obter alas: ${response.status}`);
@@ -85,7 +86,7 @@ const CadastroSala = () => {
             ala: { idAla: form.ala.idAla }, // Certifica-se que 'ala' seja um objeto com a chave idAla
         };
         try {
-            const response = await axiosWithToken.post(`http://localhost:8080/sala/salvar`, payload);
+            const response = await axiosWithToken.post('http://localhost:8080/sala/salvar', payload);
             if (response.status === 200) {
                 setRespostaOk(true);
                 navigate("/listagem-sala");

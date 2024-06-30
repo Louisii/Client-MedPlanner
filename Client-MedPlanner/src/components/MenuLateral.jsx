@@ -1,4 +1,4 @@
-import { FaChevronDown, FaHome, FaHospital, FaListAlt, FaSignOutAlt, FaStethoscope, FaUserCircle, FaUserPlus, FaUsers } from 'react-icons/fa';
+import { FaChevronDown, FaHome, FaHospital, FaListAlt, FaSignOutAlt, FaStethoscope, FaUserCircle, FaUserPlus, FaUsers, FaFileAlt } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/logoMedPlanner.png';
 import SubmenuItem from './SubmenuItem';
@@ -59,6 +59,53 @@ const MenuLateral = () => {
             ]
         },
         {
+            id: 'alas_menu',
+            title: 'Alas',
+            icon: <FaUsers />,
+            link: '/listagem-alas',
+            itens: [
+                {
+                    id: 'cadastro_de_alas_menu',
+                    title: 'Cadastrar Ala',
+                    icon: <FaUsers />,
+                    link: '/cadastro-ala',
+                },
+                {
+                    id: 'lista_de_alas_menu',
+                    title: 'Listar Alas',
+                    icon: <FaUsers />,
+                    link: '/listagem-alas',
+                }
+            ]
+        },
+        {
+            id: 'relatorios_menu',
+            title: 'Relatórios',
+            icon: <FaFileAlt />,
+            link: '/relatorios',
+            itens: [
+                {
+                    id: 'relatorio_sala_menu',
+                    title: 'Relatório de Salas',
+                    icon: <FaUserPlus />,
+                    link: '/relatorios/sala',
+                },
+                {
+                    id: 'relatorio_medico_menu',
+                    title: 'Relatório de Médicos',
+                    icon: <FaUsers />,
+                    link: '/relatorios/medico',
+                },
+                {
+                    id: 'relatorio_diario_menu',
+                    title: 'Relatório Diário',
+                    icon: <FaUsers />,
+                    link: '/relatorios/diario',
+                },
+
+            ]
+        },
+        {
             id: 'sala_menu',
             title: 'Salas',
             icon: <FaStethoscope />,
@@ -90,6 +137,8 @@ const MenuLateral = () => {
                 }
             ]
         }
+
+
     ];
 
     const minhaContaItem = {
