@@ -58,53 +58,26 @@ const MenuLateral = () => {
                 }
             ]
         },
-        {
-            id: 'alas_menu',
-            title: 'Alas',
-            icon: <FaUsers />,
-            link: '/listagem-alas',
-            itens: [
-                {
-                    id: 'cadastro_de_alas_menu',
-                    title: 'Cadastrar Ala',
-                    icon: <FaUsers />,
-                    link: '/cadastro-ala',
-                },
-                {
-                    id: 'lista_de_alas_menu',
-                    title: 'Listar Alas',
-                    icon: <FaUsers />,
-                    link: '/listagem-alas',
-                }
-            ]
-        },
-        {
-            id: 'relatorios_menu',
-            title: 'Relatórios',
-            icon: <FaFileAlt />,
-            link: '/relatorios',
-            itens: [
-                {
-                    id: 'relatorio_sala_menu',
-                    title: 'Relatório de Salas',
-                    icon: <FaUserPlus />,
-                    link: '/relatorios/sala',
-                },
-                {
-                    id: 'relatorio_medico_menu',
-                    title: 'Relatório de Médicos',
-                    icon: <FaUsers />,
-                    link: '/relatorios/medico',
-                },
-                {
-                    id: 'relatorio_diario_menu',
-                    title: 'Relatório Diário',
-                    icon: <FaUsers />,
-                    link: '/relatorios/diario',
-                },
-
-            ]
-        },
+        // {
+        //     id: 'alas_menu',
+        //     title: 'Alas',
+        //     icon: <FaUsers />,
+        //     link: '/listagem-alas',
+        //     itens: [
+        //         {
+        //             id: 'cadastro_de_alas_menu',
+        //             title: 'Cadastrar Ala',
+        //             icon: <FaUsers />,
+        //             link: '/cadastro-ala',
+        //         },
+        //         {
+        //             id: 'lista_de_alas_menu',
+        //             title: 'Listar Alas',
+        //             icon: <FaUsers />,
+        //             link: '/listagem-alas',
+        //         }
+        //     ]
+        // },
         {
             id: 'sala_menu',
             title: 'Salas',
@@ -135,6 +108,34 @@ const MenuLateral = () => {
                     icon: <FaHospital />,
                     link: '/listagem-alas',
                 }
+            ]
+        },
+
+        {
+            id: 'relatorios_menu',
+            title: 'Relatórios',
+            icon: <FaFileAlt />,
+            link: '/relatorios',
+            itens: [
+                {
+                    id: 'relatorio_sala_menu',
+                    title: 'Relatório de Salas',
+                    icon: <FaUserPlus />,
+                    link: '/relatorios/sala',
+                },
+                {
+                    id: 'relatorio_medico_menu',
+                    title: 'Relatório de Médicos',
+                    icon: <FaUsers />,
+                    link: '/relatorios/medico',
+                },
+                {
+                    id: 'relatorio_diario_menu',
+                    title: 'Relatório Diário',
+                    icon: <FaUsers />,
+                    link: '/relatorios/diario',
+                },
+
             ]
         }
 
