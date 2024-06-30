@@ -6,6 +6,8 @@ import Label from '../components/Label';
 import axiosWithToken from '../lib/RequestInterceptor';
 import { useParams } from 'react-router-dom';
 import { format, parse } from 'date-fns';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const Relatorios = () => {
     const { tipo } = useParams();
@@ -26,6 +28,7 @@ const Relatorios = () => {
             if (response.status === 200) {
                 setRespostaOk(true);
                 setRelatorio(response.data);
+                console.log(response);
             } else {
                 console.error(`Falha ao obter dados de relatório: ${response.status}`);
             }
@@ -83,6 +86,20 @@ const Relatorios = () => {
         }
     };
 
+    const gerarPDF = () => {
+        const input = document.getElementById('relatorio-table');
+        html2canvas(input)
+            .then((canvas) => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF();
+                const imgProps = pdf.getImageProperties(imgData);
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                pdf.save('relatorio.pdf');
+            });
+    };
+
     return (
         <Layout>
             <div className="p-4 my-auto">
@@ -134,47 +151,52 @@ const Relatorios = () => {
                     )}
                 </form>
                 <div className="p-4">
-                    <table className="min-w-full bg-white border">
-                        <thead>
-                            <tr>
-                                <th className="py-2 px-4 border">Codigo</th>
-                                {tipo === 'sala' && <th className="py-2 px-4 border">Médico</th>}
-                                {tipo === 'medico' && <th className="py-2 px-4 border">Sala</th>}
-                                {tipo === 'diario' && (
-                                    <>
-                                        <th className="py-2 px-4 border">Nome Médico</th>
-                                        <th className="py-2 px-4 border">Sala</th>
-                                    </>
-                                )}
-                                {tipo !== 'diario' ? (
-                                    <th className="py-2 px-4 border">Total de horas</th>
-                                ) : (
-                                    <>
-                                        <th className="py-2 px-4 border">Hora de Início</th>
-                                        <th className="py-2 px-4 border">Hora de Fim</th>
-                                    </>
-                                )}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {relatorio.map((item, index) => (
-                                <tr key={index}>
-                                    <td className="py-2 px-4 border">{item.id}</td>
-                                    {tipo === 'sala' && <td className="py-2 px-4 border">{item.nome}</td>}
-                                    {tipo === 'medico' && <td className="py-2 px-4 border">{item.nome}</td>}
+                    <div id="relatorio-table">
+                        <table className="min-w-full bg-white border">
+                            <thead>
+                                <tr>
+                                    <th className="py-2 px-4 border">Codigo</th>
+                                    {tipo === 'sala' && <th className="py-2 px-4 border">Médico</th>}
+                                    {tipo === 'medico' && <th className="py-2 px-4 border">Sala</th>}
                                     {tipo === 'diario' && (
                                         <>
-                                            <td className="py-2 px-4 border">{item.nomeMedico}</td>
-                                            <td className="py-2 px-4 border">{item.nomeSala}</td>
-                                            <td className="py-2 px-4 border">{item.horaInicio}</td>
-                                            <td className="py-2 px-4 border">{item.horaFim}</td>
+                                            <th className="py-2 px-4 border">Nome Médico</th>
+                                            <th className="py-2 px-4 border">Sala</th>
                                         </>
                                     )}
-                                    {tipo !== 'diario' && <td className="py-2 px-4 border">{item.totalHoras + " horas"}</td>}
+                                    {tipo !== 'diario' ? (
+                                        <th className="py-2 px-4 border">Total de horas</th>
+                                    ) : (
+                                        <>
+                                            <th className="py-2 px-4 border">Hora de Início</th>
+                                            <th className="py-2 px-4 border">Hora de Fim</th>
+                                        </>
+                                    )}
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {relatorio.map((item, index) => (
+                                    <tr key={index}>
+                                        <td className="py-2 px-4 border">{item.id}</td>
+                                        {tipo === 'sala' && <td className="py-2 px-4 border">{item.nome}</td>}
+                                        {tipo === 'medico' && <td className="py-2 px-4 border">{item.nome}</td>}
+                                        {tipo === 'diario' && (
+                                            <>
+                                                <td className="py-2 px-4 border">{item.nomeMedico}</td>
+                                                <td className="py-2 px-4 border">{item.nomeSala}</td>
+                                                <td className="py-2 px-4 border">{item.horaInicio}</td>
+                                                <td className="py-2 px-4 border">{item.horaFim}</td>
+                                            </>
+                                        )}
+                                        {tipo !== 'diario' && <td className="py-2 px-4 border">{item.totalHoras + " horas"}</td>}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className="p-4">
+                        <Button onClick={gerarPDF} text="Gerar PDF" />
+                    </div>
                 </div>
             </div>
         </Layout>
