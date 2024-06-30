@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Layout from '../components/Layout';
 import logo from '../assets/logoMedPlanner.png';
 import axiosWithToken from '../lib/RequestInterceptor';
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import { FaArrowLeft, FaArrowRight, FaRegClock } from 'react-icons/fa';
 import { FaUserDoctor } from 'react-icons/fa6';
 
 const Home = () => {
@@ -106,6 +106,7 @@ const Home = () => {
                   <div key={loc.idLocacao}>
                     <div className='flex flex-row m-1 items-center border-b'>
                       <div className='flex flex-row m-1 py-1 px-2 mr-2 rounded bg-gray-200 w-36 items-center'>
+                        <FaRegClock />
                         <p className='pl-2'>{formatHora(loc.horaInicio)} - {formatHora(loc.horaFinal)}</p>
                       </div>
                       <FaUserDoctor />
