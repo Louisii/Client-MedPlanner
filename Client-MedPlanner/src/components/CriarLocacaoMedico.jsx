@@ -9,6 +9,7 @@ import { format, isSameDay, isBefore } from 'date-fns';
 import axiosWithToken from '../lib/RequestInterceptor';
 import InputDisabled from './InputDisabled';
 import ConfirmDeleteModal from './ConfirmDeleteModal';
+import ButtonVermelho from './ButtonVermelho';
 
 const CriarLocacaoMedico = ({ appointmentMeta, onHide, visible, profissional, getLocacoes }) => {
     const initialTitle = appointmentMeta?.data?.title || null;
@@ -161,22 +162,31 @@ const CriarLocacaoMedico = ({ appointmentMeta, onHide, visible, profissional, ge
 
     return (
         <Dialog open={visible} onClose={onHide}>
-            <DialogTitle>Locação</DialogTitle>
+            {/* <DialogTitle>Locação</DialogTitle> */}
             <DialogContent>
                 {/* <p>id: {idLocacao}</p> */}
                 {/* <p>sala: {selectedSala.value}</p> */}
                 {/* <p>ala: {selectedAla}</p> */}
-                <div className='my-4'>
-                    <p className='font-semibold text-lg'>{profissional.nome}</p>
-                    <div className='flex flex-row'>
-                        <p className='font-semibold mr-1'>CRM: </p>
-                        <p>{profissional.numCrm}</p>
-                        <p>{`/${profissional.ufCrm}`}</p>
+                <div className='flex flex-row justify-between'>
+                    <div className='mb-4'>
+                        <p className='font-semibold text-xl mb-2'>Locação</p>
+                        <p className='font-semibold text-lg'>{profissional.nome}</p>
+                        <div className='flex flex-row'>
+                            <p className='font-semibold mr-1'>CRM: </p>
+                            <p>{profissional.numCrm}</p>
+                            <p>{`/${profissional.ufCrm}`}</p>
+                        </div>
+                        <div className='flex flex-row'>
+                            <p className='font-semibold mr-1'>E-mail: </p>
+                            <p>{profissional.username}</p>
+                        </div>
                     </div>
-                    <div className='flex flex-row'>
-                        <p className='font-semibold mr-1'>E-mail: </p>
-                        <p>{profissional.username}</p>
-                    </div>
+
+                    {idLocacao &&
+                        <div className='h-10'>
+                            <ButtonVermelho onClick={() => openDeleteModal()} text="Excluir" />
+                        </div>
+                    }
                 </div>
 
                 <div className='flex flex-row my-4 gap-4'>
@@ -221,7 +231,7 @@ const CriarLocacaoMedico = ({ appointmentMeta, onHide, visible, profissional, ge
                     <div className='bg-red-200 rounded m-2 p-2 '>{respostaErro}</div>}
             </DialogContent>
             <DialogActions>
-                <Button onClick={() => openDeleteModal()} text="Excluir" />
+
                 <Button onClick={handleCancel} text='Cancelar' />
                 <Button onClick={salvar} color='primary' text='Salvar' />
                 {idLocacao && <ConfirmDeleteModal

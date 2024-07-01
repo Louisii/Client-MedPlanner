@@ -8,6 +8,7 @@ import { format, isSameDay, isBefore } from 'date-fns';
 import axiosWithToken from '../lib/RequestInterceptor';
 import InputDisabled from './InputDisabled';
 import ConfirmDeleteModal from './ConfirmDeleteModal';
+import ButtonVermelho from './ButtonVermelho';
 
 const CriarLocacaoSala = ({ appointmentMeta, onHide, visible, sala, getLocacoes }) => {
     const initialStartDate = appointmentMeta?.data?.startDate
@@ -121,19 +122,30 @@ const CriarLocacaoSala = ({ appointmentMeta, onHide, visible, sala, getLocacoes 
 
     return (
         <Dialog open={visible} onClose={onHide}>
-            <DialogTitle>Locação</DialogTitle>
+            {/* <DialogTitle>Locação</DialogTitle> */}
             <DialogContent>
-                <div className='my-4'>
-                    <p className='font-semibold text-lg'>{sala.nomeSala}</p>
-                    <div className='flex flex-row'>
-                        <p className='font-semibold mr-1'>Ala: </p>
-                        <p>{sala.ala.nome}</p>
+
+                <div className='flex flex-row justify-between'>
+                    <div className='my-4'>
+                        <p className='font-semibold text-lg'>{sala.nomeSala}</p>
+                        <div className='flex flex-row'>
+                            <p className='font-semibold mr-1'>Ala: </p>
+                            <p>{sala.ala.nome}</p>
+                        </div>
+                        <div className='flex flex-row'>
+                            <p className='font-semibold mr-1'>Andar: </p>
+                            <p>{sala.andar}</p>
+                        </div>
                     </div>
-                    <div className='flex flex-row'>
-                        <p className='font-semibold mr-1'>Andar: </p>
-                        <p>{sala.andar}</p>
-                    </div>
+
+                    {idLocacao &&
+                        <div className='h-10'>
+                            <ButtonVermelho onClick={() => openDeleteModal()} text="Excluir" />
+                        </div>
+                    }
                 </div>
+
+
 
                 <div>
                     <Label text='Médico' />
@@ -164,7 +176,7 @@ const CriarLocacaoSala = ({ appointmentMeta, onHide, visible, sala, getLocacoes 
                     <div className='bg-red-200 rounded m-2 p-2 '>{respostaErro}</div>}
             </DialogContent>
             <DialogActions>
-                <Button onClick={openDeleteModal} text="Excluir" />
+
                 <Button onClick={handleCancel} text='Cancelar' />
                 <Button onClick={salvar} color='primary' text='Salvar' />
                 {idLocacao && <ConfirmDeleteModal
