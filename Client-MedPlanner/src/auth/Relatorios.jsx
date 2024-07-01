@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import Button from '../components/Button';
 import Input from '../components/Input';
 import Label from '../components/Label';
 import axiosWithToken from '../lib/RequestInterceptor';
 import { useParams } from 'react-router-dom';
-import { format, parse } from 'date-fns';
+import { format } from 'date-fns';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -15,6 +15,12 @@ const Relatorios = () => {
     const [respostaErro, setRespostaErro] = useState([]);
     const [respostaOk, setRespostaOk] = useState(false);
     const [relatorio, setRelatorio] = useState([]);
+
+    useEffect(() => {
+        if (tipo === 'diario') {
+            gerarRelatorioDiario();
+        }
+    }, [tipo]);
 
     const gerarRelatorioSala = () => {
         axiosWithToken.get('http://localhost:8080/relatorios/medicos-por-sala', {
@@ -64,7 +70,15 @@ const Relatorios = () => {
     const gerarRelatorioDiario = () => {
         axiosWithToken.get('http://localhost:8080/relatorios/diario')
         .then((response) => {
-            setRelatorio(response.data);
+            const dadosFormatados = response.data.map((locacao) => ({
+                id: locacao.idLocacao,
+                nomeMedico: locacao.usuario.nome,
+                nomeSala: locacao.sala.nomeSala,
+                dia: format(new Date(locacao.dia), 'dd-MM-yyyy'),
+                horaInicio: format(new Date(locacao.horaInicio), 'HH:mm'),
+                horaFim: format(new Date(locacao.horaFinal), 'HH:mm')
+            }));
+            setRelatorio(dadosFormatados);
         })
         .catch((error) => {
             setRespostaErro(error.response?.data?.errors || ['Erro ao gerar relatório diário.']);
@@ -81,8 +95,6 @@ const Relatorios = () => {
             gerarRelatorioSala();
         } else if (tipo === 'medico') {
             gerarRelatorioMedico();
-        } else if (tipo === 'diario') {
-            gerarRelatorioDiario();
         }
     };
 
@@ -179,6 +191,7 @@ const Relatorios = () => {
                                         <>
                                             <th className="py-2 px-4 border">Nome Médico</th>
                                             <th className="py-2 px-4 border">Sala</th>
+                                            <th className="py-2 px-4 border">Dia</th>
                                         </>
                                     )}
                                     {tipo !== 'diario' ? (
@@ -201,6 +214,7 @@ const Relatorios = () => {
                                             <>
                                                 <td className="py-2 px-4 border">{item.nomeMedico}</td>
                                                 <td className="py-2 px-4 border">{item.nomeSala}</td>
+                                                <td className="py-2 px-4 border">{item.dia}</td>
                                                 <td className="py-2 px-4 border">{item.horaInicio}</td>
                                                 <td className="py-2 px-4 border">{item.horaFim}</td>
                                             </>
