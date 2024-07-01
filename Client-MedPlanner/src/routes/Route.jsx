@@ -1,4 +1,3 @@
-// src/routes/Routes.jsx
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Agenda from "../auth/Agenda";
 import AlterarSenha from "../auth/AlterarSenha";
@@ -100,12 +99,22 @@ const Routes = () => {
         {
           path: "/agenda-profissional/:profissionalId",
           element: <Agenda />
+        }, {
+          path: "/agenda-sala/:salaId",
+          element: <Agenda />
         },
         {
           path: "/relatorios/:tipo",
           element: <Relatorios />
+        },
+        {
+          path: "/minha-conta",  
+          element: <MinhaConta />
+        },
+        {
+          path: "/alterar-senha",  
+          element: <AlterarSenha />
         }
-
       ],
     },
   ];

@@ -6,42 +6,44 @@ import AsyncSelectorProfissional from './AsyncSelectorProfissional';
 import Label from './Label';
 import { format, isSameDay, isBefore } from 'date-fns';
 import axiosWithToken from '../lib/RequestInterceptor';
+import InputDisabled from './InputDisabled';
+import ConfirmDeleteModal from './ConfirmDeleteModal';
 
 const CriarLocacaoSala = ({ appointmentMeta, onHide, visible, sala, getLocacoes }) => {
-
     const initialStartDate = appointmentMeta?.data?.startDate
         ? format(new Date(appointmentMeta.data.startDate), 'yyyy-MM-dd\'T\'HH:mm')
         : '';
     const initialEndDate = appointmentMeta?.data?.endDate
         ? format(new Date(appointmentMeta.data.endDate), 'yyyy-MM-dd\'T\'HH:mm')
         : '';
-    const initialSelectedSala = null;
-    const initialSelectedAla = '';
 
     const [startDate, setStartDate] = useState(initialStartDate);
     const [endDate, setEndDate] = useState(initialEndDate);
-    const [selectedSala, setSelectedSala] = useState(initialSelectedSala);
-    const [selectedAla, setSelectedAla] = useState(initialSelectedAla);
-    const [medicoSelecionado, setMedicoSelecionado] = useState();
+    const [selectedMedico, setSelectedMedico] = useState(null);
     const [respostaErro, setRespostaErro] = useState('');
+    const [idLocacao, setIdLocacao] = useState('');
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [locacao, setLocacao] = useState(null);
 
     useEffect(() => {
         setStartDate(initialStartDate);
         setEndDate(initialEndDate);
-        setSelectedSala(initialSelectedSala);
-        setSelectedAla(initialSelectedAla);
+        if (appointmentMeta?.data?.title) {
+            const id = appointmentMeta.data.title.split('#')[1].trim();
+            setIdLocacao(id);
+            getLocacao(id);
+        }
     }, [appointmentMeta]);
 
     const handleCancel = () => {
         setStartDate(initialStartDate);
         setEndDate(initialEndDate);
-        setSelectedSala(initialSelectedSala);
-        setSelectedAla(initialSelectedAla);
+        setSelectedMedico(null);
         onHide();
     };
 
     const salvar = () => {
-        if (!startDate || !endDate || !medicoSelecionado) {
+        if (!startDate || !endDate || !selectedMedico) {
             setRespostaErro('Todos os campos são obrigatórios.');
             return;
         }
@@ -57,29 +59,64 @@ const CriarLocacaoSala = ({ appointmentMeta, onHide, visible, sala, getLocacoes 
         }
 
         const data = {
-            idUsuario: medicoSelecionado.value,
+            idUsuario: selectedMedico.value,
             horaInicio: startDate,
             horaFinal: endDate,
             dia: format(new Date(startDate), 'yyyy-MM-dd'),
             sala: sala.idSala,
-            ala: sala.ala.idAla
+            ala: sala.ala.idAla,
+            idLocacao: parseInt(idLocacao),
         };
 
         axiosWithToken.post('http://localhost:8080/locacao/salvar', data)
             .then((response) => {
                 if (response.status === 200) {
                     handleCancel();
-                    getLocacoes(); // Chama a função getLocacoes após a criação da locação
+                    getLocacoes();
                 }
             })
             .catch((error) => {
                 setRespostaErro(error.response.data.errors);
-                console.error('Erro ao salvar especialidade:', error.message);
+                console.error('Erro ao salvar locação:', error.message);
             });
     };
 
+    const getLocacao = (idLocacao) => {
+        axiosWithToken.get(`http://localhost:8080/locacao/buscar?id=${idLocacao}`)
+            .then((response) => {
+                if (response.status === 200) {
+                    const { sala, profissional } = response.data;
+                    setSelectedMedico({ label: profissional.nome, value: profissional.idUsuario });
+                }
+            })
+            .catch((error) => {
+                console.error('Erro ao obter locação:', error.message);
+            });
+    };
+
+    const openDeleteModal = () => {
+        setDeleteModalOpen(true);
+    };
+
+    const closeDeleteModal = () => {
+        setDeleteModalOpen(false);
+    };
+
+    const confirmDelete = () => {
+        if (idLocacao) {
+            axiosWithToken.delete(`http://localhost:8080/locacao/delete/${idLocacao}`)
+                .then((response) => {
+                    getLocacoes();
+                    closeDeleteModal();
+                })
+                .catch((error) => {
+                    console.error('Erro ao excluir locação:', error.message);
+                });
+        }
+    };
+
     const handleProfissionalSelection = (data) => {
-        setMedicoSelecionado(data);
+        setSelectedMedico(data);
     };
 
     return (
@@ -127,8 +164,15 @@ const CriarLocacaoSala = ({ appointmentMeta, onHide, visible, sala, getLocacoes 
                     <div className='bg-red-200 rounded m-2 p-2 '>{respostaErro}</div>}
             </DialogContent>
             <DialogActions>
+                <Button onClick={openDeleteModal} text="Excluir" />
                 <Button onClick={handleCancel} text='Cancelar' />
                 <Button onClick={salvar} color='primary' text='Salvar' />
+                {idLocacao && <ConfirmDeleteModal
+                    isOpen={deleteModalOpen}
+                    onCancel={closeDeleteModal}
+                    onConfirm={confirmDelete}
+                    text="Tem certeza que deseja excluir a locação?"
+                />}
             </DialogActions>
         </Dialog>
     );

@@ -142,7 +142,7 @@ const ListagemSala = () => {
                                         </ul>
                                     </div>
                                     <div className='flex flex-col items-end justify-between mt-4 md:mt-0'>
-                                        <Button onClick={() => handleAgendaSala(sala.idSala)} text="Agenda" className='bg-blue-500 text-white p-2 rounded mb-2' />
+                                        <Button onClick={() => navigate(`/agenda-sala/${sala.idSala}`)} text="Agenda" className='bg-blue-500 text-white p-2 rounded mb-2' />
                                         <div className='flex space-x-2'>
                                             <Button onClick={() => handleEditSala(sala.idSala)} text="Editar" className='bg-green-500 text-white p-2 rounded' />
                                             <Button onClick={() => openDeleteModal(sala)} text="Excluir" className='bg-red-500 text-white p-2 rounded' />

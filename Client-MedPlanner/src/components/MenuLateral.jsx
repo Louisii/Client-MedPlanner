@@ -1,4 +1,4 @@
-import { FaChevronDown, FaHospital, FaListAlt, FaSignOutAlt, FaStethoscope, FaUserCircle, FaUserPlus, FaUsers, FaFileAlt } from 'react-icons/fa';
+import { FaChevronDown, FaHome, FaHospital, FaListAlt, FaSignOutAlt, FaStethoscope, FaUserCircle, FaUserPlus, FaUsers, FaFileAlt } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/logoMedPlanner.png';
 import SubmenuItem from './SubmenuItem';
@@ -58,109 +58,25 @@ const MenuLateral = () => {
                 }
             ]
         },
-        {
-            id: 'alas_menu',
-            title: 'Alas',
-            icon: <FaUsers />,
-            link: '/listagem-alas',
-            itens: [
-                {
-                    id: 'cadastro_de_alas_menu',
-                    title: 'Cadastrar Ala',
-                    icon: <FaUsers />,
-                    link: '/cadastro-ala',
-                },
-                {
-                    id: 'lista_de_alas_menu',
-                    title: 'Listar Alas',
-                    icon: <FaUsers />,
-                    link: '/listagem-alas',
-                }
-            ]
-        },
-        {
-            id: 'relatorios_menu',
-            title: 'Relatórios',
-            icon: <FaFileAlt />,
-            link: '/relatorios',
-            itens: [
-                {
-                    id: 'relatorio_sala_menu',
-                    title: 'Relatório de Salas',
-                    icon: <FaUserPlus />,
-                    link: '/relatorios/sala',
-                },
-                {
-                    id: 'relatorio_medico_menu',
-                    title: 'Relatório de Médicos',
-                    icon: <FaUsers />,
-                    link: '/relatorios/medico',
-                },
-                {
-                    id: 'relatorio_diario_menu',
-                    title: 'Relatório Diário',
-                    icon: <FaUsers />,
-                    link: '/relatorios/diario',
-                },
-        
-            ]
-        },
         // {
-        //     id: 'ambulatorio_menu',
-        //     title: 'Ambulatório',
-        //     icon: <FaStethoscope />,
-        //     link: '/home',
+        //     id: 'alas_menu',
+        //     title: 'Alas',
+        //     icon: <FaUsers />,
+        //     link: '/listagem-alas',
         //     itens: [
         //         {
-        //             id: 'lista_consultas_menu',
-        //             title: 'Consultas Agendadas',
-        //             icon: <FaListAlt />,
-        //             link: '/consultas-agendadas',
-        //         },
-
-
-        //     ]
-        // },
-        // {
-        //     id: 'agenda_menu',
-        //     title: 'Agenda',
-        //     icon: <FaCalendarAlt />,
-        //     link: '/home',
-        //     itens: [
-        //         {
-        //             id: 'cadastrar_agenda_menu',
-        //             title: 'Cadastrar Agenda',
-        //             icon: <FaCalendarPlus />,
-        //             link: '/cadastro-agenda',
+        //             id: 'cadastro_de_alas_menu',
+        //             title: 'Cadastrar Ala',
+        //             icon: <FaUsers />,
+        //             link: '/cadastro-ala',
         //         },
         //         {
-        //             id: 'lista_de_agendas_menu',
-        //             title: 'Lista de Agendas',
-        //             icon: <FaCalendarAlt />,
-        //             link: '/agendas',
-        //         },
-
+        //             id: 'lista_de_alas_menu',
+        //             title: 'Listar Alas',
+        //             icon: <FaUsers />,
+        //             link: '/listagem-alas',
+        //         }
         //     ]
-        // },
-        // {
-        //     title: 'Ambulatório',
-        //     icon: <FaStethoscope />
-        // },
-        // {
-        //     title: 'Agenda',
-        //     icon: <FaCalendarAlt />
-        // },
-        // {
-        //     title: 'Corpo Clínico',
-        //     icon: <FaUserMd />
-        // },
-        // {
-        //     title: 'Relatório',
-        //     icon: <FaFileAlt />
-        // },
-        // {
-        //     title: 'Outros',
-        //     icon: <FaEllipsisV />
         // },
         {
             id: 'sala_menu',
@@ -193,7 +109,37 @@ const MenuLateral = () => {
                     link: '/listagem-alas',
                 }
             ]
+        },
+
+        {
+            id: 'relatorios_menu',
+            title: 'Relatórios',
+            icon: <FaFileAlt />,
+            link: '/relatorios',
+            itens: [
+                {
+                    id: 'relatorio_sala_menu',
+                    title: 'Relatório de Salas',
+                    icon: <FaUserPlus />,
+                    link: '/relatorios/sala',
+                },
+                {
+                    id: 'relatorio_medico_menu',
+                    title: 'Relatório de Médicos',
+                    icon: <FaUsers />,
+                    link: '/relatorios/medico',
+                },
+                {
+                    id: 'relatorio_diario_menu',
+                    title: 'Relatório Diário',
+                    icon: <FaUsers />,
+                    link: '/relatorios/diario',
+                },
+
+            ]
         }
+
+
     ];
 
     const minhaContaItem = {
@@ -210,7 +156,15 @@ const MenuLateral = () => {
                 <img src={logo} alt="logo sga" className='w-48 mx-auto' />
             </div>
 
+
             <ul className='py-10'>
+
+                <li className='text-gray-500 w-full shadow-sm py-3 pl-6 pr-0'>
+                    <Link className='flex align-baseline mr-4 text-gray-500 gap-2 hover:text-teal-700 items-center' to="/home">
+                        <FaHome /> Home
+                    </Link>
+                </li>
+
                 {menuItems.map((item) =>
                     <li className='text-gray-500 w-full shadow-sm py-3 pl-6 pr-0' key={item.id}>
                         <div>
@@ -230,6 +184,7 @@ const MenuLateral = () => {
                         </div>
                     </li>
                 )}
+
                 <li className='text-gray-500 w-full shadow-sm py-3 pl-6 pr-0'>
                     <Link className='flex align-baseline mr-4 text-gray-500 gap-2 hover:text-teal-700 items-center' to={minhaContaItem.link}>
                         {minhaContaItem.icon}
