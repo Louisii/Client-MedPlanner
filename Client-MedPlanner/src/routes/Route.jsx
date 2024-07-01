@@ -108,8 +108,12 @@ const Routes = () => {
           element: <Relatorios />
         },
         {
-          path: "/minha-conta",  // Adicionando a rota Minha Conta
+          path: "/minha-conta",  
           element: <MinhaConta />
+        },
+        {
+          path: "/alterar-senha",  
+          element: <AlterarSenha />
         }
       ],
     },
