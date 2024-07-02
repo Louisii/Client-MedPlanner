@@ -5,7 +5,7 @@ import axiosWithToken from '../lib/RequestInterceptor';
 const AsyncSelectorSala = ({ onSelectionChange, defaultValue }) => {
     const [filtroId, setFiltroId] = useState('');
     const [filtroNomeSala, setFiltroNomeSala] = useState('');
-    const [selectSala, setSelectSala] = useState(defaultValue || { value: 0, label: 'Procure uma sala' });
+    const [selectSala, setSelectSala] = useState(defaultValue || { value: 0, label: 'Selecione uma sala' });
 
     useEffect(() => {
         if (defaultValue) {
