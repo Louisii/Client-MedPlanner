@@ -1,4 +1,3 @@
-// Combobox Component
 import React from 'react';
 
 const Combobox = ({ opcoes, value, onChange }) => {
@@ -9,8 +8,8 @@ const Combobox = ({ opcoes, value, onChange }) => {
             value={value}
         >
             {opcoes.map((opcao, i) => (
-                <option key={i} value={opcao}>
-                    {opcao}
+                <option key={i} value={opcao.value}>
+                    {opcao.label}
                 </option>
             ))}
         </select>
