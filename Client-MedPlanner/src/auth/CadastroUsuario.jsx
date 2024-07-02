@@ -28,12 +28,37 @@ const CadastroUsuario = () => {
     const [usuario, setUsuario] = useState(null);
     const [opcoesEspecialidade, setOpcoesEspecialidade] = useState([{ value: '', label: 'Selecione' }]);
     const opcoesUF = [
-        'Selecione', 'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA',
-        'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO',
-        'RR', 'SC', 'SP', 'SE', 'TO'
+        { value: '', label: 'Selecione' },
+        { value: 'AC', label: 'Acre' },
+        { value: 'AL', label: 'Alagoas' },
+        { value: 'AP', label: 'Amapá' },
+        { value: 'AM', label: 'Amazonas' },
+        { value: 'BA', label: 'Bahia' },
+        { value: 'CE', label: 'Ceará' },
+        { value: 'DF', label: 'Distrito Federal' },
+        { value: 'ES', label: 'Espírito Santo' },
+        { value: 'GO', label: 'Goiás' },
+        { value: 'MA', label: 'Maranhão' },
+        { value: 'MT', label: 'Mato Grosso' },
+        { value: 'MS', label: 'Mato Grosso do Sul' },
+        { value: 'MG', label: 'Minas Gerais' },
+        { value: 'PA', label: 'Pará' },
+        { value: 'PB', label: 'Paraíba' },
+        { value: 'PR', label: 'Paraná' },
+        { value: 'PE', label: 'Pernambuco' },
+        { value: 'PI', label: 'Piauí' },
+        { value: 'RJ', label: 'Rio de Janeiro' },
+        { value: 'RN', label: 'Rio Grande do Norte' },
+        { value: 'RS', label: 'Rio Grande do Sul' },
+        { value: 'RO', label: 'Rondônia' },
+        { value: 'RR', label: 'Roraima' },
+        { value: 'SC', label: 'Santa Catarina' },
+        { value: 'SP', label: 'São Paulo' },
+        { value: 'SE', label: 'Sergipe' },
+        { value: 'TO', label: 'Tocantins' }
     ];
-    const opcoesCargo = ['Selecione', 'Administrador(a)', 'Recepcionista', 'Médico(a)'];
-    const opcoesSituacao = ['Selecione', 'A', 'I', 'E'];
+    const opcoesCargo = [{ value: '', label: 'Selecione' }, { value: 'ADMINISTRADOR', label: 'Administrador(a)' }, { value: 'RECEPCAO', label: 'Recepcionista' }, { value: 'MEDICO', label: 'Médico(a)' }];
+
 
     const getUsuario = async (usuarioId) => {
         try {
@@ -58,12 +83,9 @@ const CadastroUsuario = () => {
 
     const salvarUsuario = async () => {
         try {
-            const adjustedForm = {
-                ...form,
-                cargo: form.cargo.toUpperCase() === 'ADMINISTRADOR(A)' ? 'ADMINISTRADOR' : 
-                       form.cargo.toUpperCase() === 'RECEPCIONISTA' ? 'RECEPCAO' : 
-                       form.cargo.toUpperCase() === 'MÉDICO(A)' ? 'MEDICO' : form.cargo,
-            };
+            if (!usuarioId) {
+                form = { ...form, situacao: "E" }
+            }
             const response = await axiosWithToken.post(`http://localhost:8080/usuario/salvar`, adjustedForm);
             if (response.status === 200) {
                 setRespostaOk(true);
@@ -84,7 +106,7 @@ const CadastroUsuario = () => {
         if (!form.username) errors.push("Email é obrigatório.");
         if (!form.cpf) errors.push("CPF é obrigatório.");
         if (!form.cargo || form.cargo === 'Selecione') errors.push("Cargo é obrigatório.");
-        if (!form.situacao || form.situacao === 'Selecione') errors.push("Situação é obrigatória.");
+        // if (!form.situacao || form.situacao === 'Selecione') errors.push("Situação é obrigatória.");
 
         if (form.cargo === 'Médico(a)') {
             if (!form.especialidade || form.especialidade === 'Selecione') errors.push("Especialidade é obrigatória para médicos.");
@@ -162,31 +184,24 @@ const CadastroUsuario = () => {
                             <Label text="Cargo" />
                             <Combobox opcoes={opcoesCargo} value={form.cargo} onChange={(value) => handleForm('cargo', value)} />
                         </div>
-                        <div className='m-4'>
-                            <Label text="Situação" />
-                            {form.idUsuario != null ?
-                                <InputDisabled type='text' value={opcoesSituacao[2]} />
-                                :
-                                <Combobox opcoes={opcoesSituacao} value={form.situacao} onChange={(value) => handleForm('situacao', value)} />
-                            }
-                        </div>
+
                     </div>
 
                     <div className='p-4 grid grid-cols-3 gap-8'>
                         <div className='m-4'>
                             <Label text="Especialidade" />
-                            {form.cargo !== 'Médico(a)' ?
+                            {form.cargo !== 'MEDICO' ?
                                 <InputDisabled type='text' />
                                 :
                                 <Combobox
-                                opcoes={opcoesEspecialidade}
-                                value={form.especialidade}
-                                onChange={(value) => handleForm('especialidade', value)}/>
+                                    opcoes={opcoesEspecialidade}
+                                    value={form.especialidade}
+                                    onChange={(value) => handleForm('especialidade', value)} />
                             }
                         </div>
                         <div className='m-4'>
                             <Label text="CRM" />
-                            {form.cargo !== 'Médico(a)' ?
+                            {form.cargo !== 'MEDICO' ?
                                 <InputDisabled type='text' />
                                 :
                                 <Input type='text' value={form.crm} onChange={(e) => handleForm('crm', e.target.value)} />
@@ -194,7 +209,7 @@ const CadastroUsuario = () => {
                         </div>
                         <div className='m-4'>
                             <Label text="UF" />
-                            {form.cargo !== 'Médico(a)' ?
+                            {form.cargo !== 'MEDICO' ?
                                 <InputDisabled type='text' />
                                 :
                                 <Combobox opcoes={opcoesUF} value={form.uf_crm} onChange={(value) => handleForm('uf_crm', value)} />
