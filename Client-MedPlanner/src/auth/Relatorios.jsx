@@ -5,7 +5,7 @@ import Input from '../components/Input';
 import Label from '../components/Label';
 import axiosWithToken from '../lib/RequestInterceptor';
 import { useParams } from 'react-router-dom';
-import { format } from 'date-fns';
+import { format, parse } from 'date-fns';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
