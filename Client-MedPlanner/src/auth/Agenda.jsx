@@ -18,8 +18,6 @@ import { useParams } from 'react-router-dom';
 import axiosWithToken from '../lib/RequestInterceptor';
 import { Typography } from '@material-tailwind/react';
 import Button from '../components/Button';
-import { CriarLocacaoMedico } from '../components/CriarLocacaoMedico';
-import { CriarLocacaoSala } from '../components/CriarLocacaoSala';
 import { FaStethoscope } from 'react-icons/fa';
 import CriarLocacao from '../components/CriarLocacao';
 
