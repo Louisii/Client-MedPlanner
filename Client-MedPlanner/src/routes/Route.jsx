@@ -18,6 +18,7 @@ import { ProtectedRoute } from "./ProtectedRoute";
 import { PublicRoute } from "./PublicRoute";
 import Signup from "../pages/Signup";
 import Relatorios from "../auth/Relatorios";
+import EsqueciSenha from "../pages/EsqueciSenha";
 
 const Routes = () => {
   const { token } = useAuth();
@@ -30,6 +31,10 @@ const Routes = () => {
         {
           path: "/",
           element: <Login />
+        },
+        {
+          path: "/esqueci-senha",
+          element: <EsqueciSenha />
         }
       ]
     }

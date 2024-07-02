@@ -5,7 +5,7 @@ import axiosWithToken from '../lib/RequestInterceptor';
 const AsyncSelectorProfissional = ({ onSelectionChange, defaultValue }) => {
     const [filtroId, setFiltroId] = useState('');
     const [filtroNome, setFiltroNome] = useState('');
-    const [selectProfissional, setSelectProfissional] = useState(defaultValue || { value: 0, label: 'Procure um profissional' });
+    const [selectProfissional, setSelectProfissional] = useState(defaultValue || { value: 0, label: 'Selecione um profissional' });
 
     useEffect(() => {
         if (defaultValue) {
@@ -17,7 +17,7 @@ const AsyncSelectorProfissional = ({ onSelectionChange, defaultValue }) => {
         try {
             const response = await axiosWithToken.get('http://localhost:8080/usuario/buscar', {
                 params: {
-                    idUsuario: filtroId || undefined,
+                    id: filtroId || undefined,
                     nome: filtroNome || undefined,
                 },
             });
