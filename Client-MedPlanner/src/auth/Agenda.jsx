@@ -18,9 +18,8 @@ import { useParams } from 'react-router-dom';
 import axiosWithToken from '../lib/RequestInterceptor';
 import { Typography } from '@material-tailwind/react';
 import Button from '../components/Button';
-import { CriarLocacaoMedico } from '../components/CriarLocacaoMedico';
-import { CriarLocacaoSala } from '../components/CriarLocacaoSala';
 import { FaStethoscope } from 'react-icons/fa';
+import CriarLocacao from '../components/CriarLocacao';
 
 const Agenda = () => {
     const { profissionalId, salaId } = useParams();
@@ -126,7 +125,6 @@ const Agenda = () => {
             return data;
         });
     };
-
     useEffect(() => {
         if (profissionalId) {
             console.log('Fetching professional with ID:', profissionalId);
@@ -137,7 +135,9 @@ const Agenda = () => {
             getSala(salaId);
             getLocacoesDaSala(salaId);
         }
+
     }, [profissionalId, salaId]);
+
 
     const Appointment = ({ children, style, ...restProps }) => (
         <Appointments.Appointment
@@ -158,6 +158,11 @@ const Agenda = () => {
 
     const handleCloseCustomTooltip = () => {
         setShowCustomTooltip(false);
+        if (profissionalId) {
+            getLocacoesDoMedico(profissionalId);
+        } else if (salaId) {
+            getLocacoesDaSala(salaId);
+        }
     };
     return (
         <Layout>
@@ -209,23 +214,27 @@ const Agenda = () => {
                             }
                             <div>
                                 <Button onClick={handleNovaLocacaoClick} text="Nova locação" />
-                                {profissionalId && showCustomTooltip && (
-                                    <CriarLocacaoMedico
+                                {profissionalId && (
+                                    <CriarLocacao
                                         appointmentMeta={null}
                                         onHide={handleCloseCustomTooltip}
                                         visible={showCustomTooltip}
-                                        profissional={profissional}
+                                        entity={profissional}
                                         getLocacoes={getLocacoesDoMedico}
+                                        type={"medico"}
                                     />
+
                                 )}
-                                {salaId && showCustomTooltip && (
-                                    <CriarLocacaoSala
+                                {salaId && (
+                                    <CriarLocacao
                                         appointmentMeta={null}
                                         onHide={handleCloseCustomTooltip}
                                         visible={showCustomTooltip}
-                                        sala={sala}
+                                        entity={sala}
                                         getLocacoes={getLocacoesDaSala}
+                                        type={"sala"}
                                     />
+
                                 )}
                             </div>
                         </div>
@@ -248,15 +257,18 @@ const Agenda = () => {
                                         showOpenButton
                                         layoutComponent={(props) => (
                                             profissionalId ?
-                                                <CriarLocacaoMedico
+                                                <CriarLocacao
                                                     {...props}
-                                                    profissional={profissional}
+                                                    entity={profissional}
                                                     getLocacoes={getLocacoesDoMedico}
-                                                /> :
-                                                <CriarLocacaoSala
+                                                    type={"medico"}
+                                                />
+                                                :
+                                                <CriarLocacao
                                                     {...props}
-                                                    sala={sala}
+                                                    entity={sala}
                                                     getLocacoes={getLocacoesDaSala}
+                                                    type={"sala"}
                                                 />
                                         )}
                                     />
