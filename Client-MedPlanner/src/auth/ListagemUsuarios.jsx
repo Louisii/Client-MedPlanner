@@ -27,7 +27,7 @@ const ListagemUsuarios = () => {
                 {usuarios.length > 0 ?
 
                     <div className='p-4'>
-                        <div className="h-full w-full overflow-scroll">
+                        <div className="overflow-y-auto max-h-[calc(100vh-10rem)]">
                             {usuarios.map((u) => (
                                 <div className='m-4 p-4 grid grid-cols-2 gap-8 border border-gray-100 rounded-lg shadow-md'>
                                     <div>
