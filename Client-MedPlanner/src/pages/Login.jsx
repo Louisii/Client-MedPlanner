@@ -57,7 +57,7 @@ const Login = () => {
 
                         </div>
                         <div className="flex items-center justify-between">
-                            <LinkStyled to="#" text="Esqueceu sua senha?" />
+                            <LinkStyled to="/esqueci-senha" text="Esqueceu sua senha?" />
 
                             <Button text="Entrar" onClick={handleClickEntrar} />
 
