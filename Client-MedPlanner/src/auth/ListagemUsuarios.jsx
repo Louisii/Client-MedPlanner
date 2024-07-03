@@ -22,7 +22,10 @@ const ListagemUsuarios = () => {
     return (
         <Layout>
             {<div className='p-4'>
-                <h2 className='p-4 text-xl font-bold'>Usuários</h2>
+                <div className='flex flex-row justify-between h-10'>
+                    <h2 className='p-4 text-xl font-bold'>Listagem de Usuários</h2>
+                    <Button onClick={() => navigate('/cadastro-usuario')} text="Novo usuário" className="bg-blue-500 text-white p-2 rounded" />
+                </div>
 
                 {usuarios.length > 0 ?
 
