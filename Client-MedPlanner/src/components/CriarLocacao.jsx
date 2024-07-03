@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Dialog, DialogActions, DialogContent } from '@mui/material';
 import Button from '../components/Button';
 import Input from '../components/Input';
-import SelectorSala from './SelectorSala';  // Atualizado aqui
+import SelectorSala from './SelectorSala';
 import SelectorProfissional from './SelectorProfissional';
 import Label from './Label';
 import { format, isSameDay, isBefore } from 'date-fns';

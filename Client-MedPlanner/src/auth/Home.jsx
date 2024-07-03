@@ -81,11 +81,17 @@ const Home = () => {
     return `${day}/${month}/${year}`;
   };
 
+  const handleNavigateToFiltroLocacao = () => {
+    navigate('/filtro-locacao');
+  };
 
   return (
     <Layout>
       <div className='p-4'>
+      <div className='flex justify-between items-center'>
         <h2 className='p-4 text-xl font-bold'>Locações do dia</h2>
+        <Button onClick={handleNavigateToFiltroLocacao} text="Filtrar Locação" className='bg-blue-500 text-white p-2 rounded' />
+        </div>
         <div className='flex flex-row items-center mx-6'>
           <button onClick={() => handleDateChange(-1)} className='p-2 bg-teal-600 rounded-full'>
             <FaArrowLeft color='white' />
