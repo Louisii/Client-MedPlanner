@@ -67,8 +67,8 @@ const MinhaConta = () => {
                         {usuario.cargo === 'MEDICO' && (
                             <>
                                 <p><strong>Especialidade:</strong> {usuario.especialidade?.nome}</p>
-                                <p><strong>CRM:</strong> {usuario.crm}</p>
-                                <p><strong>Estado:</strong> {usuario.uf_crm}</p>
+                                <p><strong>CRM:</strong> {usuario.numCrm}</p>
+                                <p><strong>Estado:</strong> {usuario.ufCrm}</p>
                             </>
                         )}
                     </div>
