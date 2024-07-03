@@ -90,7 +90,7 @@ const Home = () => {
       <div className='p-4'>
       <div className='flex justify-between items-center'>
         <h2 className='p-4 text-xl font-bold'>Locações do dia</h2>
-        <Button onClick={handleNavigateToFiltroLocacao} text="Filtrar Locação" className='bg-blue-500 text-white p-2 rounded' />
+        <Button onClick={handleNavigateToFiltroLocacao} text="Agenda" className='bg-blue-500 text-white p-2 rounded' />
         </div>
         <div className='flex flex-row items-center mx-6'>
           <button onClick={() => handleDateChange(-1)} className='p-2 bg-teal-600 rounded-full'>
@@ -113,7 +113,7 @@ const Home = () => {
               <div className='m-4 p-4 border border-gray-100 rounded-lg shadow-md' key={sala.idSala}>
                 <div className='flex flex-row justify-between'>
                   <p className='py-1 text-lg font-bold'>{sala.nomeSala}</p>
-                  <Button onClick={() => navigate(`/agenda-sala/${sala.idSala}`)} text="Ver mais detalhes" className='bg-blue-500 text-white p-2 rounded mb-2' />
+                  <Button onClick={() => navigate(`/agenda-sala/${sala.idSala}`)} text="Detalhes" className='bg-blue-500 text-white p-2 rounded mb-2' />
                 </div>
                 {sala.locacoes.length ? sala.locacoes.map((loc) => (
                   <div key={loc.idLocacao}>
