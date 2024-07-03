@@ -17,8 +17,8 @@ const CadastroUsuario = () => {
         cargo: 'Selecione',
         situacao: 'Selecione',
         especialidade: '',
-        crm: '',
-        uf_crm: 'Selecione'
+        numCrm: '',
+        ufCrm: 'Selecione'
     });
     const [respostaErro, setRespostaErro] = useState([]);
     const [respostaOk, setRespostaOk] = useState(false);
@@ -58,7 +58,6 @@ const CadastroUsuario = () => {
     ];
     const opcoesCargo = [{ value: '', label: 'Selecione' }, { value: 'ADMINISTRADOR', label: 'Administrador(a)' }, { value: 'RECEPCAO', label: 'Recepção' }, { value: 'MEDICO', label: 'Médico(a)' }];
 
-
     const getUsuario = async (usuarioId) => {
         try {
             const response = await axiosWithToken.get(`http://localhost:8080/usuario/buscar?id=${usuarioId}`);
@@ -71,8 +70,8 @@ const CadastroUsuario = () => {
                     cargo: response.data.cargo,
                     situacao: response.data.situacao,
                     especialidade: response.data.especialidade,
-                    crm: response.data.crm,
-                    uf_crm: response.data.uf_crm,
+                    numCrm: response.data.numCrm,
+                    ufCrm: response.data.ufCrm,
                 });
             }
         } catch (error) {
@@ -86,18 +85,31 @@ const CadastroUsuario = () => {
             if (!usuarioId) {
                 adjustedForm = { ...adjustedForm, situacao: "E" };
             }
-            const response = await axiosWithToken.post(`http://localhost:8080/usuario/salvar`, adjustedForm);
+
+            const payload = {
+                nome: adjustedForm.nome,
+                username: adjustedForm.username,
+                cpf: adjustedForm.cpf,
+                cargo: adjustedForm.cargo,
+                situacao: adjustedForm.situacao,
+                especialidade: {
+                    idEspecialidade: adjustedForm.especialidade
+                },
+                numCrm: adjustedForm.numCrm,
+                ufCrm: adjustedForm.ufCrm
+            };
+            console.log(payload)
+            const url = adjustedForm.cargo === 'MEDICO'
+                ? 'http://localhost:8080/profissional/salvar'
+                : 'http://localhost:8080/usuario/salvar';
+
+            const response = await axiosWithToken.post(url, payload);
             if (response.status === 200) {
                 setRespostaOk(true);
                 navigate("/listagem-usuario");
             }
         } catch (error) {
-            if (error.response && error.response.data && error.response.data.errors) {
-                setRespostaErro(error.response.data.errors);
-            } else {
-                setRespostaErro(['Erro ao conectar ao servidor']);
-            }
-            console.error('Erro ao salvar usuário:', error.message);
+            setRespostaErro(error.response.data?.errors || []);
         }
     };
 
@@ -111,19 +123,17 @@ const CadastroUsuario = () => {
         if (!form.username) errors.push("Email é obrigatório.");
         if (!form.cpf) errors.push("CPF é obrigatório.");
         if (!form.cargo || form.cargo === 'Selecione') errors.push("Cargo é obrigatório.");
-        // if (!form.situacao || form.situacao === 'Selecione') errors.push("Situação é obrigatória.");
 
         if (form.cargo === 'Médico(a)') {
             if (!form.especialidade || form.especialidade === 'Selecione') errors.push("Especialidade é obrigatória para médicos.");
-            if (!form.crm) errors.push("CRM é obrigatório para médicos.");
-            if (!form.uf_crm || form.uf_crm === 'Selecione') errors.push("UF do CRM é obrigatória para médicos.");
+            if (!form.numCrm) errors.push("CRM é obrigatório para médicos.");
+            if (!form.ufCrm || form.ufCrm === 'Selecione') errors.push("UF do CRM é obrigatória para médicos.");
         }
 
         return errors;
     };
 
     const handleSubmit = () => {
-        console.log(form)
         const validationErrors = validateForm();
         if (validationErrors.length > 0) {
             setRespostaErro(validationErrors);
@@ -143,11 +153,9 @@ const CadastroUsuario = () => {
 
     const fetchOpcoesEspecialidade = async () => {
         try {
-
             const response = await axiosWithToken.get('http://localhost:8080/especialidade/listar');
             if (response.status === 200) {
                 const especialidade = response.data.map((especialidade) => ({ value: especialidade.idEspecialidade, label: especialidade.nome }));
-                console.log('setOpcoesEspecialidade:', especialidade); // Adicionando log para verificar os dados das especialidade
                 setOpcoesEspecialidade([{ value: '', label: 'Selecione' }, ...especialidade]);
             } else {
                 console.error(`Falha ao obter especialidade: ${response.status}`);
@@ -210,7 +218,7 @@ const CadastroUsuario = () => {
                             {form.cargo !== 'MEDICO' ?
                                 <InputDisabled type='text' />
                                 :
-                                <Input type='text' value={form.crm} onChange={(e) => handleForm('crm', e.target.value)} />
+                                <Input type='text' value={form.numCrm} onChange={(e) => handleForm('numCrm', e.target.value)} />
                             }
                         </div>
                         <div className='m-4'>
@@ -218,7 +226,7 @@ const CadastroUsuario = () => {
                             {form.cargo !== 'MEDICO' ?
                                 <InputDisabled type='text' />
                                 :
-                                <Combobox opcoes={opcoesUF} value={form.uf_crm} onChange={(value) => handleForm('uf_crm', value)} />
+                                <Combobox opcoes={opcoesUF} value={form.ufCrm} onChange={(value) => handleForm('ufCrm', value)} />
                             }
                         </div>
                     </div>
