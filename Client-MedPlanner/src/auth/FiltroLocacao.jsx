@@ -1,14 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
 import { useNavigate } from 'react-router-dom';
+import axiosWithToken from '../lib/RequestInterceptor';
 import Button from '../components/Button';
-import SelectorSala from '../components/SelectorSala';  // Importando o SelectorSala
+import SelectorSala from '../components/SelectorSala';
 import SelectorProfissional from '../components/SelectorProfissional';
 
 const FiltroLocacao = () => {
   const navigate = useNavigate();
-  const [filtro, setFiltro] = useState('medico');
+  const [filtro, setFiltro] = useState('');
   const [selectedValue, setSelectedValue] = useState('');
+  const [isMedico, setIsMedico] = useState(false);
+  const [usuarioMedico, setUsuarioMedico] = useState(null);
+
+  useEffect(() => {
+    axiosWithToken.get('http://localhost:8080/usuario/minha-conta')
+      .then(response => {
+        if (response.status === 200) {
+          const usuario = response.data;
+          if (usuario.cargo === 'MEDICO') {
+            setIsMedico(true);
+            setUsuarioMedico({ value: usuario.idUsuario, label: usuario.nome });
+          }
+        }
+      })
+      .catch(error => {
+        console.error('Erro ao obter informações do usuário:', error);
+      });
+  }, []);
 
   const handleFiltroChange = (e) => {
     setFiltro(e.target.value);
@@ -62,7 +81,16 @@ const FiltroLocacao = () => {
           </div>
           <div className='mb-4'>
             {filtro === 'medico' ? (
-              <SelectorProfissional onSelectionChange={handleProfissionalSelection} />
+              isMedico ? (
+                <input
+                  type='text'
+                  value={usuarioMedico.label}
+                  readOnly
+                  className='w-full p-2 border rounded bg-gray-100'
+                />
+              ) : (
+                <SelectorProfissional onSelectionChange={handleProfissionalSelection} />
+              )
             ) : (
               <SelectorSala onSelectionChange={handleSalaSelection} />
             )}
