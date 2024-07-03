@@ -92,7 +92,12 @@ const CadastroUsuario = () => {
                 navigate("/listagem-usuario");
             }
         } catch (error) {
-            setRespostaErro(error.response.data?.errors || []);
+            if (error.response && error.response.data && error.response.data.errors) {
+                setRespostaErro(error.response.data.errors);
+            } else {
+                setRespostaErro(['Erro ao conectar ao servidor']);
+            }
+            console.error('Erro ao salvar usuário:', error.message);
         }
     };
 

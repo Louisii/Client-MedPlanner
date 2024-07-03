@@ -40,7 +40,7 @@ const ListagemSala = () => {
     };
 
     const getAlas = () => {
-        axiosWithToken.get('http://localhost:8080/ala/buscar')
+        axiosWithToken.get('http://localhost:8080/ala/listar')
             .then((response) => {
                 if (response.status === 200) {
                     const alas = response.data.map((ala) => ({ value: ala.idAla, label: ala.nome }));
