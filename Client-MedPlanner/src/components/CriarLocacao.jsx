@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Dialog, DialogActions, DialogContent } from '@mui/material';
 import Button from '../components/Button';
 import Input from '../components/Input';
-import AsyncSelectorSala from './AsyncSeletorSala';
-import AsyncSelectorProfissional from './AsyncSelectorProfissional';
+import SelectorSala from './SelectorSala';  // Atualizado aqui
+import SelectorProfissional from './SelectorProfissional';
 import Label from './Label';
 import { format, isSameDay, isBefore } from 'date-fns';
 import axiosWithToken from '../lib/RequestInterceptor';
@@ -195,7 +195,7 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
                             <div className='w-80'>
                                 <Label text='Sala' />
                                 <div className='my-2'>
-                                    <AsyncSelectorSala onSelectionChange={handleSalaChange} defaultValue={selectedSala} />
+                                    <SelectorSala onSelectionChange={handleSalaChange} defaultValue={selectedSala} />  {/* Atualizado aqui */}
                                 </div>
                             </div>
                             <div className='w-80'>
@@ -215,7 +215,7 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
                     <>
                         <div>
                             <Label text='Médico' />
-                            <AsyncSelectorProfissional onSelectionChange={handleProfissionalSelection} />
+                            <SelectorProfissional onSelectionChange={handleProfissionalSelection} />
                         </div>
                     </>
                 )}

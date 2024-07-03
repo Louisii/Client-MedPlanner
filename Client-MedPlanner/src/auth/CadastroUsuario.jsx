@@ -7,7 +7,6 @@ import Combobox from '../components/Combobox';
 import axiosWithToken from '../lib/RequestInterceptor';
 import { useNavigate, useParams } from 'react-router-dom';
 import InputDisabled from '../components/InputDisabled';
-import AsyncSelectorEspecialidade from '../components/AsyncSelectorEspecialidade';
 
 const CadastroUsuario = () => {
     const { usuarioId } = useParams();
