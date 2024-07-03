@@ -41,7 +41,7 @@ const DetalhesUsuario = () => {
                     <div className='m-4 p-4'>
                         {/* <h2 className='text-md font-bold'>{usuario.nome}</h2> */}
                         <p>Username: {usuario.nome}</p>
-                        <p>Função: Administrador</p>
+                        <p>Função: {usuario.cargo == 'RECEPCAO' ? 'Recepção' : usuario.cargo == 'MEDICO' ? 'Médico(a)' : 'Administrador(a)'}</p>
                         <p>Username: {usuario.username}</p>
                         <p>CPF: {usuario.cpf}</p>
                         <p>Situação: {usuario.situacao}</p>

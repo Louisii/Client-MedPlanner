@@ -56,7 +56,7 @@ const CadastroUsuario = () => {
         { value: 'SE', label: 'Sergipe' },
         { value: 'TO', label: 'Tocantins' }
     ];
-    const opcoesCargo = [{ value: '', label: 'Selecione' }, { value: 'ADMINISTRADOR', label: 'Administrador(a)' }, { value: 'RECEPCAO', label: 'Recepcionista' }, { value: 'MEDICO', label: 'Médico(a)' }];
+    const opcoesCargo = [{ value: '', label: 'Selecione' }, { value: 'ADMINISTRADOR', label: 'Administrador(a)' }, { value: 'RECEPCAO', label: 'Recepção' }, { value: 'MEDICO', label: 'Médico(a)' }];
 
 
     const getUsuario = async (usuarioId) => {
@@ -82,8 +82,9 @@ const CadastroUsuario = () => {
 
     const salvarUsuario = async () => {
         try {
+            let adjustedForm = { ...form };
             if (!usuarioId) {
-                form = { ...form, situacao: "E" }
+                adjustedForm = { ...adjustedForm, situacao: "E" };
             }
             const response = await axiosWithToken.post(`http://localhost:8080/usuario/salvar`, adjustedForm);
             if (response.status === 200) {
@@ -142,6 +143,7 @@ const CadastroUsuario = () => {
 
     const fetchOpcoesEspecialidade = async () => {
         try {
+
             const response = await axiosWithToken.get('http://localhost:8080/especialidade/listar');
             if (response.status === 200) {
                 const especialidade = response.data.map((especialidade) => ({ value: especialidade.idEspecialidade, label: especialidade.nome }));
