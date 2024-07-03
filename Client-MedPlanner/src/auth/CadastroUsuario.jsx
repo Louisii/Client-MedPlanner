@@ -56,7 +56,7 @@ const CadastroUsuario = () => {
         { value: 'SE', label: 'Sergipe' },
         { value: 'TO', label: 'Tocantins' }
     ];
-    const opcoesCargo = [{ value: '', label: 'Selecione' }, { value: 'ADMINISTRADOR', label: 'Administrador(a)' }, { value: 'RECEPCAO', label: 'Recepção' }, { value: 'MEDICO', label: 'Médico(a)' }];
+    const opcoesCargo = [{ value: '', label: 'Selecione' }, { value: 'ADMINISTRADOR', label: 'Administrador(a)' }, { value: 'RECEPCAO', label: 'Recepcionista' }, { value: 'MEDICO', label: 'Médico(a)' }];
 
     const getUsuario = async (usuarioId) => {
         try {
@@ -81,9 +81,8 @@ const CadastroUsuario = () => {
 
     const salvarUsuario = async () => {
         try {
-            let adjustedForm = { ...form };
             if (!usuarioId) {
-                adjustedForm = { ...adjustedForm, situacao: "E" };
+                form = { ...form, situacao: "E" }
             }
 
             const payload = {
@@ -111,7 +110,9 @@ const CadastroUsuario = () => {
         } catch (error) {
             setRespostaErro(error.response.data?.errors || []);
         }
-    };
+        console.error('Erro ao salvar usuário:', error.message);
+    }
+};
 
     const handleForm = (name, value) => {
         setForm({ ...form, [name]: value });

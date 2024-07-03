@@ -19,6 +19,7 @@ import { PublicRoute } from "./PublicRoute";
 import Signup from "../pages/Signup";
 import Relatorios from "../auth/Relatorios";
 import EsqueciSenha from "../pages/EsqueciSenha";
+import FiltroLocacao from "../auth/FiltroLocacao";
 
 const Routes = () => {
   const { token } = useAuth();
@@ -119,6 +120,10 @@ const Routes = () => {
         {
           path: "/alterar-senha",  
           element: <AlterarSenha />
+        },
+        {
+          path: "/filtro-locacao",
+          element: <FiltroLocacao />,
         }
       ],
     },
