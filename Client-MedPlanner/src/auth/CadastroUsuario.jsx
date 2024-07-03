@@ -56,7 +56,7 @@ const CadastroUsuario = () => {
         { value: 'SE', label: 'Sergipe' },
         { value: 'TO', label: 'Tocantins' }
     ];
-    const opcoesCargo = [{ value: '', label: 'Selecione' }, { value: 'ADMINISTRADOR', label: 'Administrador(a)' }, { value: 'RECEPCAO', label: 'Recepcionista' }, { value: 'MEDICO', label: 'Médico(a)' }];
+    const opcoesCargo = [{ value: '', label: 'Selecione' }, { value: 'ADMINISTRADOR', label: 'Administrador(a)' }, { value: 'RECEPCAO', label: 'Recepção' }, { value: 'MEDICO', label: 'Médico(a)' }];
 
 
     const getUsuario = async (usuarioId) => {

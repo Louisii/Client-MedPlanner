@@ -32,7 +32,10 @@ const ListagemUsuarios = () => {
                                 <div className='m-4 p-4 grid grid-cols-2 gap-8 border border-gray-100 rounded-lg shadow-md'>
                                     <div>
                                         <h2 className='text-xl font-bold'>{u.nome}</h2>
-                                        <p>{u.cargo.toLowerCase()}</p>
+                                        <p>{
+                                            u.cargo == 'RECEPCAO' ? 'Recepção' : u.cargo == 'MEDICO' ? 'Médico(a)' : 'Administrador(a)'
+
+                                        }</p>
                                     </div>
 
                                     <div className='flex items-center text-sm justify-end h-9 gap-2'>
