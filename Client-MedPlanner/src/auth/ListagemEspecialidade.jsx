@@ -48,8 +48,11 @@ const ListagemEspecialidades = () => {
     return (
         <Layout>
             <div className='p-4'>
-                <h2 className='p-4 text-xl font-bold'>Especialidades</h2>
-
+                <div className='flex flex-row justify-between h-10'>
+                    <h2 className='p-4 text-xl font-bold'>Listagem de Especialidades</h2>
+                    <Button onClick={() => navigate('/cadastro-especialidade')} text="Nova especialidade" className="bg-blue-500 text-white p-2 rounded" />
+                </div>
+                
                 {especialidades.length > 0 ? (
                     <div className='overflow-y-auto max-h-[calc(100vh-10rem)]'>
                         {especialidades.map((especialidade) => (
