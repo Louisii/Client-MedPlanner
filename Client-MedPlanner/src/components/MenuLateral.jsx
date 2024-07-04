@@ -21,9 +21,8 @@ const MenuLateral = () => {
 
     const handleClickSair = (e) => {
         e.preventDefault();
-        sessionStorage.removeItem('token');
-        sessionStorage.removeItem('usuario');
-        sessionStorage.removeItem('role');
+        sessionStorage.clear();
+        localStorage.clear();
         navigate("/", { replace: true });
     };
 
