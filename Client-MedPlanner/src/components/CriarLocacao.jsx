@@ -31,20 +31,21 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
     const [locacao, setLocacao] = useState(null);
 
     useEffect(() => {
-        setStartDate(initialStartDate);
-        setEndDate(initialEndDate);
-
-        if (initialTitle) {
-            getLocacaoId();
-            getLocacao(idLocacao);
+        if (visible) {
+            setStartDate(initialStartDate);
+            setEndDate(initialEndDate);
+            setSelectedSala(null);
+            setSelectedMedico(null);
+            setSelectedAla('');
+            setRespostaErro('');
+            setIdLocacao('');
+            if (initialTitle) {
+                getLocacaoId();
+            }
         }
     }, [appointmentMeta, visible]);
 
     const handleCancel = () => {
-        setStartDate(initialStartDate);
-        setEndDate(initialEndDate);
-        setSelectedSala(null);
-        setSelectedMedico(null);
         onHide();
     };
 
@@ -84,7 +85,7 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
                 }
             })
             .catch((error) => {
-                setRespostaErro(error.response.data.errors);
+                setRespostaErro(error.response.data?.errors || []);
                 console.error('Erro ao salvar locação:', error.message);
             });
     };
@@ -93,6 +94,7 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
         if (initialTitle && initialTitle.includes("#")) {
             let id = initialTitle.split('#')[1].trim();
             setIdLocacao(id);
+            getLocacao(id);
         }
     };
 
@@ -101,12 +103,12 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
             .then((response) => {
                 if (response.status === 200) {
                     console.log(response.data)
-                    const { sala, profissional } = response.data;
-                    if (type === 'medico') {
+                    const { sala, profissional: usuario } = response.data;
+                    if (type == 'MEDICO') {
                         setSelectedSala({ label: sala.nomeSala, value: sala.idSala, ala: sala.ala });
                         setSelectedAla(sala.ala.nome);
                     } else {
-                        setSelectedMedico({ label: profissional.nome, value: profissional.idUsuario });
+                        setSelectedMedico({ label: usuario.nome, value: usuario.idUsuario });
                     }
                 }
             })
@@ -128,8 +130,7 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
             axiosWithToken.delete(`http://localhost:8080/locacao/delete/${idLocacao}`)
                 .then((response) => {
                     closeDeleteModal();
-                    handleCancel()
-
+                    handleCancel();
                 })
                 .catch((error) => {
                     console.error('Erro ao excluir locação:', error.message);
@@ -195,7 +196,7 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
                             <div className='w-80'>
                                 <Label text='Sala' />
                                 <div className='my-2'>
-                                    <SelectorSala onSelectionChange={handleSalaChange} defaultValue={selectedSala} />  {/* Atualizado aqui */}
+                                    <SelectorSala onSelectionChange={handleSalaChange} defaultValue={selectedSala} />
                                 </div>
                             </div>
                             <div className='w-80'>
@@ -215,7 +216,7 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
                     <>
                         <div>
                             <Label text='Médico' />
-                            <SelectorProfissional onSelectionChange={handleProfissionalSelection} />
+                            <SelectorProfissional onSelectionChange={handleProfissionalSelection} defaultValue={selectedMedico} />
                         </div>
                     </>
                 )}
