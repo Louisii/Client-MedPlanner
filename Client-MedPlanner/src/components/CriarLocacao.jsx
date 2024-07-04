@@ -29,6 +29,7 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
     const [idLocacao, setIdLocacao] = useState('');
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [locacao, setLocacao] = useState(null);
+    const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
         if (visible) {
@@ -39,6 +40,7 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
             setSelectedAla('');
             setRespostaErro('');
             setIdLocacao('');
+            setIsEditing(false);
             if (initialTitle) {
                 getLocacaoId();
             }
@@ -150,104 +152,170 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
     return (
         <Dialog open={visible} onClose={onHide}>
             <DialogContent>
-                <div className='flex flex-row justify-between'>
-                    <div className='mb-4'>
-                        {initialTitle ? <p className='font-semibold text-xl mb-2'>Editar Locação</p> : <p className='font-semibold text-xl mb-2'>Nova Locação</p>}
-                        {initialTitle && initialTitle.includes("#") && <p className='font-semibold text-lg'>{initialTitle.split('#')[0].trim()}</p>}
+                {isEditing || initialTitle == null ? (
+                    <>
+                        <div className='mb-4'>
+                            {initialTitle ? <p className='font-semibold text-xl mb-2'>Editar Locação</p> : <p className='font-semibold text-xl mb-2'>Nova Locação</p>}
+                            {initialTitle && initialTitle.includes("#") && <p className='font-semibold text-lg'>{initialTitle.split('#')[0].trim()}</p>}
+                            {type === 'medico' && (
+                                <>
+                                    <p className='font-semibold text-lg'>{entity.nome}</p>
+                                    <div className='flex flex-row'>
+                                        <p className='font-semibold mr-1'>CRM: </p>
+                                        <p>{entity.numCrm}</p>
+                                        <p>{`/${entity.ufCrm}`}</p>
+                                    </div>
+                                    <div className='flex flex-row'>
+                                        <p className='font-semibold mr-1'>E-mail: </p>
+                                        <p>{entity.username}</p>
+                                    </div>
+                                </>
+                            )}
+                            {type === 'sala' && (
+                                <>
+                                    <p className='font-semibold text-lg'>{entity.nomeSala}</p>
+                                    <div className='flex flex-row'>
+                                        <p className='font-semibold mr-1'>Ala: </p>
+                                        <p>{entity.ala.nome}</p>
+                                    </div>
+                                    <div className='flex flex-row'>
+                                        <p className='font-semibold mr-1'>Andar: </p>
+                                        <p>{entity.andar}</p>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+
+
+
                         {type === 'medico' && (
                             <>
-                                <p className='font-semibold text-lg'>{entity.nome}</p>
-                                <div className='flex flex-row'>
-                                    <p className='font-semibold mr-1'>CRM: </p>
-                                    <p>{entity.numCrm}</p>
-                                    <p>{`/${entity.ufCrm}`}</p>
-                                </div>
-                                <div className='flex flex-row'>
-                                    <p className='font-semibold mr-1'>E-mail: </p>
-                                    <p>{entity.username}</p>
+                                <div className='flex flex-row my-4 gap-4'>
+                                    <div className='w-80'>
+                                        <Label text='Sala' />
+                                        <div className='my-2'>
+                                            <SelectorSala onSelectionChange={handleSalaChange} defaultValue={selectedSala} />
+                                        </div>
+                                    </div>
+                                    <div className='w-80'>
+                                        <Label text='Ala' />
+                                        <InputDisabled
+                                            type='text'
+                                            placeholder='Ala'
+                                            value={selectedAla}
+                                            readOnly
+                                        />
+                                    </div>
                                 </div>
                             </>
                         )}
+
                         {type === 'sala' && (
                             <>
-                                <p className='font-semibold text-lg'>{entity.nomeSala}</p>
-                                <div className='flex flex-row'>
-                                    <p className='font-semibold mr-1'>Ala: </p>
-                                    <p>{entity.ala.nome}</p>
-                                </div>
-                                <div className='flex flex-row'>
-                                    <p className='font-semibold mr-1'>Andar: </p>
-                                    <p>{entity.andar}</p>
+                                <div>
+                                    <Label text='Médico' />
+                                    <SelectorProfissional onSelectionChange={handleProfissionalSelection} defaultValue={selectedMedico} />
                                 </div>
                             </>
                         )}
-                    </div>
 
-                    {idLocacao && (
+                        <div className='flex flex-row gap-4 mb-4'>
+                            <div className='w-80'>
+                                <Label text='Hora início' />
+                                <Input
+                                    type='datetime-local'
+                                    placeholder='Hora início'
+                                    value={startDate}
+                                    onChange={(e) => setStartDate(e.target.value)}
+                                />
+                            </div>
+                            <div className='w-80'>
+                                <Label text='Hora fim' />
+                                <Input
+                                    type='datetime-local'
+                                    placeholder='Hora fim'
+                                    value={endDate}
+                                    onChange={(e) => setEndDate(e.target.value)}
+                                />
+                            </div>
+                        </div>
+                        {respostaErro && (
+                            <div className='bg-red-200 rounded m-2 p-2'>{respostaErro}</div>
+                        )}
+                    </>
+                ) : (
+                    <>
+
+                        <div className='mb-4'>
+                            <p className='font-semibold text-xl mb-2'>{initialTitle ? 'Detalhes da Locação' : 'Nova Locação'}</p>
+                            {initialTitle && initialTitle.includes("#") && <p className='font-semibold text-lg'>{initialTitle.split('#')[0].trim()}</p>}
+                            {type === 'medico' && (
+                                <>
+                                    <p className='font-semibold text-lg'>{entity.nome}</p>
+                                    <div className='flex flex-row'>
+                                        <p className='font-semibold mr-1'>CRM: </p>
+                                        <p>{entity.numCrm}</p>
+                                        <p>{`/${entity.ufCrm}`}</p>
+                                    </div>
+                                    <div className='flex flex-row'>
+                                        <p className='font-semibold mr-1'>E-mail: </p>
+                                        <p>{entity.username}</p>
+                                    </div>
+                                </>
+                            )}
+                            {type === 'sala' && (
+                                <>
+                                    <p className='font-semibold text-lg'>{entity.nomeSala}</p>
+                                    <div className='flex flex-row'>
+                                        <p className='font-semibold mr-1'>Ala: </p>
+                                        <p>{entity.ala.nome}</p>
+                                    </div>
+                                    <div className='flex flex-row'>
+                                        <p className='font-semibold mr-1'>Andar: </p>
+                                        <p>{entity.andar}</p>
+                                    </div>
+                                </>
+                            )}
+                            <div className='flex flex-row gap-4 mb-4'>
+                                <div className='w-80'>
+                                    <Label text='Hora início' />
+                                    <p>{startDate}</p>
+                                </div>
+                                <div className='w-80'>
+                                    <Label text='Hora fim' />
+                                    <p>{endDate}</p>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </>
+                )}
+            </DialogContent>
+            <DialogActions>
+                {isEditing || initialTitle == null ? (
+                    <>
+                        {idLocacao && (
+                            <div className='h-10'>
+                                <ButtonVermelho onClick={() => openDeleteModal()} text="Excluir" />
+                            </div>
+                        )}
+                        <Button onClick={handleCancel} text='Cancelar' />
+                        <Button onClick={salvar} color='primary' text='Salvar' />
+                    </>
+                ) : (
+                    <> {idLocacao && (
                         <div className='h-10'>
                             <ButtonVermelho onClick={() => openDeleteModal()} text="Excluir" />
                         </div>
                     )}
-                </div>
+                        <Button onClick={handleCancel} text='Cancelar' />
+                        {idLocacao && (
+                            <Button onClick={() => setIsEditing(true)} text='Editar' />)}
 
-                {type === 'medico' && (
-                    <>
-                        <div className='flex flex-row my-4 gap-4'>
-                            <div className='w-80'>
-                                <Label text='Sala' />
-                                <div className='my-2'>
-                                    <SelectorSala onSelectionChange={handleSalaChange} defaultValue={selectedSala} />
-                                </div>
-                            </div>
-                            <div className='w-80'>
-                                <Label text='Ala' />
-                                <InputDisabled
-                                    type='text'
-                                    placeholder='Ala'
-                                    value={selectedAla}
-                                    readOnly
-                                />
-                            </div>
-                        </div>
                     </>
-                )}
 
-                {type === 'sala' && (
-                    <>
-                        <div>
-                            <Label text='Médico' />
-                            <SelectorProfissional onSelectionChange={handleProfissionalSelection} defaultValue={selectedMedico} />
-                        </div>
-                    </>
                 )}
-
-                <div className='flex flex-row gap-4 mb-4'>
-                    <div className='w-80'>
-                        <Label text='Hora início' />
-                        <Input
-                            type='datetime-local'
-                            placeholder='Hora início'
-                            value={startDate}
-                            onChange={(e) => setStartDate(e.target.value)}
-                        />
-                    </div>
-                    <div className='w-80'>
-                        <Label text='Hora fim' />
-                        <Input
-                            type='datetime-local'
-                            placeholder='Hora fim'
-                            value={endDate}
-                            onChange={(e) => setEndDate(e.target.value)}
-                        />
-                    </div>
-                </div>
-                {respostaErro && (
-                    <div className='bg-red-200 rounded m-2 p-2'>{respostaErro}</div>
-                )}
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={handleCancel} text='Cancelar' />
-                <Button onClick={salvar} color='primary' text='Salvar' />
                 {idLocacao && (
                     <ConfirmDeleteModal
                         isOpen={deleteModalOpen}
