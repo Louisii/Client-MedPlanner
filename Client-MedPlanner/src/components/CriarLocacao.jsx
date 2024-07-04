@@ -193,7 +193,7 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
         <Dialog open={visible} onClose={onHide}>
             <DialogContent>
                 {isEditing || initialTitle == null ? (
-                    <div className='h-96'>
+                    <div className='h-[450px]'>
                         <div className='mb-4'>
                             {initialTitle ? <p className='font-semibold text-xl mb-2'>Editar Locação</p> : <p className='font-semibold text-xl mb-2'>Nova Locação</p>}
                             {initialTitle && initialTitle.includes("#") && <p className='font-semibold text-lg'>{initialTitle.split('#')[0].trim()}</p>}
