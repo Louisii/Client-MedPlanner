@@ -51,9 +51,9 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
     }, [visible]);
 
     useEffect(() => {
-
-        getLocacao(idLocacao);
-
+        if (visible) {
+            getLocacao(idLocacao);
+        }
     }, [usuarioLogado, idLocacao]);
 
     const getUsuarioLogado = () => {
