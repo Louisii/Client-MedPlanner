@@ -10,14 +10,17 @@ const EsqueciSenha = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [respostaErro, setRespostaErro] = useState(null);
+    const [respostaSucesso, setRespostaSucesso] = useState(null);
 
     const handleClickEnviar = async (e) => {
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:8080/usuario/esqueciSenha', { email });
             if (response.status === 200) {
-                alert(response.data);
-                navigate('/');
+                setRespostaSucesso("E-mail encaminhado com sucesso");
+                setTimeout(() => {
+                    navigate('/');
+                }, 2000);  // Redirecionar após 2 segundos
             }
         } catch (error) {
             setRespostaErro(error.response?.data || 'Erro ao gerar nova senha.');
@@ -51,9 +54,14 @@ const EsqueciSenha = () => {
                                 {respostaErro}
                             </div>
                         )}
+                        {respostaSucesso && (
+                            <div className="text-green-500 mb-4">
+                                {respostaSucesso}
+                            </div>
+                        )}
                         <div className="flex items-center justify-between">
                             <Button onClick={() => navigate(`/`)} text="Voltar" />
-                            <Button text="Enviar" onClick={handleClickEnviar}  />
+                            <Button text="Enviar" onClick={handleClickEnviar} />
                         </div>
                     </form>
                 </div>
