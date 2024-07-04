@@ -93,7 +93,7 @@ const CadastroSala = () => {
             }
         } catch (error) {
             if (error.response) {
-                setRespostaErro(error.response.data.errors || ['Algo deu errado! Revise os campos e tente novamente.']);
+                setRespostaErro([error.response.data] || ['Algo deu errado! Revise os campos e tente novamente.']);
                 console.log(error.response.data);
             } else {
                 setRespostaErro(['Erro ao conectar ao servidor']);
@@ -209,7 +209,7 @@ const CadastroSala = () => {
 
                     {!respostaOk && (respostaErro == undefined || respostaErro.length > 0) &&
                         <div className='bg-red-300 text-white rounded-md px-4 py-2 mx-8 my-2'>
-                            {respostaErro.map((e) => <p key={e}>{e}</p>)}
+                            {respostaErro.map((e, index) => <p key={index}>{e}</p>)}
                         </div>
                     }
                     <div className='flex gap-4 p-8 items-center justify-end'>

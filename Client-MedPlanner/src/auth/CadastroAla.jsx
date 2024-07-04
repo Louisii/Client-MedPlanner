@@ -3,17 +3,25 @@ import Layout from '../components/Layout';
 import Button from '../components/Button';
 import Input from '../components/Input';
 import Label from '../components/Label';
+import Combobox from '../components/Combobox';
 import axiosWithToken from '../lib/RequestInterceptor';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const CadastroAla = () => {
     const { alaId } = useParams();
     const navigate = useNavigate();
-    const [form, setForm] = useState({ nome: '', sigla: '' });
+    const [form, setForm] = useState({ nome: '', sigla: '', situacao: 'Selecione' });
     const [respostaErro, setRespostaErro] = useState([]);
     const [respostaOk, setRespostaOk] = useState(false);
     const [enviar, setEnviar] = useState(false);
     const [ala, setAla] = useState(null);
+
+    const opcoesSituacao = [
+        { value: 'Selecione', label: 'Selecione' },
+        { value: 'A', label: 'Ativo' },
+        { value: 'I', label: 'Inativo' },
+        { value: 'M', label: 'Manutenção' }
+    ];
 
     useEffect(() => {
         if (alaId) {
@@ -83,6 +91,14 @@ const CadastroAla = () => {
                                 placeholder=""
                                 value={form.sigla}
                                 onChange={(e) => handleForm('sigla', e.target.value)}
+                            />
+                        </div>
+                        <div className="m-4">
+                            <Label text="Situação" />
+                            <Combobox
+                                opcoes={opcoesSituacao}
+                                value={form.situacao}
+                                onChange={(value) => handleForm('situacao', value)}
                             />
                         </div>
                     </div>
