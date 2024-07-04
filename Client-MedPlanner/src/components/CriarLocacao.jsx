@@ -374,6 +374,7 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
                         isOpen={deleteModalOpen}
                         onCancel={closeDeleteModal}
                         onConfirm={confirmDelete}
+                        text={"Tem certeza que deseja excluir a locação?"}
                     />
                 )}
             </DialogActions>
