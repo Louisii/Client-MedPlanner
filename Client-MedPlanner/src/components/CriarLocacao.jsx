@@ -189,6 +189,19 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
         setSelectedMedico(data);
     };
 
+    const formatDate = (date) => {
+        if (!date) return '';
+        const options = {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+        };
+        return new Date(date).toLocaleString('pt-BR', options).replace(',', '');
+    };
+
     return (
         <Dialog open={visible} onClose={onHide}>
             <DialogContent>
@@ -319,11 +332,11 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
                             <div className='flex flex-row gap-4 mb-4'>
                                 <div className='w-80'>
                                     <Label text='Hora início' />
-                                    <p>{startDate}</p>
+                                    <p>{formatDate(startDate)}</p>
                                 </div>
                                 <div className='w-80'>
                                     <Label text='Hora fim' />
-                                    <p>{endDate}</p>
+                                    <p>{formatDate(endDate)}</p>
                                 </div>
                             </div>
                         </div>
