@@ -11,13 +11,16 @@ export const authenticate = async (username, password) => {
         if (response.ok) {
             const data = await response.json();
             return data;
+        } else if (response.status === 401) {
+            throw new Error("Usuário ou senha incorretos!");
         } else {
-            throw new Error("Usuário inválido");
+            throw new Error("Erro ao autenticar");
         }
     } catch (error) {
-        throw new Error('Erro ao autenticar:' + error);
+        throw new Error(error.message);
     }
 }
+
 
 export const create = async (nome, senha) => {
     try {
