@@ -33,13 +33,18 @@ const EsqueciSenha = () => {
         <div className='h-screen w-screen bg-gray-200'>
             <div className="h-screen flex items-center justify-center">
                 <div>
-                    <form className="bg-white shadow-md rounded-lg px-16 pt-6 pb-8 mb-4">
+                    <form className="bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-4">
                         <div className='w-full mb-8 mt-4'>
-                            <img src={logo} alt="logo sga" className='w-48 mx-auto' />
+                            <img src={logo} alt="logo MedPlanner" className='w-48 mx-auto' />
                         </div>
+                        <div className="text-center font-bold mb-4">Recuperação de senha</div>
                         <div className="mb-6">
                             <Label text="E-mail" />
                             <Input type="email" placeholder="" onChange={handleChangeEmail} required />
+                        </div>
+                        <div className="text-center mb-4">Insira seu login e encaminharemos uma nova senha para você.</div>
+                        <div className="text-center mb-6">
+                            Lembre-se de altera-la ao acessar o sistema!
                         </div>
                         {respostaErro && (
                             <div className="text-red-500 mb-4">
