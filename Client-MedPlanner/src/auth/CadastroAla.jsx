@@ -52,14 +52,24 @@ const CadastroAla = () => {
                 }
             })
             .catch((error) => {
-                setRespostaErro(error.response.data.errors);
+                setRespostaErro(error.response.data?.errors || ['Algo deu errado! Revise os campos e tente novamente.']);
                 console.error('Erro ao salvar ala:', error.message);
             });
     };
 
+    const validateForm = () => {
+        const errors = [];
+        if (!form.nome) errors.push("O Nome da Ala é obrigatório.");
+        if (!form.sigla) errors.push("A Sigla é obrigatória.");
+        if (!form.situacao || form.situacao === 'Selecione') errors.push("A Situação da Ala é obrigatória.");
+        return errors;
+    };
+
     const handleSubmit = () => {
-        if (alaId) {
-            setForm({ ...form, idAla: alaId });
+        const validationErrors = validateForm();
+        if (validationErrors.length > 0) {
+            setRespostaErro(validationErrors);
+            return;
         }
         salvarAla();
         setEnviar(true);

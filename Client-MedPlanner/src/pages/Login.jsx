@@ -1,22 +1,23 @@
-import React, { useState } from 'react'
-import logo from '../assets/logoMedPlanner.png'
-import Input from '../components/Input'
-import Label from '../components/Label'
-import LinkStyled from '../components/LinkStyled'
-import Button from '../components/Button'
-import { useAuth } from '../lib/AuthProvider'
-import { authenticate } from '../lib/Auth'
-import { useNavigate } from 'react-router-dom'
-
+import React, { useState } from 'react';
+import logo from '../assets/logoMedPlanner.png';
+import Input from '../components/Input';
+import Label from '../components/Label';
+import LinkStyled from '../components/LinkStyled';
+import Button from '../components/Button';
+import { useAuth } from '../lib/AuthProvider';
+import { authenticate } from '../lib/Auth';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const { token, setToken } = useAuth();
     const navigate = useNavigate();
-    const [username, setUsername] = useState();
-    const [password, setPassword] = useState();
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState(''); // Definindo o estado para a mensagem de erro
 
     const handleClickEntrar = async (e) => {
         e.preventDefault();
+        setErrorMessage(''); // Limpar mensagem de erro ao tentar login novamente
         try {
             await authenticate(username, password).then((response) => {
                 setToken(response.token);
@@ -25,18 +26,18 @@ const Login = () => {
                 navigate("/home", { replace: true });
             });
         } catch (error) {
-            console.log(error);
+            setErrorMessage(error.message);
+            console.log(error.message);
         }
-    }
+    };
 
     const handleChangeUsername = (e) => {
         setUsername(e.target.value);
-    }
+    };
 
     const handleChangePassword = (e) => {
         setPassword(e.target.value);
-    }
-
+    };
 
     return (
         <div className='h-screen w-screen bg-gray-200'>
@@ -45,7 +46,6 @@ const Login = () => {
                     <form className="bg-white shadow-md rounded-lg px-16 pt-6 pb-8 mb-4">
                         <div className='w-full mb-8 mt-4'>
                             <img src={logo} alt="logo sga" className='w-48 mx-auto' />
-
                         </div>
                         <div className="mb-6">
                             <Label text="Usuário" />
@@ -54,23 +54,21 @@ const Login = () => {
                         <div className="mb-6">
                             <Label text="Senha" />
                             <Input type="password" placeholder="" onChange={handleChangePassword} />
-
                         </div>
+                        {errorMessage && (
+                            <div className="mb-4 text-red-500 text-sm">
+                                {errorMessage}
+                            </div>
+                        )}
                         <div className="flex items-center justify-between">
                             <LinkStyled to="/esqueci-senha" text="Esqueceu sua senha?" />
-
                             <Button text="Entrar" onClick={handleClickEntrar} />
-
                         </div>
                     </form>
-
-
                 </div>
-
             </div>
-
         </div>
-    )
-}
+    );
+};
 
-export default Login
+export default Login;

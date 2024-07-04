@@ -50,7 +50,7 @@ const CadastroSala = () => {
             const response = await axiosWithToken.get('http://localhost:8080/ala/listar');
             if (response.status === 200) {
                 const alas = response.data.map((ala) => ({ value: ala.idAla, label: ala.nome }));
-                console.log('Alas:', alas); // Adicionando log para verificar os dados das alas
+                console.log('Alas:', alas);
                 setOpcoesAla([{ value: '', label: 'Selecione' }, ...alas]);
             } else {
                 console.error(`Falha ao obter alas: ${response.status}`);
@@ -68,7 +68,7 @@ const CadastroSala = () => {
                 setForm({
                     nomeSala: sala.nomeSala,
                     ala: sala.ala || { idAla: '' },
-                    andar: sala.andar != null ? String(sala.andar) : '',  // Converting to string if not null
+                    andar: sala.andar != null ? String(sala.andar) : '',
                     situacao: sala.situacao,
                     recursos: sala.recursos || [],
                 });
@@ -83,7 +83,7 @@ const CadastroSala = () => {
     const salvarSala = async () => {
         const payload = {
             ...form,
-            ala: { idAla: form.ala.idAla }, // Certifica-se que 'ala' seja um objeto com a chave idAla
+            ala: { idAla: form.ala.idAla },
         };
         try {
             const response = await axiosWithToken.post('http://localhost:8080/sala/salvar', payload);
@@ -100,7 +100,7 @@ const CadastroSala = () => {
                 console.log(error.message);
             }
         } finally {
-            setEnviar(false); // Reset enviar to false after the save
+            setEnviar(false);
         }
     };
 
@@ -127,13 +127,22 @@ const CadastroSala = () => {
         setForm({ ...form, recursos: newRecursos });
     };
 
+    const validateForm = () => {
+        const errors = [];
+        if (!form.nomeSala) errors.push("O Nome da Sala é obrigatório.");
+        if (!form.ala.idAla) errors.push("A Ala é obrigatória.");
+        if (!form.andar) errors.push("O Andar é obrigatório.");
+        if (!form.situacao || form.situacao === 'Selecione') errors.push("A Situação da Sala é obrigatória.");
+        return errors;
+    };
+
     const handleSubmit = () => {
-        if (idSala != null) {
-            setForm((prevForm) => ({
-                ...prevForm,
-                idSala: idSala,
-            }));
+        const validationErrors = validateForm();
+        if (validationErrors.length > 0) {
+            setRespostaErro(validationErrors);
+            return;
         }
+        salvarSala();
         setEnviar(true);
     };
 
@@ -213,7 +222,7 @@ const CadastroSala = () => {
                         </div>
                     }
                     <div className='flex gap-4 p-8 items-center justify-end'>
-                        <Button onClick={() => navigate('/listagem-sala')} text="Voltar" /> {/* Botão de Voltar corrigido */}
+                        <Button onClick={() => navigate('/listagem-sala')} text="Voltar" />
                         <Button onClick={handleSubmit} text={idSala != null ? "Atualizar" : "Cadastrar"} />
                     </div>
                 </div>
