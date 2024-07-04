@@ -5,9 +5,11 @@ import Input from '../components/Input';
 import Label from '../components/Label';
 import axiosWithToken from '../lib/RequestInterceptor';
 import { useParams } from 'react-router-dom';
-import { format, parse } from 'date-fns';
+import { format, parseISO, isBefore } from 'date-fns';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import SelectorProfissional from '../components/SelectorProfissional';
+import SelectorSala from '../components/SelectorSala';
 
 const Relatorios = () => {
     const { tipo } = useParams();
@@ -15,8 +17,20 @@ const Relatorios = () => {
     const [respostaErro, setRespostaErro] = useState([]);
     const [respostaOk, setRespostaOk] = useState(false);
     const [relatorio, setRelatorio] = useState([]);
+    const [selectedSala, setSelectedSala] = useState(null);
+    const [selectedMedico, setSelectedMedico] = useState(null);
+    const [selectedSalaLabel, setSelectedSalaLabel] = useState('');
+    const [selectedMedicoLabel, setSelectedMedicoLabel] = useState('');
 
     useEffect(() => {
+        setForm({ dataInicio: '', dataFim: '' });
+        setRespostaErro([]);
+        setRespostaOk(false);
+        setRelatorio([]);
+        setSelectedSala(null);
+        setSelectedMedico(null);
+        setSelectedSalaLabel('');
+        setSelectedMedicoLabel('');
         if (tipo === 'diario') {
             gerarRelatorioDiario();
         }
@@ -25,9 +39,9 @@ const Relatorios = () => {
     const gerarRelatorioSala = () => {
         axiosWithToken.get('http://localhost:8080/relatorios/medicos-por-sala', {
             params: {
-                salaId: form.salaId,
-                dataInicio: format(parse(form.dataInicio, 'dd/MM/yyyy', new Date()), 'yyyy-MM-dd'),
-                dataFim: format(parse(form.dataFim, 'dd/MM/yyyy', new Date()), 'yyyy-MM-dd')
+                salaId: selectedSala,
+                dataInicio: form.dataInicio,
+                dataFim: form.dataFim
             }
         })
         .then((response) => {
@@ -48,9 +62,9 @@ const Relatorios = () => {
     const gerarRelatorioMedico = () => {
         axiosWithToken.get('http://localhost:8080/relatorios/salas-por-medico', {
             params: {
-                medicoId: form.medicoId,
-                dataInicio: format(parse(form.dataInicio, 'dd/MM/yyyy', new Date()), 'yyyy-MM-dd'),
-                dataFim: format(parse(form.dataFim, 'dd/MM/yyyy', new Date()), 'yyyy-MM-dd')
+                medicoId: selectedMedico,
+                dataInicio:form.dataInicio,
+                dataFim:form.dataFim
             }
         })
         .then((response) => {
@@ -90,12 +104,38 @@ const Relatorios = () => {
         setForm({ ...form, [name]: value });
     };
 
-    const handleSubmit = () => {
-        if (tipo === 'sala') {
-            gerarRelatorioSala();
-        } else if (tipo === 'medico') {
-            gerarRelatorioMedico();
+    const validateTime = () => {
+        const { dataInicio, dataFim } = form;
+        if (dataInicio && dataFim) {
+            const start = parseISO(dataInicio);
+            const end = parseISO(dataFim);
+            if (isBefore(end, start)) {
+                setRespostaErro(['A data final não pode ser anterior à data inicial.']);
+                return false;
+            }
         }
+        setRespostaErro([]);
+        return true;
+    };
+
+    const handleSubmit = () => {
+        if (validateTime()) {
+            if (tipo === 'sala') {
+                gerarRelatorioSala();
+            } else if (tipo === 'medico') {
+                gerarRelatorioMedico();
+            }
+        }
+    };
+
+    const handleSalaChange = (selectedSala) => {
+        setSelectedSala(selectedSala.value);
+        setSelectedSalaLabel(selectedSala.label);
+    };
+
+    const handleProfissionalSelection = (selectedMedico) => {
+        setSelectedMedico(selectedMedico.value);
+        setSelectedMedicoLabel(selectedMedico.label);
     };
 
     const gerarPDF = () => {
@@ -115,9 +155,9 @@ const Relatorios = () => {
                 pdf.setFontSize(12);
                 pdf.text(`Tipo de Relatório: ${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`, 10, 10);
                 if (tipo === 'sala') {
-                    pdf.text(`Sala: ${form.salaId}`, 10, 20);
+                    pdf.text(`Sala: ${selectedSalaLabel}`, 10, 20);
                 } else if (tipo === 'medico') {
-                    pdf.text(`Médico: ${form.medicoId}`, 10, 20);
+                    pdf.text(`Médico: ${selectedMedicoLabel}`, 10, 20);
                 }
                 pdf.text(`Data Inicial: ${dataInicio}`, 10, 30);
                 pdf.text(`Data Final: ${dataFim}`, 10, 40);
@@ -139,20 +179,20 @@ const Relatorios = () => {
                             {tipo === 'sala' &&
                                 <div className="m-4">
                                     <Label text="Sala" />
-                                    <Input type='text' placeholder='' onChange={(e) => handleForm('salaId', e.target.value)} />
+                                    <SelectorSala onSelectionChange={handleSalaChange} defaultValue={"Selecionar"} />
                                 </div>
                             }
                             {tipo === 'medico' &&
                                 <div className="m-4">
                                     <Label text="Médico" />
-                                    <Input type='text' placeholder='' onChange={(e) => handleForm('medicoId', e.target.value)} />
+                                    <SelectorProfissional onSelectionChange={handleProfissionalSelection} defaultValue={"Selecionar"} />
                                 </div>
                             }
                             <div className="m-4">
                                 <Label text="Data inicial" />
                                 <Input
-                                    type="text"
-                                    placeholder="dd/mm/aaaa"
+                                    type='date'
+                                    placeholder='Hora início'
                                     value={form.dataInicio}
                                     onChange={(e) => handleForm('dataInicio', e.target.value)}
                                 />
@@ -160,8 +200,8 @@ const Relatorios = () => {
                             <div className="m-4">
                                 <Label text="Data final" />
                                 <Input
-                                    type="text"
-                                    placeholder="dd/mm/aaaa"
+                                    type='date'
+                                    placeholder='Hora início'
                                     value={form.dataFim}
                                     onChange={(e) => handleForm('dataFim', e.target.value)}
                                 />
@@ -184,7 +224,6 @@ const Relatorios = () => {
                         <table className="min-w-full bg-white border">
                             <thead>
                                 <tr>
-                                    <th className="py-2 px-4 border">Codigo</th>
                                     {tipo === 'sala' && <th className="py-2 px-4 border">Médico</th>}
                                     {tipo === 'medico' && <th className="py-2 px-4 border">Sala</th>}
                                     {tipo === 'diario' && (
@@ -207,7 +246,6 @@ const Relatorios = () => {
                             <tbody>
                                 {relatorio.map((item, index) => (
                                     <tr key={index}>
-                                        <td className="py-2 px-4 border">{item.id}</td>
                                         {tipo === 'sala' && <td className="py-2 px-4 border">{item.nome}</td>}
                                         {tipo === 'medico' && <td className="py-2 px-4 border">{item.nome}</td>}
                                         {tipo === 'diario' && (
