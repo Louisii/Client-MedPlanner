@@ -30,8 +30,10 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [locacao, setLocacao] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
+    const [usuarioLogado, setUsuarioLogado] = useState(null);
 
     useEffect(() => {
+        getUsuarioLogado()
         if (visible) {
             setStartDate(initialStartDate);
             setEndDate(initialEndDate);
@@ -46,6 +48,35 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
             }
         }
     }, [appointmentMeta, visible]);
+
+    const getUsuarioLogado = () => {
+        axiosWithToken.get('http://localhost:8080/usuario/minha-conta')
+            .then(response => {
+                if (response.status === 200) {
+                    setUsuarioLogado(response.data);
+                } else {
+                    console.error(`Falha ao obter usuário: ${response.status}`);
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao obter usuário:', error.message);
+            });
+    };
+
+    const usuarioLogadoPodeEditar = (usuarioLogado, locacao) => {
+
+        if (usuarioLogado.cargo == "MEDICO") {
+            if (locacao) {
+                if (locacao.usuario.username == usuarioLogado.username) {
+                    return true
+                } else {
+                    return false
+                }
+            } else { return false }
+        } else {
+            return true
+        }
+    }
 
     const handleCancel = () => {
         onHide();
@@ -310,7 +341,7 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
                         </div>
                     )}
                         <Button onClick={handleCancel} text='Cancelar' />
-                        {idLocacao && (
+                        {(idLocacao && usuarioLogadoPodeEditar(usuarioLogado, locacao)) && (
                             <Button onClick={() => setIsEditing(true)} text='Editar' />)}
 
                     </>
