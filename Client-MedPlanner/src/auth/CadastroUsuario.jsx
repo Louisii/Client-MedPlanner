@@ -27,7 +27,6 @@ const CadastroUsuario = () => {
   const [respostaOk, setRespostaOk] = useState(false);
   const [enviar, setEnviar] = useState(false);
   const navigate = useNavigate();
-  const [usuario, setUsuario] = useState(null);
 
   const opcoesCargo = [{ value: '', label: 'Selecione' }, { value: 'ADMINISTRADOR', label: 'Administrador(a)' }, { value: 'RECEPCAO', label: 'Recepcionista' }, { value: 'MEDICO', label: 'Médico(a)' }];
 
@@ -35,17 +34,29 @@ const CadastroUsuario = () => {
     try {
       const response = await axiosWithToken.get(`http://localhost:8080/usuario/buscar?id=${usuarioId}`);
       if (response.status === 200) {
-        setUsuario(response.data);
-        setForm({
-          nome: response.data.nome,
-          username: response.data.username,
-          cpf: response.data.cpf,
-          cargo: response.data.cargo,
-          situacao: response.data.situacao,
-          especialidade: response.data.especialidade.idEspecialidade,
-          numCrm: response.data.numCrm,
-          ufCrm: response.data.ufCrm,
-        });
+        if (response.data.cargo == "MEDICO") {
+          setForm({
+            idUsuario: usuarioId,
+            nome: response.data.nome,
+            username: response.data.username,
+            cpf: response.data.cpf,
+            cargo: response.data.cargo,
+            situacao: response.data.situacao,
+            especialidade: response.data.especialidade.idEspecialidade,
+            numCrm: response.data.numCrm,
+            ufCrm: response.data.ufCrm
+          });
+        } else {
+          setForm({
+            idUsuario: usuarioId,
+            nome: response.data.nome,
+            username: response.data.username,
+            cpf: response.data.cpf,
+            cargo: response.data.cargo,
+            situacao: response.data.situacao
+          });
+        }
+
         setMaskedCpf(maskCpf(response.data.cpf));
       }
     } catch (error) {
@@ -61,6 +72,7 @@ const CadastroUsuario = () => {
       };
 
       const payload = {
+        idUsuario: usuarioId,
         nome: adjustedForm.nome,
         username: adjustedForm.username,
         cpf: adjustedForm.cpf.replace(/\D/g, ''), // Remover a máscara do CPF
