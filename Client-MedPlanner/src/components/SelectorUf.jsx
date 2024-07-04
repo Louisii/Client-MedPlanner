@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
 import Select from 'react-select';
-
-// SelectorUF
 const SelectorUF = ({ onSelectionChange, defaultValue }) => {
     const [opcoesUF, setopcoesUF] = useState([
         { value: '', label: 'Selecione' },
@@ -33,13 +31,16 @@ const SelectorUF = ({ onSelectionChange, defaultValue }) => {
         { value: 'SE', label: 'Sergipe' },
         { value: 'TO', label: 'Tocantins' }
     ]);
-    const [selectUF, setSelectUF] = useState(defaultValue || { value: '', label: 'Selecione' });
+    const [selectUF, setSelectUF] = useState({ value: defaultValue.value, label: defaultValue.label } || { value: '', label: 'Selecione' });
 
     useEffect(() => {
         if (defaultValue) {
-            setSelectUF(defaultValue);
+            const foundOption = opcoesUF.find(option => option.value === defaultValue.value);
+            if (foundOption) {
+                setSelectUF(foundOption);
+            }
         }
-    }, [defaultValue]);
+    }, [defaultValue, opcoesUF]);
 
     const handleSelectionChange = (selectedOption) => {
         setSelectUF(selectedOption);

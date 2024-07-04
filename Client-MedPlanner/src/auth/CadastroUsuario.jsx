@@ -42,7 +42,7 @@ const CadastroUsuario = () => {
           cpf: response.data.cpf,
           cargo: response.data.cargo,
           situacao: response.data.situacao,
-          especialidade: response.data.especialidade,
+          especialidade: response.data.especialidade.idEspecialidade,
           numCrm: response.data.numCrm,
           ufCrm: response.data.ufCrm,
         });
