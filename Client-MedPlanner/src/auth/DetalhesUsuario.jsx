@@ -3,11 +3,16 @@ import Layout from '../components/Layout';
 import { useNavigate, useParams } from 'react-router-dom';
 import axiosWithToken from '../lib/RequestInterceptor';
 import Button from '../components/Button';
+import ButtonVermelho from '../components/ButtonVermelho';
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal';
 
 const DetalhesUsuario = () => {
     const { usuarioId } = useParams();
     const [usuario, setUsuario] = useState(null);
     const navigate = useNavigate();
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
+    const [usuarioLogado, setUsuarioLogado] = useState(null);
 
     const maskCpf = (cpf) => {
         if (!cpf) return '';
@@ -19,19 +24,69 @@ const DetalhesUsuario = () => {
         getUsuario(usuarioId);
     }, [usuarioId]);
 
-    const getUsuario = (usuarioId) => {
+    const getUsuarioLogado = () => {
+        axiosWithToken.get('http://localhost:8080/usuario/minha-conta')
+            .then(response => {
+                if (response.status === 200) {
+                    setUsuarioLogado(response.data);
+                } else {
+                    console.error(`Falha ao obter usuário: ${response.status}`);
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao obter usuário:', error.message);
+            });
+    };
+
+
+    const getUsuario = () => {
         axiosWithToken.get(`http://localhost:8080/usuario/buscar?id=${usuarioId}`)
-            .then((response) => {
+            .then(response => {
                 if (response.status === 200) {
                     setUsuario(response.data);
                 } else {
                     console.error(`Falha ao obter usuário: ${response.status}`);
                 }
             })
-            .catch((error) => {
+            .catch(error => {
                 console.error('Erro ao obter usuário:', error.message);
-                // Aqui você pode adicionar lógica para exibir uma mensagem de erro para o usuário
             });
+    };
+
+    const usuarioLogadoIsAdm = () => {
+        if (usuarioLogado) {
+            return usuarioLogado.cargo == "ADMINISTRADOR"
+        }
+        return false
+    }
+
+
+    const openDeleteModal = () => {
+        setDeleteModalOpen(true);
+    };
+
+    const closeDeleteModal = () => {
+        setDeleteModalOpen(false);
+    };
+
+
+    const confirmDelete = () => {
+        if (usuario) {
+            let url = ''
+            if (usuario.cargo == "MEDICO") {
+                url = `http://localhost:8080/profissional/deletar/`
+            } else {
+                url = `http://localhost:8080/usuario/deletar/`
+            }
+            axiosWithToken.delete(`${url}${usuario.idUsuario}`)
+                .then((response) => {
+                    closeDeleteModal();
+                    handleCancel();
+                })
+                .catch((error) => {
+                    console.error('Erro ao excluir locação:', error.message);
+                });
+        }
     };
 
     return (
@@ -48,12 +103,19 @@ const DetalhesUsuario = () => {
                     </div>
                     <div className='flex items-center text-sm h-9 gap-4 m-4 p-4'>
                         <Button onClick={() => navigate(`/listagem-usuario`)} text="Voltar" />
-                        <Button onClick={() => navigate(`/edicao-usuario/${usuarioId}`)} text="Editar" />
+                        {usuarioLogadoIsAdm && <Button onClick={() => navigate(`/edicao-usuario/${usuarioId}`)} text="Editar" />}
+                        {usuarioLogadoIsAdm && <ButtonVermelho onClick={() => openDeleteModal()} text="Excluir" />}
                     </div>
                 </div>
                 :
                 <p></p>
             }
+            <ConfirmDeleteModal
+                isOpen={deleteModalOpen}
+                onCancel={closeDeleteModal}
+                onConfirm={confirmDelete}
+                text={`Tem certeza que deseja excluir permanentemente o usuário?`}
+            />
         </Layout>
     );
 };

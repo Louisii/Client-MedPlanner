@@ -30,8 +30,10 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [locacao, setLocacao] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
+    const [usuarioLogado, setUsuarioLogado] = useState(null);
 
     useEffect(() => {
+
         if (visible) {
             setStartDate(initialStartDate);
             setEndDate(initialEndDate);
@@ -44,8 +46,45 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
             if (initialTitle) {
                 getLocacaoId();
             }
+            getUsuarioLogado()
         }
-    }, [appointmentMeta, visible]);
+    }, [visible]);
+
+    useEffect(() => {
+        if (visible) {
+            getLocacao(idLocacao);
+        }
+    }, [usuarioLogado, idLocacao]);
+
+    const getUsuarioLogado = () => {
+        axiosWithToken.get('http://localhost:8080/usuario/minha-conta')
+            .then(response => {
+                if (response.status === 200) {
+                    setUsuarioLogado(response.data);
+                } else {
+                    console.error(`Falha ao obter usuário: ${response.status}`);
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao obter usuário:', error.message);
+            });
+    };
+
+    const usuarioLogadoPodeEditar = (usuarioLogado, locacao) => {
+        if (usuarioLogado) {
+            if (usuarioLogado.cargo == "MEDICO") {
+                if (locacao) {
+                    if (locacao.usuario.username == usuarioLogado.username) {
+                        return true
+                    } else {
+                        return false
+                    }
+                } else { return false }
+            } else {
+                return true
+            }
+        }
+    }
 
     const handleCancel = () => {
         onHide();
@@ -96,7 +135,7 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
         if (initialTitle && initialTitle.includes("#")) {
             let id = initialTitle.split('#')[1].trim();
             setIdLocacao(id);
-            getLocacao(id);
+
         }
     };
 
@@ -105,6 +144,7 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
             .then((response) => {
                 if (response.status === 200) {
                     console.log(response.data)
+                    setLocacao(response.data)
                     const { sala, profissional: usuario } = response.data;
                     if (type == 'MEDICO') {
                         setSelectedSala({ label: sala.nomeSala, value: sala.idSala, ala: sala.ala });
@@ -153,7 +193,7 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
         <Dialog open={visible} onClose={onHide}>
             <DialogContent>
                 {isEditing || initialTitle == null ? (
-                    <>
+                    <div className='h-[450px]'>
                         <div className='mb-4'>
                             {initialTitle ? <p className='font-semibold text-xl mb-2'>Editar Locação</p> : <p className='font-semibold text-xl mb-2'>Nova Locação</p>}
                             {initialTitle && initialTitle.includes("#") && <p className='font-semibold text-lg'>{initialTitle.split('#')[0].trim()}</p>}
@@ -242,7 +282,7 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
                         {respostaErro && (
                             <div className='bg-red-200 rounded m-2 p-2'>{respostaErro}</div>
                         )}
-                    </>
+                    </div>
                 ) : (
                     <>
 
@@ -304,13 +344,13 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
                         <Button onClick={salvar} color='primary' text='Salvar' />
                     </>
                 ) : (
-                    <> {idLocacao && (
+                    <> {(idLocacao && usuarioLogadoPodeEditar(usuarioLogado, locacao)) && (
                         <div className='h-10'>
                             <ButtonVermelho onClick={() => openDeleteModal()} text="Excluir" />
                         </div>
                     )}
                         <Button onClick={handleCancel} text='Cancelar' />
-                        {idLocacao && (
+                        {(idLocacao && usuarioLogadoPodeEditar(usuarioLogado, locacao)) && (
                             <Button onClick={() => setIsEditing(true)} text='Editar' />)}
 
                     </>
