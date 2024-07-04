@@ -121,8 +121,9 @@ const CadastroUsuario = () => {
   };
 
   const validateForm = () => {
-    console.log(form)
     const errors = [];
+    const crmRegex = /^[0-9]{4,6}$/;
+
     if (!form.nome) errors.push("Nome é obrigatório.");
     if (!form.username) errors.push("Email é obrigatório.");
     if (!form.cpf) errors.push("CPF é obrigatório.");
@@ -132,6 +133,7 @@ const CadastroUsuario = () => {
     if (form.cargo === 'MEDICO') {
       if (!form.especialidade || form.especialidade === 'Selecione') errors.push("Especialidade é obrigatória para médicos.");
       if (!form.numCrm) errors.push("CRM é obrigatório para médicos.");
+      if (!crmRegex.test(form.numCrm)) errors.push("CRM inválido. Deve ter entre 4 e 6 dígitos.");
       if (!form.ufCrm || form.ufCrm === 'Selecione') errors.push("UF do CRM é obrigatória para médicos.");
     }
 
