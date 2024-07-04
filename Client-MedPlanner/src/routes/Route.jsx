@@ -52,55 +52,94 @@ const Routes = () => {
         },
         {
           path: "/cadastro-usuario",
-          element: <CadastroUsuario />
+          element: <ProtectedRoute allowedRoles={['ADMINISTRADOR']} />,
+          children: [
+            { path: "", element: <CadastroUsuario /> }
+          ]
         },
         {
           path: "/edicao-usuario/:usuarioId",
-          element: <CadastroUsuario />
+          element: <ProtectedRoute allowedRoles={['ADMINISTRADOR']} />,
+          children: [
+            { path: "", element: <CadastroUsuario /> }
+          ]
         },
         {
           path: "/usuario/:usuarioId",
-          element: <DetalhesUsuario />
+          element: <ProtectedRoute allowedRoles={['ADMINISTRADOR']} />,
+          children: [
+            { path: "", element: <DetalhesUsuario /> }
+          ]
         },
         {
           path: "/listagem-usuario",
-          element: <ListagemUsuarios />
+          element: <ProtectedRoute allowedRoles={['ADMINISTRADOR']} />,
+          children: [
+            { path: "", element: <ListagemUsuarios /> }
+          ]
         },
         {
           path: "/cadastro-especialidade",
-          element: <CadastroEspecialidade />
+          element: <ProtectedRoute allowedRoles={['ADMINISTRADOR']} />,
+          children: [
+            { path: "", element: <CadastroEspecialidade /> }
+          ]
         },
         {
           path: "/listagem-especialidade",
-          element: <ListagemEspecialidades />
+          element: <ProtectedRoute allowedRoles={['ADMINISTRADOR']} />,
+          children: [
+            { path: "", element: <ListagemEspecialidades /> }
+          ]
         },
         {
           path: "/cadastro-sala",
-          element: <CadastroSala />
+          element: <ProtectedRoute allowedRoles={['ADMINISTRADOR', 'RECEPCAO']} />,
+          children: [
+            { path: "", element: <CadastroSala /> }
+          ]
         },
         {
           path: "/listagem-sala",
-          element: <ListagemSala />
+          element: <ProtectedRoute allowedRoles={['ADMINISTRADOR', 'RECEPCAO']} />,
+          children: [
+            { path: "", element: <ListagemSala /> }
+          ]
         },
         {
           path: "/edicao-especialidade/:especialidadeId",
-          element: <CadastroEspecialidade />
+          element: <ProtectedRoute allowedRoles={['ADMINISTRADOR']} />,
+          children: [
+            { path: "", element: <CadastroEspecialidade /> }
+          ]
         },
         {
           path: "/edicao-sala/:idSala",
-          element: <CadastroSala />
+          element: <ProtectedRoute allowedRoles={['ADMINISTRADOR', 'RECEPCAO']} />,
+          children: [
+            { path: "", element: <CadastroSala /> }
+          ]
         },
         {
           path: "/cadastro-ala/",
-          element: <CadastroAla />
+          element: <ProtectedRoute allowedRoles={['ADMINISTRADOR', 'RECEPCAO']} />,
+          children: [
+            { path: "", element: <CadastroAla /> }
+          ]
         },
         {
           path: "/edicao-ala/:alaId",
-          element: <CadastroAla />
+          element: <ProtectedRoute allowedRoles={['ADMINISTRADOR', 'RECEPCAO']} />,
+          children: [
+            { path: "", element: <CadastroAla /> }
+          ]
         },
         {
           path: "/listagem-alas",
-          element: <ListagemAlas />
+          element: <ProtectedRoute allowedRoles={['ADMINISTRADOR', 'RECEPCAO']} />,
+          children: [
+            { path: "", element: <ListagemAlas/> }
+          ]
         },
         {
           path: "/agenda-profissional/:profissionalId",
@@ -111,7 +150,10 @@ const Routes = () => {
         },
         {
           path: "/relatorios/:tipo",
-          element: <Relatorios />
+          element: <ProtectedRoute allowedRoles={['ADMINISTRADOR']} />,
+          children: [
+            { path: "", element: <Relatorios/> }
+          ]
         },
         {
           path: "/minha-conta",  
