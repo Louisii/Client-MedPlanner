@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import Layout from '../components/Layout';
@@ -22,19 +22,20 @@ const ListagemUsuarios = () => {
     }, []);
 
     useEffect(() => {
-        if (filterCargo === 'Selecione') {
-            setFilteredUsuarios(usuarios);
-        } else {
-            const filtered = usuarios.filter(user => user.cargo === filterCargo);
-            setFilteredUsuarios(filtered);
+        let filtered = usuarios;
+        if (filterCargo !== 'Selecione') {
+            filtered = usuarios.filter(user => user.cargo === filterCargo);
         }
+        filtered.sort((a, b) => a.nome.localeCompare(b.nome));
+        setFilteredUsuarios(filtered);
     }, [filterCargo, usuarios]);
 
     const getUsuarios = () => {
         axiosWithToken.get('http://localhost:8080/usuario/listar')
             .then((response) => {
-                setUsuarios(response.data);
-                setFilteredUsuarios(response.data);
+                const sortedUsuarios = response.data.sort((a, b) => a.nome.localeCompare(b.nome));
+                setUsuarios(sortedUsuarios);
+                setFilteredUsuarios(sortedUsuarios);
             })
             .catch((error) => { console.log("Error fetching users:", error) });
     };
