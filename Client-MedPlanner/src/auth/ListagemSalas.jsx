@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
-import ConfirmDeleteModal from '../components/ConfirmDeleteModal';
 import Layout from '../components/Layout';
 import axiosWithToken from '../lib/RequestInterceptor';
 
 const ListagemSala = () => {
     const [salas, setSalas] = useState([]);
-    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-    const [salaToDelete, setSalaToDelete] = useState(null);
     const [filterAla, setFilterAla] = useState('Selecione');
     const [filterSituacao, setFilterSituacao] = useState('Selecione');
     const [opcoesAla, setOpcoesAla] = useState([{ value: 'Selecione', label: 'Selecione' }]);
@@ -54,30 +51,6 @@ const ListagemSala = () => {
             });
     };
 
-    const openDeleteModal = (sala) => {
-        setSalaToDelete(sala);
-        setDeleteModalOpen(true);
-    };
-
-    const closeDeleteModal = () => {
-        setDeleteModalOpen(false);
-        setSalaToDelete(null);
-    };
-
-    const confirmDelete = () => {
-        if (salaToDelete) {
-            axiosWithToken.delete(`http://localhost:8080/sala/deletar/${salaToDelete.idSala}`)
-                .then((response) => {
-                    console.log(response.data); // Assuming backend returns a success message
-                    getSalas(); // Refresh the list after deletion
-                    closeDeleteModal();
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        }
-    };
-
     const handleEditSala = (idSala) => {
         navigate(`/edicao-sala/${idSala}`);
     };
@@ -93,7 +66,7 @@ const ListagemSala = () => {
                     <h2 className='text-xl font-bold'>Listagem de Salas</h2>
                     <div className='flex items-center space-x-4'>
                         <div className='flex items-center'>
-                            <label className='mr-2'>Filtrar por ala:</label>
+                            <label className='mr-2'>Filtrar por Ala:</label>
                             <select
                                 className='p-2 border border-gray-300 rounded'
                                 value={filterAla}
@@ -105,7 +78,7 @@ const ListagemSala = () => {
                             </select>
                         </div>
                         <div className='flex items-center'>
-                            <label className='mr-2'>Filtrar por situação:</label>
+                            <label className='mr-2'>Filtrar por Situação:</label>
                             <select
                                 className='p-2 border border-gray-300 rounded'
                                 value={filterSituacao}
@@ -145,7 +118,6 @@ const ListagemSala = () => {
                                         <Button onClick={() => navigate(`/agenda-sala/${sala.idSala}`)} text="Agenda" className='bg-blue-500 text-white p-2 rounded mb-2' />
                                         <div className='flex space-x-2'>
                                             <Button onClick={() => handleEditSala(sala.idSala)} text="Editar" className='bg-green-500 text-white p-2 rounded' />
-                                            <Button onClick={() => openDeleteModal(sala)} text="Excluir" className='bg-red-500 text-white p-2 rounded' />
                                         </div>
                                     </div>
                                 </div>
@@ -159,14 +131,6 @@ const ListagemSala = () => {
                         </div>
                     </div>
                 )}
-
-                {/* Modal for Confirm Delete */}
-                <ConfirmDeleteModal
-                    isOpen={deleteModalOpen}
-                    onCancel={closeDeleteModal}
-                    onConfirm={confirmDelete}
-                    text={salaToDelete != null ? `Tem certeza que deseja excluir a sala ${salaToDelete.nomeSala}? Todos os recursos ligados a essa sala serão excluídos!` : "Tem certeza que deseja excluir a sala?"}
-                />
             </div>
         </Layout>
     );
