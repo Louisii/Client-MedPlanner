@@ -9,10 +9,9 @@ const SelectorProfissional = ({ onSelectionChange, defaultValue }) => {
     useEffect(() => {
         const fetchProfissionals = async () => {
             try {
-                const response = await axiosWithToken.get('http://localhost:8080/usuario/buscar');
+                const response = await axiosWithToken.get('http://localhost:8080/profissional/listar');
                 if (response.status === 200) {
                     const profissionais = response.data
-                        .filter(profissional => profissional.cargo === 'MEDICO')
                         .map((profissional) => ({
                             value: profissional.idUsuario,
                             label: `${profissional.idUsuario} - ${profissional.nome}`,
