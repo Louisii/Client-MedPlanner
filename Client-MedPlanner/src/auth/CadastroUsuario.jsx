@@ -7,6 +7,8 @@ import Combobox from '../components/Combobox';
 import axiosWithToken from '../lib/RequestInterceptor';
 import { useNavigate, useParams } from 'react-router-dom';
 import InputDisabled from '../components/InputDisabled';
+import SelectorEspecialidade from '../components/SelectorEspecialidade';
+import SelectorUF from '../components/SelectorUf';
 
 const CadastroUsuario = () => {
   const { usuarioId } = useParams();
@@ -15,47 +17,18 @@ const CadastroUsuario = () => {
     username: '',
     cpf: '',
     cargo: 'Selecione',
-    situacao: 'Selecione',
+    situacao: 'E',
     especialidade: '',
     numCrm: '',
     ufCrm: 'Selecione'
   });
+  const [maskedCpf, setMaskedCpf] = useState('');
   const [respostaErro, setRespostaErro] = useState([]);
   const [respostaOk, setRespostaOk] = useState(false);
   const [enviar, setEnviar] = useState(false);
   const navigate = useNavigate();
   const [usuario, setUsuario] = useState(null);
-  const [opcoesEspecialidade, setOpcoesEspecialidade] = useState([{ value: '', label: 'Selecione' }]);
-  const opcoesUF = [
-    { value: '', label: 'Selecione' },
-    { value: 'AC', label: 'Acre' },
-    { value: 'AL', label: 'Alagoas' },
-    { value: 'AP', label: 'Amapá' },
-    { value: 'AM', label: 'Amazonas' },
-    { value: 'BA', label: 'Bahia' },
-    { value: 'CE', label: 'Ceará' },
-    { value: 'DF', label: 'Distrito Federal' },
-    { value: 'ES', label: 'Espírito Santo' },
-    { value: 'GO', label: 'Goiás' },
-    { value: 'MA', label: 'Maranhão' },
-    { value: 'MT', label: 'Mato Grosso' },
-    { value: 'MS', label: 'Mato Grosso do Sul' },
-    { value: 'MG', label: 'Minas Gerais' },
-    { value: 'PA', label: 'Pará' },
-    { value: 'PB', label: 'Paraíba' },
-    { value: 'PR', label: 'Paraná' },
-    { value: 'PE', label: 'Pernambuco' },
-    { value: 'PI', label: 'Piauí' },
-    { value: 'RJ', label: 'Rio de Janeiro' },
-    { value: 'RN', label: 'Rio Grande do Norte' },
-    { value: 'RS', label: 'Rio Grande do Sul' },
-    { value: 'RO', label: 'Rondônia' },
-    { value: 'RR', label: 'Roraima' },
-    { value: 'SC', label: 'Santa Catarina' },
-    { value: 'SP', label: 'São Paulo' },
-    { value: 'SE', label: 'Sergipe' },
-    { value: 'TO', label: 'Tocantins' }
-  ];
+
   const opcoesCargo = [{ value: '', label: 'Selecione' }, { value: 'ADMINISTRADOR', label: 'Administrador(a)' }, { value: 'RECEPCAO', label: 'Recepcionista' }, { value: 'MEDICO', label: 'Médico(a)' }];
 
   const getUsuario = async (usuarioId) => {
@@ -73,6 +46,7 @@ const CadastroUsuario = () => {
           numCrm: response.data.numCrm,
           ufCrm: response.data.ufCrm,
         });
+        setMaskedCpf(maskCpf(response.data.cpf));
       }
     } catch (error) {
       console.error('Erro ao obter usuário:', error.message);
@@ -89,7 +63,7 @@ const CadastroUsuario = () => {
       const payload = {
         nome: adjustedForm.nome,
         username: adjustedForm.username,
-        cpf: adjustedForm.cpf,
+        cpf: adjustedForm.cpf.replace(/\D/g, ''), // Remover a máscara do CPF
         cargo: adjustedForm.cargo,
         situacao: adjustedForm.situacao,
         especialidade: adjustedForm.especialidade,
@@ -112,15 +86,35 @@ const CadastroUsuario = () => {
     }
   };
 
+
   const handleForm = (name, value) => {
-    setForm({ ...form, [name]: value });
+    if (name === 'cpf') {
+      const cleanValue = value.replace(/\D/g, '').slice(0, 11); // Limitar a 11 dígitos
+      const maskedValue = maskCpf(cleanValue);
+      setMaskedCpf(maskedValue);
+      setForm({ ...form, [name]: cleanValue }); // Armazenar apenas os dígitos
+    } else if (name === 'especialidade' || name === 'ufCrm') {
+      setForm({ ...form, [name]: value.value }); // Atualiza o valor da especialidade ou UF
+    } else {
+      setForm({ ...form, [name]: value });
+    }
+  };
+
+  const maskCpf = (value) => {
+    return value
+      .replace(/\D/g, '')
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
   };
 
   const validateForm = () => {
+    console.log(form)
     const errors = [];
     if (!form.nome) errors.push("Nome é obrigatório.");
     if (!form.username) errors.push("Email é obrigatório.");
     if (!form.cpf) errors.push("CPF é obrigatório.");
+    if (form.cpf.length !== 11) errors.push("CPF deve ter 11 dígitos.");
     if (!form.cargo || form.cargo === 'Selecione') errors.push("Cargo é obrigatório.");
 
     if (form.cargo === 'MEDICO') {
@@ -143,25 +137,10 @@ const CadastroUsuario = () => {
     setEnviar(true);
   };
 
-  const fetchOpcoesEspecialidade = async () => {
-    try {
-      const response = await axiosWithToken.get('http://localhost:8080/especialidade/listar');
-      if (response.status === 200) {
-        const especialidade = response.data.map((especialidade) => ({ value: especialidade.idEspecialidade, label: especialidade.nome }));
-        setOpcoesEspecialidade([{ value: '', label: 'Selecione' }, ...especialidade]);
-      } else {
-        console.error(`Falha ao obter especialidade: ${response.status}`);
-      }
-    } catch (error) {
-      console.error('Erro ao obter especialidade:', error.message);
-    }
-  };
-
   useEffect(() => {
     if (usuarioId != null) {
       getUsuario(usuarioId);
     }
-    fetchOpcoesEspecialidade();
   }, [usuarioId]);
 
   return (
@@ -181,10 +160,10 @@ const CadastroUsuario = () => {
             </div>
           </div>
 
-          <div className='p-4 grid grid-cols-3 gap-8'>
+          <div className='p-4 grid grid-cols-2 gap-8'>
             <div className='m-4'>
               <Label text="CPF" />
-              <Input type='text' value={form.cpf} onChange={(e) => handleForm('cpf', e.target.value)} />
+              <Input type='text' value={maskedCpf} onChange={(e) => handleForm('cpf', e.target.value)} />
             </div>
             <div className='m-4'>
               <Label text="Cargo" />
@@ -198,10 +177,8 @@ const CadastroUsuario = () => {
               {form.cargo !== 'MEDICO' ?
                 <InputDisabled type='text' />
                 :
-                <Combobox
-                  opcoes={opcoesEspecialidade}
-                  value={form.especialidade}
-                  onChange={(value) => handleForm('especialidade', value)} />
+                <SelectorEspecialidade onSelectionChange={(value) => handleForm('especialidade', value)} defaultValue={{ value: form.especialidade, label: form.especialidade }} />
+
               }
             </div>
             <div className='m-4'>
@@ -217,7 +194,7 @@ const CadastroUsuario = () => {
               {form.cargo !== 'MEDICO' ?
                 <InputDisabled type='text' />
                 :
-                <Combobox opcoes={opcoesUF} value={form.ufCrm} onChange={(value) => handleForm('ufCrm', value)} />
+                <SelectorUF onSelectionChange={(value) => handleForm('ufCrm', value)} defaultValue={{ value: form.ufCrm, label: form.ufCrm }} />
               }
             </div>
           </div>
