@@ -101,7 +101,7 @@ const ListagemSala = () => {
                             <div key={sala.idSala} className='m-4 p-4 border border-gray-200 rounded-lg shadow-md bg-gray-100'>
                                 <div className='grid grid-cols-1 md:grid-cols-2'>
                                     <div>
-                                        <h2 className='text-lg font-bold'>Sala {sala.idSala}</h2>
+                                        <h2 className='text-lg font-bold'>{sala.nomeSala}</h2>
                                         <p><strong>Ala:</strong> {sala.ala.nome}</p>
                                         <p><strong>Andar:</strong> {sala.andar}</p>
                                         <p><strong>Situação:</strong> {sala.situacao}</p>

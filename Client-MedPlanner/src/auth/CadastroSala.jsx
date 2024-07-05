@@ -10,6 +10,7 @@ import axiosWithToken from '../lib/RequestInterceptor';
 const CadastroSala = () => {
     const { idSala } = useParams();
     const [form, setForm] = useState({
+        idSala: null,
         nomeSala: '',
         ala: { idAla: '' },
         andar: '',
@@ -39,12 +40,6 @@ const CadastroSala = () => {
         fetchOpcoesAla();
     }, [idSala]);
 
-    useEffect(() => {
-        if (enviar) {
-            salvarSala();
-        }
-    }, [enviar]);
-
     const fetchOpcoesAla = async () => {
         try {
             const response = await axiosWithToken.get('http://localhost:8080/ala/listar');
@@ -66,6 +61,7 @@ const CadastroSala = () => {
             if (response.status === 200) {
                 const sala = response.data;
                 setForm({
+                    idSala: sala.idSala,
                     nomeSala: sala.nomeSala,
                     ala: sala.ala || { idAla: '' },
                     andar: sala.andar != null ? String(sala.andar) : '',
