@@ -154,17 +154,20 @@ const Relatorios = () => {
 
                 pdf.setFontSize(12);
                 pdf.text(`Tipo de Relatório: ${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`, 10, 10);
+                pdf.text(`Data de Geração: ${dataAtual}`, 150, 10);
                 if (tipo === 'sala') {
                     pdf.text(`Sala: ${selectedSalaLabel}`, 10, 20);
                 } else if (tipo === 'medico') {
                     pdf.text(`Médico: ${selectedMedicoLabel}`, 10, 20);
                 }
-                pdf.text(`Data Inicial: ${dataInicio}`, 10, 30);
-                pdf.text(`Data Final: ${dataFim}`, 10, 40);
-                pdf.text(`Data de Geração: ${dataAtual}`, 10, 50);
-
-                // Adicionando imagem da tabela
-                pdf.addImage(imgData, 'PNG', 0, 60, pdfWidth, pdfHeight);
+                if(tipo !== 'diario'){
+                    pdf.text(`Data Inicial: ${dataInicio}`, 10, 30);
+                    pdf.text(`Data Final: ${dataFim}`, 10, 40);
+                    pdf.addImage(imgData, 'PNG', 0, 60, pdfWidth, pdfHeight);
+                } else {
+                    pdf.addImage(imgData, 'PNG', 0, 40, pdfWidth, pdfHeight);
+                }
+                               
                 pdf.save('relatorio.pdf');
             });
     };
