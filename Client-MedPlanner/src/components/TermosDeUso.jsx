@@ -77,7 +77,7 @@ const TermosDeUsoModal = ({ isOpen, onClose }) => {
                             C) Não causar danos aos sistemas físicos (hardwares) e lógicos (softwares) do MedPlanner, de seus fornecedores ou terceiros, para introduzir ou disseminar vírus informáticos ou quaisquer outros sistemas de hardware ou software que sejam capazes de causar danos anteriormente mencionados.
                             Mais informações
                             Ao aceitar a presente Política de Privacidade é declarado que todo seu conteúdo foi devidamente lido e aceito, tendo assim todas as cláusulas devidamente validadas pelo usuário para que atuem em pleno vigor.
-                            Esta política é efetiva a partir *****.
+                            Esta política é efetiva a partir de 10/07/2024.
                         </p>
                     </div>
                 </div>
