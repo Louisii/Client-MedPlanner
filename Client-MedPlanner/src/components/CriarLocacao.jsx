@@ -95,17 +95,17 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
             setRespostaErro('Todos os campos são obrigatórios.');
             return;
         }
-
+    
         if (!isSameDay(new Date(startDate), new Date(endDate))) {
             setRespostaErro('As datas de início e fim devem estar no mesmo dia.');
             return;
         }
-
+    
         if (!isBefore(new Date(startDate), new Date(endDate))) {
             setRespostaErro('O horário de início deve ser anterior ao horário de fim.');
             return;
         }
-
+    
         const data = {
             idUsuario: type === 'medico' ? entity.idUsuario : selectedMedico.value,
             horaInicio: startDate,
@@ -115,9 +115,9 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
             ala: type === 'medico' ? selectedSala.ala.idAla : entity.ala.idAla,
             idLocacao: parseInt(idLocacao)
         };
-
-        console.log(data)
-
+    
+        console.log(data);
+    
         axiosWithToken.post('http://localhost:8080/locacao/salvar', data)
             .then((response) => {
                 if (response.status === 200) {
@@ -126,10 +126,13 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
                 }
             })
             .catch((error) => {
-                setRespostaErro(error.response.data?.errors || []);
-                console.error('Erro ao salvar locação:', error.message);
+                const mensagemErro = error.response.data?.message || error.response.data?.errors || error.response.data ||  'Erro ao salvar locação.';
+                setRespostaErro(mensagemErro);
+                console.error('Erro ao salvar locação:', mensagemErro);
             });
+            
     };
+    
 
     const getLocacaoId = () => {
         if (initialTitle && initialTitle.includes("#")) {
