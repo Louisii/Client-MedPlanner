@@ -28,7 +28,7 @@ const Agenda = () => {
     const [schedulerData, setSchedulerData] = useState([]);
     const [showCustomTooltip, setShowCustomTooltip] = useState(false);
 
-    const getLocacoesDoMedico = (profissionalId) => {
+    const getLocacoesDoMedico = () => {
 
         axiosWithToken.get(`http://localhost:8080/locacao/buscar?medico=${profissionalId}`)
             .then((response) => {
@@ -53,7 +53,7 @@ const Agenda = () => {
             });
     };
 
-    const getLocacoesDaSala = (salaId) => {
+    const getLocacoesDaSala = () => {
         axiosWithToken.get(`http://localhost:8080/locacao/buscar?sala=${salaId}`)
 
             .then((response) => {
