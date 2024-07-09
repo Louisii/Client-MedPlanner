@@ -81,7 +81,7 @@ const DetalhesUsuario = () => {
             axiosWithToken.delete(`${url}${usuario.idUsuario}`)
                 .then((response) => {
                     closeDeleteModal();
-                    handleCancel();
+                    navigate("/listagem-usuario");
                 })
                 .catch((error) => {
                     console.error('Erro ao excluir locação:', error.message);
