@@ -148,10 +148,11 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
                 if (response.status === 200) {
                     console.log(response.data)
                     setLocacao(response.data)
-                    const { sala, usuario: usuario } = response.data;
-                    if (type == 'MEDICO') {
+                    const { sala: sala, usuario: usuario } = response.data;
+                    if (type === 'medico') {
                         setSelectedSala({ label: sala.nomeSala, value: sala.idSala, ala: sala.ala });
                         setSelectedAla(sala.ala.nome);
+                        console.log(selectedAla)
                     } else {
                         setSelectedMedico({ label: usuario.nome, value: usuario.idUsuario });
                     }
