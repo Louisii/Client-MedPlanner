@@ -177,6 +177,7 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
                 .then((response) => {
                     closeDeleteModal();
                     handleCancel();
+                    getLocacoes();
                 })
                 .catch((error) => {
                     console.error('Erro ao excluir locação:', error.message);
