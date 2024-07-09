@@ -59,6 +59,20 @@ const ListagemSala = () => {
         navigate(`/agenda-sala/${idSala}`);
     };
 
+
+    const traduzirSituacao = (situacao) => {
+        switch (situacao) {
+            case 'A':
+                return 'Ativo';
+            case 'I':
+                return 'Inativo';
+            case 'E':
+                return 'Em manutenção';
+            default:
+                return situacao;
+        }
+    };
+
     return (
         <Layout>
             <div className='p-4'>
@@ -104,7 +118,7 @@ const ListagemSala = () => {
                                         <h2 className='text-lg font-bold'>{sala.nomeSala}</h2>
                                         <p><strong>Ala:</strong> {sala.ala.nome}</p>
                                         <p><strong>Andar:</strong> {sala.andar}</p>
-                                        <p><strong>Situação:</strong> {sala.situacao}</p>
+                                        <p><strong>Situação:</strong> {traduzirSituacao(sala.situacao)}</p>
                                         <p><strong>Recursos:</strong></p>
                                         <ul>
                                             {sala.recursos.map((recurso, index) => (

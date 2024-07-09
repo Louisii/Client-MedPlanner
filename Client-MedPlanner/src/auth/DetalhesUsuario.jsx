@@ -89,6 +89,19 @@ const DetalhesUsuario = () => {
         }
     };
 
+    const traduzirSituacao = (situacao) => {
+        switch (situacao) {
+            case 'A':
+                return 'Ativo';
+            case 'I':
+                return 'Inativo';
+            case 'E':
+                return 'Em validação';
+            default:
+                return situacao;
+        }
+    };
+
     return (
         <Layout>
             {usuario != null ?
@@ -99,7 +112,7 @@ const DetalhesUsuario = () => {
                         <p>Função: {usuario.cargo === 'RECEPCAO' ? 'Recepção' : usuario.cargo === 'MEDICO' ? 'Médico(a)' : 'Administrador(a)'}</p>
                         <p>Email: {usuario.username}</p>
                         <p>CPF: {maskCpf(usuario.cpf)}</p>
-                        <p>Situação: {usuario.situacao}</p>
+                        <p>Situação: {traduzirSituacao(usuario.situacao)}</p>
                     </div>
                     <div className='flex items-center text-sm h-9 gap-4 m-4 p-4'>
                         <Button onClick={() => navigate(`/listagem-usuario`)} text="Voltar" />

@@ -31,6 +31,20 @@ const ListagemAlas = () => {
             .catch((error) => { console.log(error) });
     };
 
+
+    const traduzirSituacao = (situacao) => {
+        switch (situacao) {
+            case 'A':
+                return 'Ativo';
+            case 'I':
+                return 'Inativo';
+            case 'E':
+                return 'Em manutenção';
+            default:
+                return situacao;
+        }
+    };
+
     return (
         <Layout>
             <div className='p-4'>
@@ -59,7 +73,7 @@ const ListagemAlas = () => {
                             <div key={ala.idAla} className='m-4 p-4 grid grid-cols-2 gap-8 border border-gray-100 rounded-lg shadow-md'>
                                 <div>
                                     <h2 className='text-xl font-bold'>{ala.nome}</h2>
-                                    <p><strong>Situação:</strong> {ala.situacao}</p>
+                                    <p><strong>Situação:</strong> {traduzirSituacao(ala.situacao)}</p>
                                 </div>
                                 <div className='flex items-center text-sm justify-end h-9 gap-2'>
                                     <Button onClick={() => navigate(`/edicao-ala/${ala.idAla}`)} text="Editar" />
