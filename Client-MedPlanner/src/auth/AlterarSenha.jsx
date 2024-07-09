@@ -6,6 +6,7 @@ import Input from '../components/Input';
 import Layout from '../components/Layout';
 import SuccessModal from '../components/SuccessModal';
 import axiosWithToken from '../lib/RequestInterceptor';
+import TermosDeUsoModal from '../components/TermosDeUso';
 
 const AlterarSenha = () => {
     const [usuario, setUsuario] = useState(null);
@@ -15,6 +16,8 @@ const AlterarSenha = () => {
     const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
     const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -77,7 +80,11 @@ const AlterarSenha = () => {
                         <Input type='password' placeholder='Nova senha' value={novaSenha} onChange={(e) => setNovaSenha(e.target.value)} />
                         <Input type='password' placeholder='Confirme a nova senha' value={confirmarSenha} onChange={(e) => setConfirmarSenha(e.target.value)} />
                     </div>
-
+                    <div className='flex items-center text-sm h-9  mx-8 mt-2'>
+                        <p>Ao salvar você concorda com os</p>
+                        <p className='hover:text-blue-400 text-blue-700 mx-1 underline cursor-pointer' onClick={() => setIsTermsModalOpen(true)}>termos de uso</p>
+                        <p>do sistema.</p>
+                    </div>
                     <div className='flex items-center text-sm h-9 gap-4 m-4 p-4'>
                         <Button onClick={() => navigate('/minha-conta')} text="Cancelar" className="bg-gray-500 text-white" />
                         <Button onClick={handleAlterarSenha} text="Salvar" className="bg-green-500 text-white" />
@@ -86,15 +93,19 @@ const AlterarSenha = () => {
             ) : (
                 <p>Carregando...</p>
             )}
-            <SuccessModal 
-                isOpen={isSuccessModalOpen} 
-                onClose={() => { setIsSuccessModalOpen(false); navigate('/minha-conta'); }} 
-                text="Senha alterada com sucesso!" 
+            <SuccessModal
+                isOpen={isSuccessModalOpen}
+                onClose={() => { setIsSuccessModalOpen(false); navigate('/minha-conta'); }}
+                text="Senha alterada com sucesso!"
             />
-            <ErrorModal 
-                isOpen={isErrorModalOpen} 
-                onClose={() => setIsErrorModalOpen(false)} 
-                text={errorMessage} 
+            <ErrorModal
+                isOpen={isErrorModalOpen}
+                onClose={() => setIsErrorModalOpen(false)}
+                text={errorMessage}
+            />
+            <TermosDeUsoModal
+                isOpen={isTermsModalOpen}
+                onClose={() => setIsTermsModalOpen(false)}
             />
         </Layout>
     );
