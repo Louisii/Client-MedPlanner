@@ -34,7 +34,7 @@ const CadastroUsuario = () => {
     try {
       const response = await axiosWithToken.get(`http://localhost:8080/usuario/buscar?id=${usuarioId}`);
       if (response.status === 200) {
-        if (response.data.cargo == "MEDICO") {
+        if (response.data.cargo === "MEDICO") {
           setForm({
             idUsuario: usuarioId,
             nome: response.data.nome,
@@ -98,7 +98,6 @@ const CadastroUsuario = () => {
     }
   };
 
-
   const handleForm = (name, value) => {
     if (name === 'cpf') {
       const cleanValue = value.replace(/\D/g, '').slice(0, 11); // Limitar a 11 dígitos
@@ -123,9 +122,11 @@ const CadastroUsuario = () => {
   const validateForm = () => {
     const errors = [];
     const crmRegex = /^[0-9]{4,6}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!form.nome) errors.push("Nome é obrigatório.");
     if (!form.username) errors.push("Email é obrigatório.");
+    if (!emailRegex.test(form.username)) errors.push("Email inválido.");
     if (!form.cpf) errors.push("CPF é obrigatório.");
     if (form.cpf.length !== 11) errors.push("CPF deve ter 11 dígitos.");
     if (!form.cargo || form.cargo === 'Selecione') errors.push("Cargo é obrigatório.");
