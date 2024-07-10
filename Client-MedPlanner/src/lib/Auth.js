@@ -14,7 +14,7 @@ export const authenticate = async (username, password) => {
         } else if (response.status === 401) {
             throw new Error("Usuário ou senha incorretos!");
         } else {
-            throw new Error("Erro ao autenticar");
+            throw new Error("Dados incorretos ou não cadastrados!");
         }
     } catch (error) {
         throw new Error(error.message);

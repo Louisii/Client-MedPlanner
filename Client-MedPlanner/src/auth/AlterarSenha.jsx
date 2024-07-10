@@ -58,9 +58,10 @@ const AlterarSenha = () => {
                 }
             })
             .catch(error => {
-                console.error('Erro ao alterar senha:', error.message);
-                setErrorMessage('Senha antiga incorreta!');
+                const mensagemErro = error.response.data?.message || error.response.data?.errors || error.response.data || 'Erro ao alterar senha.';
+                setErrorMessage(mensagemErro);
                 setIsErrorModalOpen(true);
+                console.error('Erro ao alterar senha: ', mensagemErro);
             });
     };
 
@@ -90,6 +91,7 @@ const AlterarSenha = () => {
                         <Button onClick={handleAlterarSenha} text="Salvar" className="bg-green-500 text-white" />
                     </div>
                 </div>
+                
             ) : (
                 <p>Carregando...</p>
             )}

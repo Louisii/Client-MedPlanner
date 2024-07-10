@@ -1,8 +1,11 @@
 import React from 'react';
-import Button from './Button'; // Assuming Button component is defined elsewhere
+import Button from './Button';
+import PropTypes from 'prop-types';
 
 const ErrorModal = ({ isOpen, onClose, text }) => {
     if (!isOpen) return null;
+
+    const formattedText = text.replace(/\n/g, '<br>');
 
     return (
         <div className="fixed z-10 inset-0 overflow-y-auto">
@@ -22,7 +25,7 @@ const ErrorModal = ({ isOpen, onClose, text }) => {
                             <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                                 <h3 className="text-lg leading-6 font-medium text-gray-900">Erro</h3>
                                 <div className="mt-2">
-                                    <p className="text-sm text-gray-500">{text}</p>
+                                    <p className="text-sm text-gray-500" dangerouslySetInnerHTML={{ __html: formattedText }} />
                                 </div>
                             </div>
                         </div>
