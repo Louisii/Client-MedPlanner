@@ -8,11 +8,11 @@ import { FaUserDoctor } from 'react-icons/fa6';
 const ListagemUsuarios = () => {
     const [usuarios, setUsuarios] = useState([]);
     const [filteredUsuarios, setFilteredUsuarios] = useState([]);
-    const [filterCargo, setFilterCargo] = useState('Selecione');
+    const [filterCargo, setFilterCargo] = useState('Todos');
     const navigate = useNavigate();
 
     const opcoesCargo = [
-        { value: 'Selecione', label: 'Selecione' },
+        { value: 'Todos', label: 'Todos' },
         { value: 'ADMINISTRADOR', label: 'Administrador(a)' },
         { value: 'RECEPCAO', label: 'Recepcionista' },
         { value: 'MEDICO', label: 'Médico(a)' }
@@ -24,7 +24,7 @@ const ListagemUsuarios = () => {
 
     useEffect(() => {
         let filtered = usuarios;
-        if (filterCargo !== 'Selecione') {
+        if (filterCargo !== 'Todos') {
             filtered = usuarios.filter(user => user.cargo === filterCargo);
         }
         filtered.sort((a, b) => a.nome.localeCompare(b.nome));

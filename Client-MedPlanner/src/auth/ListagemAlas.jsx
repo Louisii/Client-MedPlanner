@@ -6,11 +6,11 @@ import { useNavigate } from 'react-router-dom';
 
 const ListagemAlas = () => {
     const [alas, setAlas] = useState([]);
-    const [filterSituacao, setFilterSituacao] = useState('Selecione');
+    const [filterSituacao, setFilterSituacao] = useState('Todos');
     const navigate = useNavigate();
 
     const opcoesSituacao = [
-        { value: 'Selecione', label: 'Selecione' },
+        { value: 'Todos', label: 'Todos' },
         { value: 'A', label: 'Ativo' },
         { value: 'I', label: 'Inativo' },
         { value: 'M', label: 'Manutenção' }
@@ -22,7 +22,7 @@ const ListagemAlas = () => {
 
     const getAlas = () => {
         let url = 'http://localhost:8080/ala/listar';
-        if (filterSituacao !== 'Selecione') {
+        if (filterSituacao !== 'Todos') {
             url = `http://localhost:8080/ala/buscar/situacao/${filterSituacao}`;
         }
 

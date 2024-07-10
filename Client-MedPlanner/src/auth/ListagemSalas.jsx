@@ -6,11 +6,11 @@ import axiosWithToken from '../lib/RequestInterceptor';
 
 const ListagemSala = () => {
     const [salas, setSalas] = useState([]);
-    const [filterAla, setFilterAla] = useState('Selecione');
-    const [filterSituacao, setFilterSituacao] = useState('Selecione');
-    const [opcoesAla, setOpcoesAla] = useState([{ value: 'Selecione', label: 'Selecione' }]);
+    const [filterAla, setFilterAla] = useState('Todos');
+    const [filterSituacao, setFilterSituacao] = useState('Todos');
+    const [opcoesAla, setOpcoesAla] = useState([{ value: 'Todos', label: 'Todos' }]);
     const opcoesSituacao = [
-        { value: 'Selecione', label: 'Selecione' },
+        { value: 'Todos', label: 'Todos' },
         { value: 'A', label: 'Ativo' },
         { value: 'I', label: 'Inativo' },
         { value: 'M', label: 'Manutenção' }
@@ -28,8 +28,8 @@ const ListagemSala = () => {
 
     const getSalas = () => {
         const params = {};
-        if (filterAla !== 'Selecione') params.idAla = filterAla;
-        if (filterSituacao !== 'Selecione') params.situacao = filterSituacao;
+        if (filterAla !== 'Todos') params.idAla = filterAla;
+        if (filterSituacao !== 'Todos') params.situacao = filterSituacao;
 
         axiosWithToken.get('http://localhost:8080/sala/buscar', { params })
             .then((response) => { setSalas(response.data) })
@@ -41,7 +41,7 @@ const ListagemSala = () => {
             .then((response) => {
                 if (response.status === 200) {
                     const alas = response.data.map((ala) => ({ value: ala.idAla, label: ala.nome }));
-                    setOpcoesAla([{ value: 'Selecione', label: 'Selecione' }, ...alas]);
+                    setOpcoesAla([{ value: 'Todos', label: 'Todos' }, ...alas]);
                 } else {
                     console.error(`Falha ao obter alas: ${response.status}`);
                 }
