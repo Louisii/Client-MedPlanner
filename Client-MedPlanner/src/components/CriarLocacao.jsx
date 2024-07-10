@@ -31,6 +31,8 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
     const [locacao, setLocacao] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [usuarioLogado, setUsuarioLogado] = useState(null);
+    const [isMedicoInativo, setIsMedicoInativo] = useState(false);
+
 
     useEffect(() => {
 
@@ -155,6 +157,7 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
                         console.log(selectedAla)
                     } else {
                         setSelectedMedico({ label: usuario.nome, value: usuario.idUsuario });
+                        setIsMedicoInativo(usuario.username && usuario.cpf ? false : true)
                     }
                 }
             })
@@ -218,6 +221,7 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
                             {type === 'medico' && (
                                 <>
                                     <p className='font-semibold text-lg'>{entity.nome}</p>
+
                                     <div className='flex flex-row'>
                                         <p className='font-semibold mr-1'>CRM: </p>
                                         <p>{entity.numCrm}</p>
@@ -231,7 +235,10 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
                             )}
                             {type === 'sala' && (
                                 <>
+
+                                    {isMedicoInativo && <p className='font-semibold text-lg text-red-700 w-40 bg-red-200 p-1 rounded'>Médico inativo</p>}
                                     <p className='font-semibold text-lg'>{entity.nomeSala}</p>
+
                                     <div className='flex flex-row'>
                                         <p className='font-semibold mr-1'>Ala: </p>
                                         <p>{entity.ala.nome}</p>
@@ -323,6 +330,8 @@ const CriarLocacao = ({ appointmentMeta, onHide, visible, entity, getLocacoes, t
                             )}
                             {type === 'sala' && (
                                 <>
+                                    {isMedicoInativo && <p className='font-semibold text-lg text-red-700 w-40 bg-red-200 p-1 rounded'>Médico inativo</p>}
+
                                     <p className='font-semibold text-lg'>{entity.nomeSala}</p>
                                     <div className='flex flex-row'>
                                         <p className='font-semibold mr-1'>Ala: </p>
