@@ -200,7 +200,7 @@ const CadastroUsuario = () => {
               {form.cargo !== 'MEDICO' ?
                 <InputDisabled type='text' />
                 :
-                <Input type='text' value={form.numCrm} onChange={(e) => handleForm('numCrm', e.target.value)} />
+                <Input type='number' value={form.numCrm} onChange={(e) => handleForm('numCrm', e.target.value)} />
               }
             </div>
             <div className='m-4'>
