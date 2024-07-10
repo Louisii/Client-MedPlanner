@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import Layout from '../components/Layout';
 import axiosWithToken from '../lib/RequestInterceptor';
+import { FaUserDoctor } from 'react-icons/fa6';
 
 const ListagemUsuarios = () => {
     const [usuarios, setUsuarios] = useState([]);
@@ -70,7 +71,18 @@ const ListagemUsuarios = () => {
                             <div key={u.idUsuario} className='m-4 p-4 grid grid-cols-2 gap-8 border border-gray-100 rounded-lg shadow-md'>
                                 <div>
                                     <h2 className='text-xl font-bold'>{u.nome}</h2>
-                                    <p>{u.cargo === 'RECEPCAO' ? 'Recepção' : u.cargo === 'MEDICO' ? 'Médico(a)' : 'Administrador(a)'}</p>
+                                    <p>
+                                        {u.cargo === 'RECEPCAO' ? 'Recepção' : u.cargo === 'MEDICO' ? 'Médico(a)' : 'Administrador(a)'}
+                                    </p>
+                                    {u.cargo === 'MEDICO' &&
+                                        <div>
+
+                                            <h2 className=' text-gray-600 font-bold text-sm flex flex-row gap-2 items-center'>
+                                                <FaUserDoctor /> {u.especialidade.nome} - {u.especialidade.sigla.toUpperCase()}
+                                            </h2>
+                                        </div>
+                                    }
+
                                 </div>
                                 <div className='flex items-center text-sm justify-end h-9 gap-2'>
                                     {u.cargo === "MEDICO" && (
