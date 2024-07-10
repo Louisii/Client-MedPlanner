@@ -25,13 +25,14 @@ const ListagemEspecialidades = () => {
                     <h2 className='p-4 text-xl font-bold'>Listagem de Especialidades</h2>
                     <Button onClick={() => navigate('/cadastro-especialidade')} text="Nova Especialidade" className="bg-blue-500 text-white p-2 rounded" />
                 </div>
-                
+
                 {especialidades.length > 0 ? (
                     <div className='overflow-y-auto max-h-[calc(100vh-10rem)]'>
                         {especialidades.map((especialidade) => (
                             <div key={especialidade.idEspecialidade} className='m-4 p-4 grid grid-cols-2 gap-8 border border-gray-100 rounded-lg shadow-md'>
                                 <div>
                                     <h2 className='text-xl font-bold'>{especialidade.nome}</h2>
+                                    <h2 className=' text-gray-600 font-semibold'>{especialidade.sigla.toUpperCase()}</h2>
                                 </div>
                                 <div className='flex items-center text-sm justify-end h-9 gap-2'>
                                     <Button onClick={() => navigate(`/edicao-especialidade/${especialidade.idEspecialidade}`)} text="Editar" />
